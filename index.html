@@ -1325,6 +1325,33 @@ input[type="date"].jdate-input {
   .supp-row__grid { grid-template-columns: 1fr; }
   .supp-row__grid2 { grid-template-columns: 60px 1fr; }
 }
+
+/* ── CUSTOM FOOD AUTOCOMPLETE (replaces datalist — mobile compatible) ── */
+.food-autocomplete-wrap { position: relative; flex: 1; min-width: 120px; }
+.food-autocomplete-wrap .food-input-name { width: 100%; }
+.food-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--white); border: 1.5px solid var(--blue-light);
+  border-top: none; border-radius: 0 0 8px 8px;
+  max-height: 220px; overflow-y: auto; z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  -webkit-overflow-scrolling: touch;
+}
+.food-dropdown-item {
+  padding: 10px 12px; font-size: 14px; cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,.04); color: var(--text);
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
+}
+.food-dropdown-item:last-child { border-bottom: none; }
+.food-dropdown-item:hover, .food-dropdown-item.highlighted {
+  background: rgba(46,134,193,.10); color: var(--navy); font-weight: 600;
+}
+.food-dropdown-item .food-cat {
+  font-size: 10px; color: var(--mid-gray); letter-spacing: .5px;
+  text-transform: uppercase; float: right; margin-top: 2px;
+}
+.food-dropdown.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -2291,7 +2318,35 @@ input[type="date"].jdate-input {
         </table></div>
       </div>
 
-      <!-- S2 -->
+      <!-- S2 Lundi — Pectoraux -->
+      <div class="week-check">
+        <div class="week-check-header">
+          <div class="week-check-title">SÉANCE PECTORAUX — S2 Lundi</div>
+          <div class="week-check-date">16 mars 2026</div>
+        </div>
+        <div class="alert alert-blue">
+          <strong>Statut : Prévue</strong>
+          Séance réalisée le lundi 16 mars. Statut à confirmer comme "Faite" dans le journal.
+        </div>
+        <div class="cards cards-3" style="margin-bottom:16px;">
+          <div class="card blue"><div class="card-label">Volume total</div><div class="card-value">9 252</div><div class="card-sub">kg</div></div>
+          <div class="card"><div class="card-label">Séries</div><div class="card-value">18</div><div class="card-sub">séries muscu</div></div>
+          <div class="card"><div class="card-label">Exercices</div><div class="card-value">6</div><div class="card-sub">exercices</div></div>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Exercice</th><th>Poids</th><th>Reps</th><th>Séries</th><th>Volume</th></tr></thead>
+          <tbody>
+            <tr><td>Développé couché haltère</td><td class="num">50 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 800 kg</td></tr>
+            <tr><td>Développé incliné barre assisté</td><td class="num">50 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 800 kg</td></tr>
+            <tr><td>Écarté haltère</td><td class="num">30 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 080 kg</td></tr>
+            <tr class="highlight-row"><td>Dips (lest poids corps 77kg)</td><td class="num">77 kg</td><td class="num">12</td><td class="num">3</td><td class="num">2 772 kg</td></tr>
+            <tr><td>Superman câbles assistés</td><td class="num">30 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 080 kg</td></tr>
+            <tr><td>Low Cable Crossover</td><td class="num">20 kg</td><td class="num">12</td><td class="num">3</td><td class="num">720 kg</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+            <!-- S2 -->
       <div class="week-check">
         <div class="week-check-header">
           <div class="week-check-title">SEMAINE 2 — FONDATION</div>
@@ -2350,7 +2405,7 @@ input[type="date"].jdate-input {
         <div class="cards cards-3" style="margin-bottom:16px;">
           <div class="card blue">
             <div class="card-label">Volume total</div>
-            <div class="card-value">6 750</div>
+            <div class="card-value">7 002</div>
             <div class="card-sub">kg</div>
           </div>
           <div class="card">
@@ -2383,7 +2438,7 @@ input[type="date"].jdate-input {
         <div class="tbl-wrap"><table>
           <thead><tr><th>Exercice</th><th>Poids</th><th>Reps</th><th>Séries</th><th>Volume</th></tr></thead>
           <tbody>
-            <tr class="highlight-row"><td>Tractions</td><td class="num">Poids corps</td><td class="num">12</td><td class="num">3</td><td class="num">—</td></tr>
+            <tr class="highlight-row"><td>Tractions (+ 7kg lest)</td><td class="num">7 kg lest</td><td class="num">12</td><td class="num">3</td><td class="num">252 kg</td></tr>
             <tr><td>Soulevé de terre</td><td class="num">80 kg</td><td class="num">12</td><td class="num">3</td><td class="num">2 880 kg</td></tr>
             <tr><td>Tirage poulie haute</td><td class="num">17.5 kg</td><td class="num">12</td><td class="num">3</td><td class="num">630 kg</td></tr>
             <tr><td>Rowing haltère unilatéral</td><td class="num">30 kg</td><td class="num">10</td><td class="num">3</td><td class="num">900 kg</td></tr>
@@ -2402,8 +2457,8 @@ input[type="date"].jdate-input {
             <tr><td>Strain cardio tapis</td><td class="num">5.1</td><td>LISS modéré</td></tr>
             <tr><td>Recovery</td><td class="num">67%</td><td>Zone jaune — stable vs S2</td></tr>
             <tr class="orange-row"><td>Sommeil</td><td class="num"><strong>5.6h</strong></td><td>⚠ Insuffisant — point critique persistant</td></tr>
-            <tr><td>Énergie déclarée</td><td class="num">6/10</td><td>Correct pour 5.6h de sommeil</td></tr>
-            <tr><td>Difficulté déclarée</td><td class="num">5/10</td><td>Séance gérée malgré fatigue</td></tr>
+            <tr><td>Énergie déclarée</td><td class="num">7/10</td><td>Correct pour 5.6h de sommeil</td></tr>
+            <tr><td>Difficulté déclarée</td><td class="num">9/10</td><td>Séance très intense — difficulté maximale</td></tr>
           </tbody>
         </table></div>
 
@@ -2411,17 +2466,17 @@ input[type="date"].jdate-input {
         <div class="subsection-title" style="margin-top:20px;margin-bottom:16px">Nutrition S3 — Données partielles (matin uniquement)</div>
         <div class="alert alert-blue">
           <strong>Journal alimentaire partiel</strong>
-          Seul le petit-déjeuner est renseigné à l'heure de l'export : 1 Banane + 1 Orange + suppléments post-training.
-          Total connu : ~326 kcal / P27g / G54g / L2g. Il manque déjeuner, collation et dîner pour compléter la journée.
+          Journée complète renseignée. 2 Clémentines (matin) + Pâtes/Saumon fumé (déjeuner) + Yaourt grec/Flocons (collation) + Haricots verts/3 œufs (dîner).
+          Total journée : 1 332 kcal / P125g / G117g / L42g + suppléments.
         </div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Aliment / Supplément</th><th>Kcal</th><th>Prot</th><th>Glucides</th><th>Lipides</th></tr></thead>
           <tbody>
-            <tr><td>Banane (1 pièce)</td><td class="num">107</td><td class="num">1.3g</td><td class="num">27.6g</td><td class="num">0.4g</td></tr>
-            <tr><td>Orange (1 pièce)</td><td class="num">85</td><td class="num">1.6g</td><td class="num">21.6g</td><td class="num">0.2g</td></tr>
-            <tr><td>Pre-Workout (inclus macros)</td><td class="num">15</td><td class="num">0g</td><td class="num">2g</td><td class="num">0g</td></tr>
-            <tr class="highlight-row"><td>Whey Gold Standard (1 scoop)</td><td class="num">120</td><td class="num">24g</td><td class="num">3g</td><td class="num">1g</td></tr>
-            <tr class="total-row"><td>Total connu (matin)</td><td class="num">327</td><td class="num">26.9g</td><td class="num">54.2g</td><td class="num">1.6g</td></tr>
+            <tr><td>2 × Clémentine (matin)</td><td class="num">66</td><td class="num">1.3g</td><td class="num">16.8g</td><td class="num">0.3g</td></tr>
+            <tr><td>Pâtes complètes 200g + Saumon fumé (déjeuner)</td><td class="num">423</td><td class="num">28.6g</td><td class="num">46g</td><td class="num">14.8g</td></tr>
+            <tr><td>Yaourt grec 150g + Flocons 42g (collation)</td><td class="num">244</td><td class="num">20.5g</td><td class="num">31.4g</td><td class="num">3.5g</td></tr>
+            <tr><td>Haricots verts 177g + 3 Œufs (dîner)</td><td class="num">334</td><td class="num">26.6g</td><td class="num">14.4g</td><td class="num">20g</td></tr><tr class="highlight-row"><td>Suppléments caloriiques (Pre-WO + 2× Whey + Oméga)</td><td class="num">265</td><td class="num">48g</td><td class="num">8g</td><td class="num">3g</td></tr>
+            <tr class="total-row"><td>Total journée complète</td><td class="num">1 332</td><td class="num">125g</td><td class="num">117g</td><td class="num">42g</td></tr>
             <tr class="orange-row"><td>Cible journée training</td><td class="num">2 150</td><td class="num">150g</td><td class="num">218g</td><td class="num">75g</td></tr>
           </tbody>
         </table></div>
@@ -3887,49 +3942,44 @@ function buildFoodRow(cat, item) {
 
   var isManual = item.sourceType === 'manual';
 
-  // Build datalist options
-  var dlId = 'dl-' + item.id;
-  var dlHtml = '<datalist id="' + dlId + '">';
-  for (var i = 0; i < FOOD_NAMES.length; i++) {
-    dlHtml += '<option value="' + escapeHtml(FOOD_NAMES[i]) + '">';
-  }
-  dlHtml += '</datalist>';
-
   var units = ['g','ml','piece','scoop','c. a soupe'];
   var unitOpts = '';
   for (var j = 0; j < units.length; j++) {
     unitOpts += '<option value="' + units[j] + '"' + (item.unit === units[j] ? ' selected' : '') + '>' + units[j] + '</option>';
   }
-
   var modeLabel = isManual ? 'Manuel' : 'Base';
-  var modeCls = isManual ? 'food-source-toggle manual-mode' : 'food-source-toggle';
+  var modeCls   = isManual ? 'food-source-toggle manual-mode' : 'food-source-toggle';
 
-  div.innerHTML = dlHtml +
+  div.innerHTML =
     '<div class="food-row__top">' +
-      '<input class="food-input-name" list="' + dlId + '" placeholder="Aliment…" value="' + escapeHtml(item.foodName || '') + '" />' +
-      '<input class="food-input-qty" type="number" step="any" min="0" placeholder="Qté" value="' + (item.quantity || '') + '" />' +
+      '<div class="food-autocomplete-wrap">' +
+        '<input class="food-input-name" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Aliment…" value="' + escapeHtml(item.foodName || '') + '" />' +
+        '<div class="food-dropdown hidden"></div>' +
+      '</div>' +
+      '<input class="food-input-qty" type="number" inputmode="decimal" step="any" min="0" placeholder="Qté" value="' + (item.quantity || '') + '" />' +
       '<select class="food-select-unit">' + unitOpts + '</select>' +
       '<button class="' + modeCls + '" title="Basculer mode saisie">' + modeLabel + '</button>' +
       '<button class="food-del-btn" title="Supprimer">✕</button>' +
     '</div>' +
     '<div class="macro-grid-labels"><span class="macro-label-mini">Kcal</span><span class="macro-label-mini">Prot g</span><span class="macro-label-mini">Gluc g</span><span class="macro-label-mini">Lip g</span></div>' +
     '<div class="food-row__macros">' +
-      '<input type="number" step="any" class="macro-in-kcal" placeholder="0" value="' + round2(item.calories) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" step="any" class="macro-in-prot" placeholder="0" value="' + round2(item.protein) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" step="any" class="macro-in-carb" placeholder="0" value="' + round2(item.carbs) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" step="any" class="macro-in-fat"  placeholder="0" value="' + round2(item.fat) + '" ' + (isManual ? '' : 'readonly') + '>' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-kcal" placeholder="0" value="' + round2(item.calories) + '" ' + (isManual ? '' : 'readonly') + '>' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-prot" placeholder="0" value="' + round2(item.protein) + '" ' + (isManual ? '' : 'readonly') + '>' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-carb" placeholder="0" value="' + round2(item.carbs) + '" ' + (isManual ? '' : 'readonly') + '>' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-fat"  placeholder="0" value="' + round2(item.fat) + '" ' + (isManual ? '' : 'readonly') + '>' +
     '</div>';
 
-  // Wire events
-  var nameInput = div.querySelector('.food-input-name');
-  var qtyInput  = div.querySelector('.food-input-qty');
-  var unitSel   = div.querySelector('.food-select-unit');
-  var toggleBtn = div.querySelector('.food-source-toggle');
-  var delBtn    = div.querySelector('.food-del-btn');
-  var kcalIn    = div.querySelector('.macro-in-kcal');
-  var protIn    = div.querySelector('.macro-in-prot');
-  var carbIn    = div.querySelector('.macro-in-carb');
-  var fatIn     = div.querySelector('.macro-in-fat');
+  /* ── Element refs ── */
+  var nameInput  = div.querySelector('.food-input-name');
+  var dropdown   = div.querySelector('.food-dropdown');
+  var qtyInput   = div.querySelector('.food-input-qty');
+  var unitSel    = div.querySelector('.food-select-unit');
+  var toggleBtn  = div.querySelector('.food-source-toggle');
+  var delBtn     = div.querySelector('.food-del-btn');
+  var kcalIn     = div.querySelector('.macro-in-kcal');
+  var protIn     = div.querySelector('.macro-in-prot');
+  var carbIn     = div.querySelector('.macro-in-carb');
+  var fatIn      = div.querySelector('.macro-in-fat');
 
   function getItem() {
     var items = mealState.data.meals[cat];
@@ -3937,6 +3987,79 @@ function buildFoodRow(cat, item) {
     return null;
   }
 
+  /* ── Custom dropdown logic ── */
+  var ddVisible = false;
+
+  function showDropdown(query) {
+    query = (query || '').toLowerCase().trim();
+    dropdown.innerHTML = '';
+    var matches = [];
+    for (var n = 0; n < FOOD_NAMES.length; n++) {
+      if (!query || FOOD_NAMES[n].toLowerCase().indexOf(query) !== -1) {
+        matches.push(FOOD_NAMES[n]);
+      }
+      if (matches.length >= 30) break;
+    }
+    if (matches.length === 0) { hideDropdown(); return; }
+    for (var m = 0; m < matches.length; m++) {
+      (function(name) {
+        var item2 = document.createElement('div');
+        item2.className = 'food-dropdown-item';
+        item2.textContent = name;
+        /* Touch + click both handled */
+        item2.addEventListener('mousedown', function(e) { e.preventDefault(); selectFood(name); });
+        item2.addEventListener('touchend',  function(e) { e.preventDefault(); selectFood(name); });
+        dropdown.appendChild(item2);
+      })(matches[m]);
+    }
+    dropdown.classList.remove('hidden');
+    ddVisible = true;
+  }
+
+  function hideDropdown() {
+    dropdown.classList.add('hidden');
+    dropdown.innerHTML = '';
+    ddVisible = false;
+  }
+
+  function selectFood(name) {
+    nameInput.value = name;
+    hideDropdown();
+    var it = getItem(); if (!it) return;
+    it.foodName = name;
+    var food = FOOD_DB[name];
+    if (food) {
+      it.sourceType = 'known';
+      unitSel.value = food.unit || 'g';
+      it.unit = unitSel.value;
+      recalcFromKnown();
+    }
+    nameInput.blur();
+  }
+
+  nameInput.addEventListener('focus', function() { showDropdown(nameInput.value); });
+  nameInput.addEventListener('input', function() {
+    showDropdown(nameInput.value);
+    var it = getItem(); if (!it) return;
+    it.foodName = nameInput.value;
+    var food = FOOD_DB[nameInput.value.trim()];
+    if (food) {
+      it.sourceType = 'known';
+      unitSel.value = food.unit || 'g';
+      it.unit = unitSel.value;
+      recalcFromKnown();
+    } else { saveMealDay(); }
+  });
+  nameInput.addEventListener('blur', function() {
+    /* Delay to allow click/touch on dropdown item to fire first */
+    setTimeout(hideDropdown, 200);
+  });
+  nameInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { hideDropdown(); nameInput.blur(); }
+    if (e.key === 'Enter') { hideDropdown(); nameInput.blur(); }
+  });
+
+  /* ── Quantity ── */
   function recalcFromKnown() {
     var it = getItem(); if (!it) return;
     var name = nameInput.value.trim();
@@ -3948,10 +4071,10 @@ function buildFoodRow(cat, item) {
     if (unit === 'piece' || unit === 'scoop') { grams = qty * (food.portionG || 100); }
     else { grams = qty; }
     var ratio = grams / 100;
-    it.calories = round2(food.cal100 * ratio);
-    it.protein  = round2(food.prot100 * ratio);
-    it.carbs    = round2(food.carb100 * ratio);
-    it.fat      = round2(food.fat100 * ratio);
+    it.calories = round2(food.cal100   * ratio);
+    it.protein  = round2(food.prot100  * ratio);
+    it.carbs    = round2(food.carb100  * ratio);
+    it.fat      = round2(food.fat100   * ratio);
     kcalIn.value = it.calories;
     protIn.value  = it.protein;
     carbIn.value  = it.carbs;
@@ -3959,17 +4082,6 @@ function buildFoodRow(cat, item) {
     updateMealTotals(); saveMealDay();
   }
 
-  nameInput.addEventListener('input', function() {
-    var it = getItem(); if (!it) return;
-    it.foodName = nameInput.value;
-    var food = FOOD_DB[nameInput.value.trim()];
-    if (food && !it.sourceType || it.sourceType === 'known') {
-      it.sourceType = 'known';
-      unitSel.value = food.unit || 'g';
-      it.unit = unitSel.value;
-      recalcFromKnown();
-    } else { saveMealDay(); }
-  });
   qtyInput.addEventListener('input', function() {
     var it = getItem(); if (!it) return;
     it.quantity = parseFloat(qtyInput.value) || 0;
@@ -3980,6 +4092,8 @@ function buildFoodRow(cat, item) {
     it.unit = unitSel.value;
     if (it.sourceType === 'known') { recalcFromKnown(); } else { saveMealDay(); }
   });
+
+  /* ── Manual macro inputs ── */
   [kcalIn, protIn, carbIn, fatIn].forEach(function(inp, idx) {
     inp.addEventListener('input', function() {
       var it = getItem(); if (!it || it.sourceType !== 'manual') return;
@@ -3988,6 +4102,8 @@ function buildFoodRow(cat, item) {
       updateMealTotals(); saveMealDay();
     });
   });
+
+  /* ── Mode toggle (Base / Manuel) ── */
   toggleBtn.addEventListener('click', function() {
     var it = getItem(); if (!it) return;
     if (it.sourceType === 'manual') {
@@ -4002,7 +4118,10 @@ function buildFoodRow(cat, item) {
       saveMealDay();
     }
   });
+
+  /* ── Delete ── */
   delBtn.addEventListener('click', function() {
+    hideDropdown();
     var items = mealState.data.meals[cat];
     for (var k = 0; k < items.length; k++) { if (items[k].id === item.id) { items.splice(k,1); break; } }
     saveMealDay(); renderMealCategory(cat); updateMealTotals();
@@ -4010,6 +4129,7 @@ function buildFoodRow(cat, item) {
 
   return div;
 }
+
 
 function addFoodRow(cat) {
   if (!mealState.data) return;
@@ -5057,19 +5177,17 @@ function initApp() {
 /* ── SEED DATA v2 — merges JSON by date key, never loses other dates ── */
 (function() {
   try {
-    var SEED_MEALS    = {"2026-03-17":{"meals":{"lunch":[],"snack":[],"dinner":[],"breakfast":[{"id":"food_84ifsj3_mmuop9ac","sourceType":"known","foodName":"Banane","quantity":1,"unit":"piece","calories":106.8,"protein":1.3,"carbs":27.6,"fat":0.4},{"id":"food_idq397j_mmuqwj83","sourceType":"known","foodName":"Orange","quantity":1,"unit":"piece","calories":84.6,"protein":1.6,"carbs":21.6,"fat":0.2}]},"notes":"","dayType":"training","updatedAt":"2026-03-17T15:09:04.240Z","supplements":[{"id":"sp_ku18ulg_mmuopvnn","_knownIdx":0,"name":"Pre-Workout Gold Standard (ON)","type":"Shaker","moment":"Avant training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":true,"calories":15,"protein":0,"carbs":2,"fat":0,"notes":""},{"id":"sp_52fueoj_mmuoq3p3","_knownIdx":1,"name":"BCAA 5000 Powder (ON)","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_2nv0v6x_mmuot6r0","_knownIdx":2,"name":"Whey Gold Standard","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":true,"calories":120,"protein":24,"carbs":3,"fat":1,"notes":""},{"id":"sp_nln24wv_mmuothum","_knownIdx":3,"name":"Créatine Micronized","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_am8kwsh_mmuou85i","_knownIdx":4,"name":"Vitamine D3","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_o97jcb9_mmuouhuk","_knownIdx":5,"name":"Vitamine B12","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_b1rbj0v_mmuoum7d","_knownIdx":6,"name":"Vitamine B6","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_dg1ns37_mmuouqhx","_knownIdx":7,"name":"Vitamine A (Solgar)","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_qoxctir_mmuouve5","_knownIdx":9,"name":"Oméga 3-6-9","type":"Gélule","moment":"Matin","quantity":1,"unit":"","taken":false,"includeInMacros":true,"calories":10,"protein":0,"carbs":0,"fat":1,"notes":""}]}};
-    var SEED_TRAINING = {"2026-03-17":{"sessionType":"Dos","status":"faite","energy":"6","difficulty":"5","feeling":"","strain":"16.9","recovery":"67","sleepHours":"5.6","notes":"Strain haltero 11.8 pour 66mn\nStrain tapis marche 5.1  pour 15mn","exercises":[{"id":"ex_ou9jl76_mmuq7fuh","name":"Tractions","weight":0,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_j40kwh2_mmuq7fuh","name":"Soulevé de terre","weight":80,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_ricncp0_mmuq7fuh","name":"Tirage poulie haute","weight":17.5,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_vp9h8v3_mmuq8tvi","name":"Rowing haltère unilatéral","weight":30,"reps":10,"sets":3,"unit":"kg","note":""},{"id":"ex_zreyaw9_mmuqc88p","name":"Rowing haltère unilatéral","weight":30,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_05n4id8_mmuqe6ew","name":"Rowing à la barre en T","weight":35,"reps":12,"sets":3,"unit":"kg","note":""}],"cardio":[{"id":"c_ri3q7bc_mmuqejyh","type":"Tapis","duration":15,"speed":"3","incline":"6","distance":"1","calories":"100","note":""}],"abs":[{"id":"ab_y837iqv_mmuqj57w","name":"Heel touch (toucher talons)","reps":25,"sets":2,"note":""},{"id":"ab_n5v4fqn_mmuqp46m","name":"Elbow to knee","reps":20,"sets":2,"note":""},{"id":"ab_9pahoa7_mmuqpol3","name":"Leg raises / hip raises","reps":16,"sets":2,"note":""},{"id":"ab_e9ckqbh_mmuqtfeq","name":"Cocoons (abdos groupés dynamiques)","reps":15,"sets":2,"note":""},{"id":"ab_ncekhv0_mmuqtktp","name":"Plank variations (gainage)","reps":0,"sets":2,"note":""}],"updatedAt":"2026-03-17T15:06:01.838Z"}};
-    /* Merge: load existing, overwrite only the seeded date keys */
+    var SEED_MEALS    = {"2026-03-17":{"meals":{"breakfast":[{"id":"food_84ifsj3_mmuop9ac","sourceType":"known","foodName":"Cafe noir","quantity":1,"unit":"ml","calories":0,"protein":0,"carbs":0,"fat":0},{"id":"food_idq397j_mmuqwj83","sourceType":"known","foodName":"Clementine","quantity":2,"unit":"piece","calories":65.8,"protein":1.3,"carbs":16.8,"fat":0.3}],"lunch":[{"id":"food_n98fmd9_mmv1g43z","sourceType":"known","foodName":"Pates completes cuites","quantity":200,"unit":"g","calories":248,"protein":10.6,"carbs":46,"fat":2.8},{"id":"food_1tg8082_mmv1gy39","sourceType":"known","foodName":"Saumon fume","quantity":1,"unit":"piece","calories":175,"protein":18,"carbs":0,"fat":12},{"id":"food_7d3nngt_mmv1hwgh","sourceType":"known","foodName":"Epinards cuits","quantity":0,"unit":"g","calories":0,"protein":0,"carbs":0,"fat":0}],"snack":[{"id":"food_pbyqsqo_mmv3detf","sourceType":"known","foodName":"Yaourt grec","quantity":150,"unit":"g","calories":88.5,"protein":15,"carbs":5.4,"fat":0.6},{"id":"food_771or96_mmv6vq43","sourceType":"known","foodName":"Flocons d'avoine","quantity":42,"unit":"g","calories":155.4,"protein":5.5,"carbs":26,"fat":2.9}],"dinner":[{"id":"food_8ez07f8_mmvbfmmk","sourceType":"known","foodName":"Haricots verts","quantity":177,"unit":"g","calories":54.9,"protein":3.2,"carbs":12.6,"fat":0.2},{"id":"food_td3kvon_mmvbp9in","sourceType":"known","foodName":"Oeuf entier","quantity":3,"unit":"piece","calories":279,"protein":23.4,"carbs":1.8,"fat":19.8}]},"notes":"","dayType":"training","updatedAt":"2026-03-18T01:00:29.880Z","supplements":[{"id":"sp_ku18ulg_mmuopvnn","_knownIdx":0,"name":"Pre-Workout Gold Standard (ON)","type":"Shaker","moment":"Avant training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":true,"calories":15,"protein":0,"carbs":2,"fat":0,"notes":""},{"id":"sp_52fueoj_mmuoq3p3","_knownIdx":1,"name":"BCAA 5000 Powder (ON)","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_2nv0v6x_mmuot6r0","_knownIdx":2,"name":"Whey Gold Standard","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":true,"calories":120,"protein":24,"carbs":3,"fat":1,"notes":""},{"id":"sp_nln24wv_mmuothum","_knownIdx":3,"name":"Créatine Micronized","type":"Poudre","moment":"Après training","quantity":1,"unit":"scoop","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_am8kwsh_mmuou85i","_knownIdx":4,"name":"Vitamine D3","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_o97jcb9_mmuouhuk","_knownIdx":5,"name":"Vitamine B12","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_b1rbj0v_mmuoum7d","_knownIdx":6,"name":"Vitamine B6","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_dg1ns37_mmuouqhx","_knownIdx":7,"name":"Vitamine A (Solgar)","type":"Comprimé","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":false,"calories":0,"protein":0,"carbs":0,"fat":0,"notes":""},{"id":"sp_qoxctir_mmuouve5","_knownIdx":9,"name":"Oméga 3-6-9","type":"Gélule","moment":"Matin","quantity":1,"unit":"","taken":true,"includeInMacros":true,"calories":10,"protein":0,"carbs":0,"fat":1,"notes":""},{"id":"sp_q0r5sfv_mmv3dndw","_knownIdx":2,"name":"Whey Gold Standard","type":"Poudre","moment":"Libre","quantity":1,"unit":"","taken":true,"includeInMacros":true,"calories":120,"protein":24,"carbs":3,"fat":1,"notes":"Collation"}]}};
+    var SEED_TRAINING = {"2026-03-16":{"sessionType":"Pectoraux","status":"prevue","energy":"","difficulty":"","feeling":"","strain":"","recovery":"","sleepHours":"","notes":"","exercises":[{"id":"ex_ludr60j_mmv6xoj9","name":"Developpe couche haltere","weight":50,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_wmxjso8_mmv6xoj9","name":"Developpe incline barre assisté","weight":50,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_wcti74y_mmv6xoj9","name":"Ecarté haltere","weight":30,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_z18ppzt_mmv6xoj9","name":"Dips","weight":77,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_bcs3rme_mmv705fm","name":"Superman câbles assistés","weight":30,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_tlsn3nl_mmv70sas","name":"Low Cable Crossover","weight":20,"reps":12,"sets":3,"unit":"kg","note":""}],"cardio":[],"abs":[],"updatedAt":"2026-03-17T22:44:18.162Z"},"2026-03-17":{"sessionType":"Dos","status":"faite","energy":"7","difficulty":"9","feeling":"8","strain":"16.9","recovery":"67","sleepHours":"5.6","notes":"Strain haltero 11.8 pour 66mn\nStrain tapis marche 5.1 pour 15mn","exercises":[{"id":"ex_ou9jl76_mmuq7fuh","name":"Tractions (+ 7kg lest)","weight":7,"reps":12,"sets":3,"unit":"kg","note":"ceinture de lest"},{"id":"ex_j40kwh2_mmuq7fuh","name":"Soulevé de terre","weight":80,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_ricncp0_mmuq7fuh","name":"Tirage poulie haute","weight":17.5,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_vp9h8v3_mmuq8tvi","name":"Rowing haltère unilatéral","weight":30,"reps":10,"sets":3,"unit":"kg","note":""},{"id":"ex_zreyaw9_mmuqc88p","name":"Rowing haltère unilatéral","weight":30,"reps":12,"sets":3,"unit":"kg","note":""},{"id":"ex_05n4id8_mmuqe6ew","name":"Rowing à la barre en T","weight":35,"reps":12,"sets":3,"unit":"kg","note":""}],"cardio":[{"id":"c_ri3q7bc_mmuqejyh","type":"Tapis","duration":15,"speed":"3","incline":"6","distance":"1","calories":"100","note":""}],"abs":[{"id":"ab_y837iqv_mmuqj57w","name":"Heel touch (toucher talons)","reps":25,"sets":2,"note":""},{"id":"ab_n5v4fqn_mmuqp46m","name":"Elbow to knee","reps":20,"sets":2,"note":""},{"id":"ab_9pahoa7_mmuqpol3","name":"Leg raises / hip raises","reps":16,"sets":2,"note":""},{"id":"ab_e9ckqbh_mmuqtfeq","name":"Cocoons (abdos groupés dynamiques)","reps":15,"sets":2,"note":""},{"id":"ab_ncekhv0_mmuqtktp","name":"Plank variations (gainage)","reps":0,"sets":2,"note":""}],"updatedAt":"2026-03-18T01:09:33.894Z"}};
     var existingMeals = {};
     var existingTraining = {};
     try { existingMeals    = JSON.parse(localStorage.getItem('shai_recomp_meals_v1')    || '{}'); } catch(e) {}
     try { existingTraining = JSON.parse(localStorage.getItem('shai_recomp_training_v1') || '{}'); } catch(e) {}
-    /* Overwrite specific date keys with seed data */
     for (var d in SEED_MEALS)    { existingMeals[d]    = SEED_MEALS[d];    }
     for (var d in SEED_TRAINING) { existingTraining[d] = SEED_TRAINING[d]; }
     localStorage.setItem('shai_recomp_meals_v1',    JSON.stringify(existingMeals));
     localStorage.setItem('shai_recomp_training_v1', JSON.stringify(existingTraining));
-    localStorage.setItem('shai_recomp_meta_v1', '{"updated_at":"2026-03-17T15:21:01.683Z"}');
+    localStorage.setItem('shai_recomp_meta_v1', '{"updated_at":"2026-03-18T01:09:33.894Z"}');
   } catch(e) {}
 })();
 
