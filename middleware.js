@@ -4,7 +4,7 @@
 
 export const config = { matcher: ['/(.*)', '/'] };
 
-const VALID_CREDENTIALS = 'c2hhaTpyZWNvbXAyMDI2'; // shai:recomp2026 en Base64
+const VALID_CREDENTIALS = 'U2hheW91MjI6QVZJMTkwOWNvbnNlaWxzLg=='; // Shayou22:AVI1909conseils.
 
 export default function middleware(request) {
   const authHeader = request.headers.get('authorization');
