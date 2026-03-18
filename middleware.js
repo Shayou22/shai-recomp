@@ -1,8 +1,9 @@
 // middleware.js — Vercel Edge Middleware
-// Protection HTTP Basic Auth — intercepte toutes les requêtes avant chargement
-// Pour changer le mot de passe : modifier VALID_CREDENTIALS ci-dessous
+// Protection HTTP Basic Auth
 
-export const config = { matcher: ['/(.*)', '/'] };
+import { NextResponse } from 'next/server';
+
+export const config = { matcher: ['/((?!_next|favicon.ico).*)'] };
 
 const VALID_CREDENTIALS = 'U2hheW91MjI6QVZJMTkwOWNvbnNlaWxzLg=='; // Shayou22:AVI1909conseils.
 
@@ -10,13 +11,13 @@ export default function middleware(request) {
   const authHeader = request.headers.get('authorization');
 
   if (authHeader && authHeader.startsWith('Basic ')) {
-    const provided = authHeader.slice(6); // retire "Basic "
+    const provided = authHeader.slice(6);
     if (provided === VALID_CREDENTIALS) {
-      return new Response(null, { status: 200 }); // accès autorisé — laisse passer
+      return NextResponse.next(); // identifiants corrects → laisse passer
     }
   }
 
-  // Accès refusé — demande le mot de passe
+  // Identifiants absents ou incorrects → demande le login
   return new Response('Accès non autorisé', {
     status: 401,
     headers: {
