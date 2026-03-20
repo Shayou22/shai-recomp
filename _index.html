@@ -479,6 +479,10 @@ td.center { text-align: center; }
 /* ── PROG TABLE ── */
 .prog-table tr.current td { background: rgba(46,134,193,.1); font-weight: 600; }
 .prog-table tr.objective td { background: rgba(26,122,74,.1); font-weight: 600; color: var(--green); }
+.prog-table tbody tr[data-week] { cursor: pointer; transition: background .15s; }
+.prog-table tbody tr[data-week]:hover td { background: rgba(46,134,193,.06); }
+.prog-table tbody tr.active-week td { background: rgba(46,134,193,.14) !important; }
+.prog-table tbody tr.active-week td:first-child { font-weight: 700; color: var(--blue-light); }
 
 /* ── MEAL BLOCK ── */
 .meal-block {
@@ -2126,6 +2130,164 @@ input[type="date"].jdate-input {
 }
 
 /* ═══════════════════════════════════════════════════
+   SECTION 8 — DASHBOARD HEBDOMADAIRE
+═══════════════════════════════════════════════════ */
+.s8-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.s8-week-label {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  min-width: 180px;
+}
+.s8-week-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--mid-gray);
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-body);
+}
+
+/* KPI strip */
+.s8-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.s8-kpi {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.s8-kpi.good  { border-top: 3px solid var(--green-light); }
+.s8-kpi.warn  { border-top: 3px solid var(--gold); }
+.s8-kpi.bad   { border-top: 3px solid var(--red); }
+.s8-kpi.info  { border-top: 3px solid var(--blue-light); }
+.s8-kpi__lbl  { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--mid-gray); margin-bottom: 4px; }
+.s8-kpi__val  { font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--navy); line-height: 1.1; }
+.s8-kpi__val .s8-unit { font-size: 11px; color: var(--mid-gray); font-weight: 400; }
+.s8-kpi__trend { font-size: 12px; margin-top: 3px; color: var(--text-light); }
+
+/* Day grid */
+.s8-day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.s8-day-card {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 11px;
+  min-width: 0;
+}
+.s8-day-card.today   { border-color: var(--blue-light); background: rgba(46,134,193,.04); }
+.s8-day-card.good    { border-top: 2px solid var(--green-light); }
+.s8-day-card.warn    { border-top: 2px solid var(--gold); }
+.s8-day-card.bad     { border-top: 2px solid var(--red); }
+.s8-day-card.empty   { opacity: .55; }
+.s8-day__name        { font-weight: 700; color: var(--navy); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.s8-day__date        { font-family: var(--font-mono); font-size: 10px; color: var(--mid-gray); margin-bottom: 6px; }
+.s8-day__pill        { display: inline-block; width: 22px; height: 22px; border-radius: 50%; margin: 2px auto; font-size: 11px; line-height: 22px; }
+.s8-day__pill.done   { background: var(--green-light); color: var(--white); }
+.s8-day__pill.none   { background: var(--warm-gray); color: var(--mid-gray); }
+.s8-day__val         { font-family: var(--font-mono); font-size: 10px; color: var(--navy); display: block; margin-top: 1px; }
+.s8-day__sub         { font-size: 9px; color: var(--mid-gray); display: block; }
+
+/* Summary alert */
+.s8-summary-block {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.s8-summary-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+/* Renpho entry form */
+.renpho-entry-form {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.renpho-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.renpho-field { display: flex; flex-direction: column; gap: 3px; }
+.renpho-field label { font-size: 10px; font-weight: 600; color: var(--mid-gray); text-transform: uppercase; letter-spacing: .5px; }
+.renpho-input {
+  background: var(--cream);
+  border: 1.5px solid var(--warm-gray);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 15px;
+  font-family: var(--font-mono);
+  color: var(--navy);
+  text-align: center;
+  width: 100%;
+  outline: none;
+  -webkit-appearance: none;
+}
+.renpho-input:focus { border-color: var(--blue-light); background: var(--white); }
+
+/* History accordion */
+.s8-history-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-light);
+  border-top: 1px solid var(--warm-gray);
+  margin-top: 8px;
+  touch-action: manipulation;
+}
+.s8-history-content { display: none; }
+.s8-history-content.open { display: block; }
+
+@media (max-width: 900px) {
+  .s8-kpi-strip { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .s8-kpi__val  { font-size: 17px; }
+  .s8-day-grid  { gap: 4px; }
+  .s8-day-card  { padding: 6px 2px; }
+  .renpho-entry-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 430px) {
+  .s8-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .s8-day__name { font-size: 9px; }
+  .s8-day__val  { font-size: 9px; }
+}
+
+/* ═══════════════════════════════════════════════════
    DASHBOARD ANALYSE & TENDANCES
 ═══════════════════════════════════════════════════ */
 .dash-kpi-grid {
@@ -3202,229 +3364,142 @@ input[type="date"].jdate-input {
         <div class="section-title">SUIVI PHYSIOLOGIQUE</div>
       </div>
 
-      <div class="update-banner">
-        📅 Cette section est mise à jour chaque lundi matin avec les nouvelles données Renpho + Whoop
+      <!-- ══ NAVIGATION SEMAINE ══ -->
+      <div class="s8-week-nav">
+        <button class="jbtn-sm" id="s8-prev-week">&#8592;</button>
+        <div class="s8-week-label-wrap">
+          <div class="s8-week-label" id="s8-week-label">Semaine en cours</div>
+          <div class="s8-week-sub" id="s8-week-sub"></div>
+        </div>
+        <button class="jbtn-sm" id="s8-this-week">Auj.</button>
+        <button class="jbtn-sm" id="s8-next-week">&#8594;</button>
       </div>
 
-      <!-- S0 -->
-      <div class="week-check">
-        <div class="week-check-header">
-          <div class="week-check-title">SEMAINE 0 — BASELINE</div>
-          <div class="week-check-date">1 mars 2026</div>
-        </div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Indicateur</th><th>Valeur</th><th>Contexte</th></tr></thead>
-          <tbody>
-            <tr><td>Poids</td><td class="num"><strong>76.4 kg</strong></td><td>Référence programme</td></tr>
-            <tr><td>Body Fat %</td><td class="num">16.5 %</td><td>Objectif : 9–10 %</td></tr>
-            <tr><td>Masse musculaire</td><td class="num">60.6 kg</td><td>À préserver</td></tr>
-            <tr class="orange-row"><td>LBM</td><td class="num"><strong>63.8 kg</strong></td><td>Plancher initial</td></tr>
-            <tr><td>Masse grasse</td><td class="num">12.6 kg</td><td>À réduire −5.5 kg</td></tr>
-            <tr><td>Graisse viscérale</td><td class="num">9</td><td>Objectif : 5–6</td></tr>
-            <tr><td>BMR</td><td class="num">1 747 kcal</td><td>—</td></tr>
-          </tbody>
-        </table></div>
-        <p style="font-size:13.5px;color:var(--mid-gray);font-style:italic">Whoop non disponible en S0 — baseline établie à partir de S1.</p>
+      <!-- ══ KPI STRIP ══ -->
+      <div class="s8-kpi-strip" id="s8-kpi-strip">
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Kcal moy.</div><div class="s8-kpi__val" id="s8k-kcal">—</div><div class="s8-kpi__trend" id="s8k-kcal-t"></div></div>
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Prot. moy.</div><div class="s8-kpi__val" id="s8k-prot">—</div><div class="s8-kpi__trend" id="s8k-prot-t"></div></div>
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Jours tracés</div><div class="s8-kpi__val" id="s8k-logged">—</div><div class="s8-kpi__trend" id="s8k-logged-t"></div></div>
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Séances</div><div class="s8-kpi__val" id="s8k-sessions">—</div><div class="s8-kpi__trend" id="s8k-sessions-t"></div></div>
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Recovery</div><div class="s8-kpi__val" id="s8k-rec">—</div><div class="s8-kpi__trend" id="s8k-rec-t"></div></div>
+        <div class="s8-kpi info"><div class="s8-kpi__lbl">Sommeil</div><div class="s8-kpi__val" id="s8k-sleep">—</div><div class="s8-kpi__trend" id="s8k-sleep-t"></div></div>
       </div>
 
-      <!-- S1 -->
-      <div class="week-check">
-        <div class="week-check-header">
-          <div class="week-check-title">SEMAINE 1 — ACTIVATION</div>
-          <div class="week-check-date">9 mars 2026</div>
+      <!-- ══ RENPHO SAISIE ══ -->
+      <div class="renpho-entry-form">
+        <div class="renpho-entry-form__title">📱 Renpho — semaine sélectionnée</div>
+        <div class="renpho-entry-grid">
+          <div class="renpho-field"><label>Poids (kg)</label><input class="renpho-input" id="renpho-weight" type="number" step="0.05" min="50" max="150" placeholder="—" inputmode="decimal"></div>
+          <div class="renpho-field"><label>BF %</label><input class="renpho-input" id="renpho-bf" type="number" step="0.1" min="5" max="40" placeholder="—" inputmode="decimal"></div>
+          <div class="renpho-field"><label>Masse musc. (kg)</label><input class="renpho-input" id="renpho-muscle" type="number" step="0.1" min="30" max="100" placeholder="—" inputmode="decimal"></div>
+          <div class="renpho-field"><label>LBM (kg)</label><input class="renpho-input" id="renpho-lbm" type="number" step="0.1" min="50" max="110" placeholder="—" inputmode="decimal"></div>
+          <div class="renpho-field"><label>Gr. viscérale</label><input class="renpho-input" id="renpho-visceral" type="number" step="1" min="1" max="20" placeholder="—" inputmode="numeric"></div>
+          <div class="renpho-field"><label>BMR (kcal)</label><input class="renpho-input" id="renpho-bmr" type="number" step="1" min="1200" max="3000" placeholder="—" inputmode="numeric"></div>
         </div>
-        <div class="cards cards-2">
-          <div>
-            <div class="subsection-title" style="margin-bottom:16px">Renpho S1</div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>Indicateur</th><th>S0</th><th>S1</th><th>Évolution</th></tr></thead>
-              <tbody>
-                <tr><td>Poids</td><td class="num">76.4</td><td class="num"><strong>77.35</strong></td><td><span class="badge badge-gold">+0.95 kg ⚠</span></td></tr>
-                <tr><td>BF %</td><td class="num">16.5</td><td class="num">16.8</td><td>+0.3%</td></tr>
-                <tr class="green-row"><td>Masse musc.</td><td class="num">60.6</td><td class="num"><strong>61.1</strong></td><td><span class="badge badge-green">+0.5 kg ✅</span></td></tr>
-                <tr class="green-row"><td>LBM</td><td class="num">63.8</td><td class="num"><strong>64.4</strong></td><td><span class="badge badge-green">+0.6 kg ✅</span></td></tr>
-                <tr><td>Masse grasse</td><td class="num">12.6</td><td class="num">13.0</td><td>+0.4 kg</td></tr>
-                <tr><td>Gr. viscérale</td><td class="num">9</td><td class="num">10</td><td><span class="badge badge-gold">+1 ⚠</span></td></tr>
-                <tr><td>BMR</td><td class="num">1 747</td><td class="num">1 759</td><td>+12 kcal</td></tr>
-              </tbody>
-            </table></div>
-          </div>
-          <div>
-            <div class="subsection-title" style="margin-bottom:16px">Whoop S1 & Strain</div>
-            <div class="tbl-wrap"><table>
-              <thead><tr><th>Indicateur</th><th>Valeur</th></tr></thead>
-              <tbody>
-                <tr><td>HRV moyen</td><td class="num">~38 ms</td></tr>
-                <tr><td>RHR moyen</td><td class="num">~68 bpm</td></tr>
-                <tr class="green-row"><td>Strain moy. entraînement</td><td class="num"><strong>11.4</strong> ✅</td></tr>
-                <tr><td>Lun 9/03</td><td class="num">12.5</td></tr>
-                <tr><td>Mar 10/03</td><td class="num">11.6</td></tr>
-                <tr><td>Mer 11/03</td><td class="num">12.6</td></tr>
-                <tr><td>Jeu 12/03</td><td class="num">11.1</td></tr>
-                <tr><td>Ven 13/03</td><td class="num">9.4</td></tr>
-              </tbody>
-            </table></div>
-          </div>
-        </div>
-        <div class="alert alert-gold"><strong>Note S1</strong> Le +0.95 kg = rétention eau (excès famille week-end). Confirmation : masse musculaire +0.5 kg → pas de stockage graisseux réel. LBM plancher recalibré à 64.4 kg.</div>
-        <div class="subsection-title" style="margin-top:24px;margin-bottom:16px">Log Séances S1</div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Jour</th><th>Séance</th><th>Ressenti</th><th>Exercice repère</th><th>Charge</th></tr></thead>
-          <tbody>
-            <tr><td>Lundi</td><td>Pectoraux</td><td class="center"><span class="badge badge-green">7–8/10</span></td><td>Dev. couché haltères</td><td class="num">50 kg total</td></tr>
-            <tr><td>Mardi</td><td>Dos</td><td class="center"><span class="badge badge-green">7–8/10</span></td><td>Tractions</td><td class="num">8+ reps</td></tr>
-            <tr><td>Mercredi</td><td>Épaules + Trapèzes</td><td class="center"><span class="badge badge-green">7–8/10</span></td><td>Dev. militaire barre</td><td class="num">40 kg</td></tr>
-            <tr><td>Jeudi</td><td>Biceps + Triceps</td><td class="center"><span class="badge badge-green">7–8/10</span></td><td>Curl barre EZ</td><td class="num">30 kg</td></tr>
-            <tr><td>Vendredi</td><td>Jambes (midi)</td><td class="center"><span class="badge badge-gold">5–6/10</span></td><td>Squat barre</td><td class="num">50 kg</td></tr>
-          </tbody>
-        </table></div>
+        <button class="jbtn" id="s8-save-renpho" style="width:100%;margin-top:4px;">💾 Enregistrer les données Renpho</button>
+        <div id="s8-renpho-saved" style="display:none;text-align:center;padding:6px;font-size:13px;color:var(--green);font-weight:600;margin-top:6px;">✅ Enregistré</div>
       </div>
 
-      <!-- S2 Lundi — Pectoraux -->
-      <div class="week-check">
-        <div class="week-check-header">
-          <div class="week-check-title">SÉANCE PECTORAUX — S2 Lundi</div>
-          <div class="week-check-date">16 mars 2026</div>
+      <!-- ══ GRILLE 7 JOURS ══ -->
+      <div class="s8-summary-block">
+        <div class="s8-summary-title">Détail jour par jour</div>
+        <div class="s8-day-grid" id="s8-day-grid"></div>
+        <div class="s8-legend">
+          <span><span class="s8-legend-dot" style="background:var(--green-light)"></span>Dans la cible</span>
+          <span><span class="s8-legend-dot" style="background:var(--gold)"></span>Écart léger</span>
+          <span><span class="s8-legend-dot" style="background:var(--red)"></span>Hors cible</span>
+          <span><span class="s8-legend-dot" style="background:var(--warm-gray)"></span>Non tracé</span>
         </div>
-        <div class="alert alert-blue">
-          <strong>Statut : Prévue</strong>
-          Séance réalisée le lundi 16 mars. Statut à confirmer comme "Faite" dans le journal.
-        </div>
-        <div class="cards cards-3" style="margin-bottom:16px;">
-          <div class="card blue"><div class="card-label">Volume total</div><div class="card-value">9 252</div><div class="card-sub">kg</div></div>
-          <div class="card"><div class="card-label">Séries</div><div class="card-value">18</div><div class="card-sub">séries muscu</div></div>
-          <div class="card"><div class="card-label">Exercices</div><div class="card-value">6</div><div class="card-sub">exercices</div></div>
-        </div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Exercice</th><th>Poids</th><th>Reps</th><th>Séries</th><th>Volume</th></tr></thead>
-          <tbody>
-            <tr><td>Développé couché haltère</td><td class="num">50 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 800 kg</td></tr>
-            <tr><td>Développé incliné barre assisté</td><td class="num">50 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 800 kg</td></tr>
-            <tr><td>Écarté haltère</td><td class="num">30 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 080 kg</td></tr>
-            <tr class="highlight-row"><td>Dips (lest poids corps 77kg)</td><td class="num">77 kg</td><td class="num">12</td><td class="num">3</td><td class="num">2 772 kg</td></tr>
-            <tr><td>Superman câbles assistés</td><td class="num">30 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 080 kg</td></tr>
-            <tr><td>Low Cable Crossover</td><td class="num">20 kg</td><td class="num">12</td><td class="num">3</td><td class="num">720 kg</td></tr>
-          </tbody>
-        </table></div>
       </div>
 
-            <!-- S2 Mardi — Dos -->
-      <div class="week-check">
-        <div class="week-check-header">
-          <div class="week-check-title">SÉANCE DOS — S2 Mardi</div>
-          <div class="week-check-date">17 mars 2026</div>
+      <!-- ══ RÉSUMÉ AUTOMATIQUE ══ -->
+      <div id="s8-auto-summary"></div>
+
+      <!-- ══ ARCHIVE (accordéon) ══ -->
+      <div class="s8-history-toggle" id="s8-history-toggle">
+        <span id="s8-history-arrow">▶</span>&nbsp; Archive initiale du programme (S0–S2)
+      </div>
+      <div class="s8-history-content" id="s8-history-content">
+        <div class="update-banner" style="margin-top:16px;">📅 Données S0, S1 et S2 saisies manuellement depuis Renpho</div>
+
+        <!-- S0 -->
+        <div class="week-check">
+          <div class="week-check-header">
+            <div class="week-check-title">SEMAINE 0 — BASELINE</div>
+            <div class="week-check-date">1 mars 2026</div>
+          </div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Indicateur</th><th>Valeur</th><th>Contexte</th></tr></thead>
+            <tbody>
+              <tr><td>Poids</td><td class="num"><strong>76.4 kg</strong></td><td>Référence programme</td></tr>
+              <tr><td>Body Fat %</td><td class="num">16.5 %</td><td>Objectif : 9–10 %</td></tr>
+              <tr><td>Masse musculaire</td><td class="num">60.6 kg</td><td>À préserver</td></tr>
+              <tr class="orange-row"><td>LBM</td><td class="num"><strong>63.8 kg</strong></td><td>Plancher initial</td></tr>
+              <tr><td>Masse grasse</td><td class="num">12.6 kg</td><td>À réduire −5.5 kg</td></tr>
+              <tr><td>Graisse viscérale</td><td class="num">9</td><td>Objectif : 5–6</td></tr>
+              <tr><td>BMR</td><td class="num">1 747 kcal</td><td>—</td></tr>
+            </tbody>
+          </table></div>
+          <p style="font-size:13.5px;color:var(--mid-gray);font-style:italic">Whoop non disponible en S0 — baseline établie à partir de S1.</p>
         </div>
 
-        <!-- Recap cards -->
-        <div class="cards cards-3" style="margin-bottom:16px;">
-          <div class="card blue">
-            <div class="card-label">Volume total</div>
-            <div class="card-value">7 002</div>
-            <div class="card-sub">kg</div>
+        <!-- S1 -->
+        <div class="week-check">
+          <div class="week-check-header">
+            <div class="week-check-title">SEMAINE 1 — ACTIVATION</div>
+            <div class="week-check-date">9 mars 2026</div>
           </div>
-          <div class="card">
-            <div class="card-label">Séries</div>
-            <div class="card-value">18</div>
-            <div class="card-sub">séries muscu</div>
+          <div class="cards cards-2">
+            <div>
+              <div class="subsection-title" style="margin-bottom:16px">Renpho S1</div>
+              <div class="tbl-wrap"><table>
+                <thead><tr><th>Indicateur</th><th>S0</th><th>S1</th><th>Évolution</th></tr></thead>
+                <tbody>
+                  <tr><td>Poids</td><td class="num">76.4</td><td class="num"><strong>77.35</strong></td><td><span class="badge badge-gold">+0.95 kg ⚠</span></td></tr>
+                  <tr><td>BF %</td><td class="num">16.5</td><td class="num">16.8</td><td>+0.3%</td></tr>
+                  <tr class="green-row"><td>Masse musc.</td><td class="num">60.6</td><td class="num"><strong>61.1</strong></td><td><span class="badge badge-green">+0.5 kg ✅</span></td></tr>
+                  <tr class="green-row"><td>LBM</td><td class="num">63.8</td><td class="num"><strong>64.4</strong></td><td><span class="badge badge-green">+0.6 kg ✅</span></td></tr>
+                  <tr><td>Masse grasse</td><td class="num">12.6</td><td class="num">13.0</td><td>+0.4 kg</td></tr>
+                  <tr><td>Gr. viscérale</td><td class="num">9</td><td class="num">10</td><td><span class="badge badge-gold">+1 ⚠</span></td></tr>
+                  <tr><td>BMR</td><td class="num">1 747</td><td class="num">1 759</td><td>+12 kcal</td></tr>
+                </tbody>
+              </table></div>
+            </div>
+            <div>
+              <div class="subsection-title" style="margin-bottom:16px">Whoop S1 & Strain</div>
+              <div class="tbl-wrap"><table>
+                <thead><tr><th>Indicateur</th><th>Valeur</th></tr></thead>
+                <tbody>
+                  <tr><td>HRV moyen</td><td class="num">~38 ms</td></tr>
+                  <tr><td>RHR moyen</td><td class="num">~68 bpm</td></tr>
+                  <tr class="green-row"><td>Strain moy. training</td><td class="num"><strong>11.4</strong> ✅</td></tr>
+                  <tr><td>Recovery moy.</td><td class="num">—</td></tr>
+                  <tr><td>Sommeil moy.</td><td class="num">—</td></tr>
+                </tbody>
+              </table></div>
+            </div>
           </div>
-          <div class="card">
-            <div class="card-label">Reps</div>
-            <div class="card-value">210</div>
-            <div class="card-sub">reps totales</div>
-          </div>
-          <div class="card">
-            <div class="card-label">Cardio</div>
-            <div class="card-value">15 min</div>
-            <div class="card-sub">Tapis incl. 6%</div>
-          </div>
-          <div class="card">
-            <div class="card-label">Abdos</div>
-            <div class="card-value">152</div>
-            <div class="card-sub">reps / 10 séries</div>
-          </div>
-          <div class="card gold">
-            <div class="card-label">Strain Whoop</div>
-            <div class="card-value">16.9</div>
-            <div class="card-sub">haltéro 11.8 + tapis 5.1</div>
-          </div>
+          <div class="alert alert-gold"><strong>Note S1</strong> Le +0.95 kg = rétention eau (excès famille week-end). Confirmation : masse musculaire +0.5 kg → pas de stockage graisseux réel. LBM plancher recalibré à 64.4 kg.</div>
         </div>
 
-        <!-- Exercices -->
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Exercice</th><th>Poids</th><th>Reps</th><th>Séries</th><th>Volume</th></tr></thead>
-          <tbody>
-            <tr class="highlight-row"><td>Tractions (+ 7kg lest)</td><td class="num">7 kg lest</td><td class="num">12</td><td class="num">3</td><td class="num">252 kg</td></tr>
-            <tr><td>Soulevé de terre</td><td class="num">80 kg</td><td class="num">12</td><td class="num">3</td><td class="num">2 880 kg</td></tr>
-            <tr><td>Tirage poulie haute</td><td class="num">17.5 kg</td><td class="num">12</td><td class="num">3</td><td class="num">630 kg</td></tr>
-            <tr><td>Rowing haltère unilatéral</td><td class="num">30 kg</td><td class="num">10</td><td class="num">3</td><td class="num">900 kg</td></tr>
-            <tr><td>Rowing haltère unilatéral</td><td class="num">30 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 080 kg</td></tr>
-            <tr class="highlight-row"><td>Rowing à la barre en T</td><td class="num">35 kg</td><td class="num">12</td><td class="num">3</td><td class="num">1 260 kg</td></tr>
-          </tbody>
-        </table></div>
 
-        <!-- Whoop & Ressenti -->
-        <div class="subsection-title" style="margin-top:20px;margin-bottom:14px;">Données Whoop & Ressenti</div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Indicateur</th><th>Valeur</th><th>Lecture</th></tr></thead>
-          <tbody>
-            <tr class="green-row"><td>Strain total</td><td class="num"><strong>16.9</strong></td><td>Élevé ✅ — haltéro 11.8 + tapis 5.1</td></tr>
-            <tr><td>Recovery</td><td class="num">67%</td><td>Zone jaune — stable</td></tr>
-            <tr class="orange-row"><td>Sommeil</td><td class="num"><strong>5.6h</strong></td><td>⚠ Insuffisant — point critique persistant</td></tr>
-            <tr><td>Ressenti</td><td class="num">8/10</td><td>Très bon malgré la fatigue</td></tr>
-            <tr><td>Énergie</td><td class="num">7/10</td><td>Bon</td></tr>
-            <tr class="orange-row"><td>Difficulté</td><td class="num"><strong>9/10</strong></td><td>Séance très intense — proche du maximum</td></tr>
-          </tbody>
-        </table></div>
 
-        <!-- Nutrition -->
-        <div class="subsection-title" style="margin-top:20px;margin-bottom:14px;">Nutrition S2 — 17 mars (journée complète)</div>
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Repas / Aliment</th><th>Kcal</th><th>Prot</th><th>Glucides</th><th>Lipides</th></tr></thead>
-          <tbody>
-            <tr><td>🌅 Petit-déjeuner — 2× Clémentine + Café noir</td><td class="num">66</td><td class="num">1.3g</td><td class="num">16.8g</td><td class="num">0.3g</td></tr>
-            <tr><td>🍽 Déjeuner — Pâtes complètes 200g + Saumon fumé</td><td class="num">423</td><td class="num">28.6g</td><td class="num">46g</td><td class="num">14.8g</td></tr>
-            <tr><td>🥜 Collation — Yaourt grec 150g + Flocons 42g</td><td class="num">244</td><td class="num">20.5g</td><td class="num">31.4g</td><td class="num">3.5g</td></tr>
-            <tr><td>🌙 Dîner — Haricots verts 177g + 3 Œufs</td><td class="num">334</td><td class="num">26.6g</td><td class="num">14.4g</td><td class="num">20g</td></tr>
-            <tr class="highlight-row"><td>💊 Suppléments — Pre-WO + 2× Whey + Oméga</td><td class="num">265</td><td class="num">48g</td><td class="num">8g</td><td class="num">3g</td></tr>
-            <tr class="total-row"><td>Total journée</td><td class="num">1 332</td><td class="num">125g</td><td class="num">117g</td><td class="num">42g</td></tr>
-            <tr class="orange-row"><td>Cible training</td><td class="num">2 150</td><td class="num">150g</td><td class="num">218g</td><td class="num">75g</td></tr>
-            <tr class="warn-row"><td>Écarts</td><td class="num">-818</td><td class="num">-25g</td><td class="num">-101g</td><td class="num">-33g</td></tr>
-          </tbody>
-        </table></div>
-      </div>
-
-            <!-- S2 -->
-      
-
-      <!-- Tableau Global -->
-      <!-- S3 -->
-      
-
-            <div class="subsection">
-        <div class="subsection-title">Tableau Global de Progression — 16 Semaines</div>
-        <div class="tbl-wrap"><table class="prog-table">
-          <thead><tr><th>Sem.</th><th>Date</th><th>Poids</th><th>Masse musc.</th><th>BF%</th><th>HRV</th><th>RHR</th><th>Recovery</th><th>Sleep</th></tr></thead>
-          <tbody>
-            <tr><td>S0</td><td>01/03</td><td class="num">76.4</td><td class="num">60.6 kg</td><td class="num">16.5%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S1</td><td>09/03</td><td class="num">77.35</td><td class="num">61.1 kg</td><td class="num">16.8%</td><td class="num">~38</td><td class="num">~68</td><td>—</td><td>—</td></tr>
-            <tr class="current"><td><strong>S2 ←</strong></td><td>16/03</td><td class="num"><strong>77.85</strong></td><td class="num"><strong>61.4 kg</strong></td><td class="num">16.9%</td><td class="num">39</td><td class="num">67</td><td class="num">69%</td><td class="num">77%</td></tr>
-            <tr><td>S3</td><td>23/03</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-            <tr><td>S4</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S5</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S6</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S7</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S8</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S9</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S10</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S11</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S12</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S13</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S14</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>S15</td><td></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr class="objective"><td><strong>S16</strong></td><td>Objectif</td><td class="num"><strong>70–71</strong></td><td class="num"><strong>≥ 64.0</strong></td><td class="num"><strong>9–10%</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-          </tbody>
-        </table></div>
-      </div>
+        <!-- Tableau Global -->
+        <div class="subsection" style="margin-top:24px;">
+          <div class="subsection-title">Tableau Global de Progression — 16 Semaines</div>
+          <div class="tbl-wrap"><table class="prog-table">
+            <thead><tr><th>Sem.</th><th>Date</th><th>Poids</th><th>Masse musc.</th><th>BF%</th><th>HRV</th><th>RHR</th><th>Recovery</th><th>Sleep</th></tr></thead>
+            <tbody>
+              <tr data-week="S0"><td>S0</td><td>01/03</td><td class="num">76.4</td><td class="num">60.6 kg</td><td class="num">16.5%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-week="S1"><td>S1</td><td>09/03</td><td class="num">77.35</td><td class="num">61.1 kg</td><td class="num">16.8%</td><td class="num">~38</td><td class="num">~68</td><td>—</td><td>—</td></tr>
+              <tr class="current" data-week="S2"><td><strong>S2 ←</strong></td><td>16/03</td><td class="num"><strong>77.85</strong></td><td class="num"><strong>61.4 kg</strong></td><td class="num">16.9%</td><td class="num">39</td><td class="num">67</td><td class="num">69%</td><td class="num">77%</td></tr>
+              <tr data-week="S3"><td>S3</td><td>23/03</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td>S4–S16</td><td>…</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr class="objective"><td><strong>S16</strong></td><td>Objectif</td><td class="num"><strong>70–71</strong></td><td class="num"><strong>≥ 64.0</strong></td><td class="num"><strong>9–10%</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div><!-- /s8-history-content -->
     </div>
 
     <!-- ══════════════════════════════════════════ -->
@@ -5193,6 +5268,9 @@ function saveMealDay() {
     appData.meals[mealState.date] = mealState.data;
     saveAppData(appData);
     refreshDataStats();
+    /* Refresh S8 if visible */
+    var s8el = document.getElementById('s8');
+    if (s8el && s8el.classList.contains('active')) { try { renderS8Dashboard(); } catch(e2) {} }
   } catch(e) {}
 }
 
@@ -5861,6 +5939,9 @@ function saveTrainingDay() {
     appData.training[trState.date] = trState.data;
     saveAppData(appData);
     refreshDataStats();
+    /* Refresh S8 if visible */
+    var s8el2 = document.getElementById('s8');
+    if (s8el2 && s8el2.classList.contains('active')) { try { renderS8Dashboard(); } catch(e2) {} }
   } catch(e) {}
 }
 
@@ -6125,6 +6206,7 @@ function showSection(id, el) {
   if (id === 's14') loadMealDay(mealState.date);
   if (id === 's15') loadTrainingDay(trState.date);
   if (id === 's16') { refreshDataStats(); renderDashboard(dashPeriod); }
+  if (id === 's8')  { try { renderS8Dashboard(); } catch(e) {} }
 }
 
 function showWeek(id, el) {
@@ -7399,6 +7481,315 @@ function copyPrevSessionOfType() {
 }
 
 /* ═══════════════════════════════════════════════════
+   SECTION 8 — DASHBOARD HEBDOMADAIRE DYNAMIQUE
+═══════════════════════════════════════════════════ */
+
+var RENPHO_KEY   = 'shai_recomp_renpho_v1';
+var PROG_START   = '2026-03-09'; /* S1 = lundi 9 mars */
+var s8WeekOffset = 0;
+
+/* ── helpers semaine ── */
+function getWeekMonday(offset) {
+  var t   = new Date();
+  var dow = t.getDay() || 7; /* 1=lun … 7=dim */
+  var mon = new Date(t);
+  mon.setDate(t.getDate() - (dow - 1) + offset * 7);
+  mon.setHours(0,0,0,0);
+  return mon;
+}
+
+function getWeekDays(offset) {
+  var mon  = getWeekMonday(offset);
+  var days = [];
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(mon);
+    d.setDate(mon.getDate() + i);
+    days.push(getDateKey(d));
+  }
+  return days;
+}
+
+function getWeekLabel(offset) {
+  var days    = getWeekDays(offset);
+  var MONTHS  = ['jan.','fév.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  var monDate = new Date(days[0] + 'T12:00:00');
+  var sunDate = new Date(days[6] + 'T12:00:00');
+  var label   = parseInt(days[0].split('-')[2]) + ' ' + MONTHS[monDate.getMonth()] +
+                ' \u2013 ' + parseInt(days[6].split('-')[2]) + ' ' + MONTHS[sunDate.getMonth()] +
+                ' ' + days[0].split('-')[0];
+  var progMon = new Date(PROG_START + 'T12:00:00');
+  var diffW   = Math.round((monDate - progMon) / (7 * 24 * 3600 * 1000));
+  var wNum    = diffW + 1;
+  var prefix  = (wNum >= 1 && wNum <= 16) ? 'S' + wNum + ' \u2014 ' : '';
+  return { label: prefix + label, num: wNum };
+}
+
+/* ── Renpho localStorage ── */
+function getRenphoData()              { return safeParse(localStorage.getItem(RENPHO_KEY), {}); }
+function saveRenphoEntry(wk, data)    {
+  var all = getRenphoData();
+  all[wk] = Object.assign(all[wk] || {}, data, { updatedAt: new Date().toISOString() });
+  localStorage.setItem(RENPHO_KEY, JSON.stringify(all));
+}
+
+/* ── Aggregate one day from S14+S15 ── */
+function getDayData(dateKey) {
+  var appData = loadAppData();
+  var mDay    = (appData.meals    || {})[dateKey] || null;
+  var tDay    = (appData.training || {})[dateKey] || null;
+  var r = {
+    dateKey: dateKey,
+    hasMeals: false, hasTraining: false,
+    kcal: 0, prot: 0, carb: 0, fat: 0,
+    sessionType: '', strain: 0, recovery: 0, sleep: 0,
+    feeling: 0, trainingDone: false
+  };
+
+  if (mDay && mDay.meals) {
+    var cats = ['breakfast','lunch','snack','dinner'];
+    for (var c = 0; c < cats.length; c++) {
+      var items = mDay.meals[cats[c]] || [];
+      if (items.length) r.hasMeals = true;
+      for (var j = 0; j < items.length; j++) {
+        r.kcal += parseFloat(items[j].calories) || 0;
+        r.prot += parseFloat(items[j].protein)  || 0;
+        r.carb += parseFloat(items[j].carbs)    || 0;
+        r.fat  += parseFloat(items[j].fat)      || 0;
+      }
+    }
+    var supps = mDay.supplements || [];
+    for (var si = 0; si < supps.length; si++) {
+      if (supps[si].includeInMacros && supps[si].taken) {
+        r.kcal += parseFloat(supps[si].calories) || 0;
+        r.prot += parseFloat(supps[si].protein)  || 0;
+        r.carb += parseFloat(supps[si].carbs)    || 0;
+        r.fat  += parseFloat(supps[si].fat)      || 0;
+      }
+    }
+    r.kcal = Math.round(r.kcal);
+    r.prot = Math.round(r.prot);
+    r.carb = Math.round(r.carb);
+    r.fat  = Math.round(r.fat);
+  }
+
+  if (tDay) {
+    r.sessionType  = tDay.sessionType || '';
+    r.strain       = parseFloat(tDay.strain)      || 0;
+    r.recovery     = parseFloat(tDay.recovery)    || 0;
+    r.sleep        = parseFloat(tDay.sleepHours)  || 0;
+    r.feeling      = parseFloat(tDay.feeling)     || 0;
+    r.trainingDone = tDay.status === 'faite' || tDay.status === 'partielle';
+    var exs = tDay.exercises || [];
+    for (var ei = 0; ei < exs.length; ei++) {
+      if ((parseFloat(exs[ei].weight)||0) > 0 || (parseInt(exs[ei].reps)||0) > 0) {
+        r.hasTraining = true; break;
+      }
+    }
+    if (!r.hasTraining && tDay.cardio && tDay.cardio.length) r.hasTraining = true;
+  }
+  return r;
+}
+
+/* ── KPI element helpers ── */
+function s8SetKpi(id, val, trend, cls) {
+  var el = document.getElementById(id);
+  var te = document.getElementById(id + '-t');
+  var pe = el && el.closest('.s8-kpi');
+  if (el)  el.innerHTML = val;
+  if (te)  te.textContent = trend;
+  if (pe) {
+    pe.className = 's8-kpi ' + cls;
+  }
+}
+
+/* ── Main render ── */
+function renderS8Dashboard() {
+  var weekDays  = getWeekDays(s8WeekOffset);
+  var weekInfo  = getWeekLabel(s8WeekOffset);
+  var renphoAll = getRenphoData();
+  var weekKey   = weekDays[0]; /* Monday as key */
+  var renpho    = renphoAll[weekKey] || {};
+  var today     = todayKey();
+
+  /* Labels */
+  var lblEl = document.getElementById('s8-week-label');
+  var subEl = document.getElementById('s8-week-sub');
+  if (lblEl) lblEl.textContent = weekInfo.label;
+  if (subEl) subEl.textContent = weekInfo.num >= 1 ? 'Semaine ' + weekInfo.num + ' du programme' : '';
+
+  /* Build day data array */
+  var days = weekDays.map(function(dk) { return getDayData(dk); });
+
+  var loggedDays  = days.filter(function(d) { return d.hasMeals; });
+  var trDays      = days.filter(function(d) { return d.hasTraining; });
+  var sleepDays   = days.filter(function(d) { return d.sleep > 0; });
+  var recDays     = trDays.filter(function(d) { return d.recovery > 0; });
+
+  var avgKcal   = loggedDays.length ? Math.round(loggedDays.reduce(function(s,d){return s+d.kcal;},0)/loggedDays.length) : null;
+  var avgProt   = loggedDays.length ? Math.round(loggedDays.reduce(function(s,d){return s+d.prot;},0)/loggedDays.length) : null;
+  var avgRec    = recDays.length    ? Math.round(recDays.reduce(function(s,d){return s+d.recovery;},0)/recDays.length)  : null;
+  var avgSleep  = sleepDays.length  ? Math.round(sleepDays.reduce(function(s,d){return s+d.sleep;},0)/sleepDays.length*10)/10 : null;
+
+  /* KPI: Kcal */
+  if (avgKcal !== null) {
+    var kCls = avgKcal > 2400 ? 'bad' : avgKcal < 1600 ? 'warn' : 'good';
+    s8SetKpi('s8k-kcal', avgKcal + '<span style="font-size:11px;color:var(--mid-gray)"> kcal</span>',
+      'cible ~2150', kCls);
+  } else {
+    s8SetKpi('s8k-kcal', '<span style="font-size:14px;color:var(--mid-gray)">—</span>', 'non tracé', 'info');
+  }
+
+  /* KPI: Prot */
+  if (avgProt !== null) {
+    var pCls = avgProt >= 140 ? 'good' : avgProt >= 110 ? 'warn' : 'bad';
+    s8SetKpi('s8k-prot', avgProt + '<span style="font-size:11px;color:var(--mid-gray)"> g</span>',
+      'cible 150g', pCls);
+  } else {
+    s8SetKpi('s8k-prot', '<span style="font-size:14px;color:var(--mid-gray)">—</span>', 'non tracé', 'info');
+  }
+
+  /* KPI: Jours tracés */
+  var logCls = loggedDays.length >= 5 ? 'good' : loggedDays.length >= 3 ? 'warn' : 'bad';
+  s8SetKpi('s8k-logged', loggedDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
+    loggedDays.length >= 5 ? 'excellent' : loggedDays.length >= 3 ? 'à améliorer' : 'insuffisant', logCls);
+
+  /* KPI: Séances */
+  var sCls = trDays.length >= 5 ? 'good' : trDays.length >= 3 ? 'warn' : (trDays.length > 0 ? 'warn' : 'bad');
+  s8SetKpi('s8k-sessions', trDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
+    trDays.length >= 5 ? 'programme respecté' : trDays.length >= 3 ? 'partiel' : 'insuffisant', sCls);
+
+  /* KPI: Recovery */
+  if (avgRec !== null) {
+    var rCls = avgRec >= 67 ? 'good' : avgRec >= 34 ? 'warn' : 'bad';
+    s8SetKpi('s8k-rec', avgRec + '<span style="font-size:11px;color:var(--mid-gray)"> %</span>',
+      avgRec >= 67 ? 'zone verte' : avgRec >= 34 ? 'zone jaune' : 'zone rouge', rCls);
+  } else {
+    s8SetKpi('s8k-rec', '<span style="font-size:14px;color:var(--mid-gray)">—</span>', 'non saisi', 'info');
+  }
+
+  /* KPI: Sommeil */
+  if (avgSleep !== null) {
+    var slCls = avgSleep >= 7 ? 'good' : avgSleep >= 6 ? 'warn' : 'bad';
+    s8SetKpi('s8k-sleep', avgSleep + '<span style="font-size:11px;color:var(--mid-gray)"> h</span>',
+      'cible 7h15+', slCls);
+  } else {
+    s8SetKpi('s8k-sleep', '<span style="font-size:14px;color:var(--mid-gray)">—</span>', 'non saisi', 'info');
+  }
+
+  /* ── Renpho form load ── */
+  var RENPHO_FIELDS = ['weight','bf','muscle','lbm','visceral','bmr'];
+  RENPHO_FIELDS.forEach(function(f) {
+    var el = document.getElementById('renpho-' + f);
+    if (el) el.value = (renpho[f] !== undefined && renpho[f] !== null) ? renpho[f] : '';
+  });
+
+  /* ── Day grid ── */
+  var gridEl   = document.getElementById('s8-day-grid');
+  var DAY_NAMES = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  if (gridEl) {
+    gridEl.innerHTML = '';
+    for (var i = 0; i < 7; i++) {
+      var d     = days[i];
+      var dk    = weekDays[i];
+      var isToday = dk === today;
+      var dayNum  = parseInt(dk.split('-')[2]);
+
+      /* card colour */
+      var cardCls = 'empty';
+      if (d.hasMeals || d.hasTraining) {
+        var tgt2  = DEFAULT_MACRO_TARGETS['training'];
+        var ratio = tgt2 && d.kcal > 0 ? d.kcal / tgt2.kcal : 0;
+        if (d.hasMeals && ratio > 1.1)       cardCls = 'bad';
+        else if (d.hasMeals && ratio >= 0.7)  cardCls = 'good';
+        else if (d.hasMeals)                  cardCls = 'warn';
+        else if (d.hasTraining)               cardCls = '';
+      }
+
+      var mealIcon = d.hasMeals
+        ? '<span class="s8-day__pill done" title="Repas tracé">🍽</span>'
+        : '<span class="s8-day__pill none">·</span>';
+      var trIcon = d.hasTraining
+        ? '<span class="s8-day__pill done" title="' + escapeHtml(d.sessionType || 'Séance') + '">💪</span>'
+        : '<span class="s8-day__pill none">·</span>';
+
+      var kcalLine   = d.kcal > 0   ? '<span class="s8-day__val">' + d.kcal  + '</span><span class="s8-day__sub">kcal</span>' : '';
+      var strainLine = d.strain > 0 ? '<span class="s8-day__val">' + d.strain + '</span><span class="s8-day__sub">strain</span>' : '';
+      var recLine    = d.recovery > 0 ? '<span class="s8-day__val">' + d.recovery + '%</span><span class="s8-day__sub">rec.</span>' : '';
+
+      var card = document.createElement('div');
+      card.className = 's8-day-card ' + cardCls + (isToday ? ' today' : '');
+      card.innerHTML =
+        '<div class="s8-day__name">'  + DAY_NAMES[i] + '</div>' +
+        '<div class="s8-day__date">'  + dayNum + '</div>' +
+        mealIcon + trIcon + kcalLine + strainLine + recLine;
+      gridEl.appendChild(card);
+    }
+  }
+
+  /* ── Auto summary ── */
+  renderS8AutoSummary(days, renpho);
+}
+
+function renderS8AutoSummary(days, renpho) {
+  var el = document.getElementById('s8-auto-summary');
+  if (!el) return;
+
+  var loggedDays = days.filter(function(d) { return d.hasMeals; });
+  var trDays     = days.filter(function(d) { return d.hasTraining; });
+  var sleepDays  = days.filter(function(d) { return d.sleep > 0; });
+
+  if (!loggedDays.length && !trDays.length) { el.innerHTML = ''; return; }
+
+  var alerts = [];
+
+  /* Protéines */
+  var lowProt = loggedDays.filter(function(d) { return d.prot > 0 && d.prot < 120; });
+  if (lowProt.length >= 2)
+    alerts.push({ t:'bad', i:'\u26a0\ufe0f', title:'Prot\u00e9ines insuffisantes',
+      text: lowProt.length + ' jour' + (lowProt.length>1?'s':'') + ' sous 120\u202fg. Risque de perte musculaire.' });
+
+  /* Recovery */
+  var lowRec = trDays.filter(function(d) { return d.recovery > 0 && d.recovery < 34; });
+  if (lowRec.length >= 2)
+    alerts.push({ t:'bad', i:'\ud83d\udd34', title:'Fatigue \u00e9lev\u00e9e',
+      text: lowRec.length + ' jour' + (lowRec.length>1?'s':'') + ' en zone rouge. R\u00e9duis l\u2019intensit\u00e9.' });
+
+  /* Sommeil */
+  var avgSleep = sleepDays.length ? sleepDays.reduce(function(s,d){return s+d.sleep;},0)/sleepDays.length : 0;
+  if (avgSleep > 0 && avgSleep < 6.5)
+    alerts.push({ t:'warn', i:'\ud83d\ude34', title:'Sommeil court',
+      text: 'Moyenne ' + Math.round(avgSleep*10)/10 + 'h. Objectif\u00a07h15+.' });
+
+  /* Calories basses */
+  var avgKcal = loggedDays.length ? loggedDays.reduce(function(s,d){return s+d.kcal;},0)/loggedDays.length : 0;
+  if (avgKcal > 0 && avgKcal < 1600)
+    alerts.push({ t:'warn', i:'\ud83d\udcc9', title:'Apport calorique faible',
+      text: 'Moyenne ' + Math.round(avgKcal) + '\u202fkcal \u2014 sous la cible 2\u202f150.' });
+
+  /* LBM */
+  if (renpho && renpho.lbm && parseFloat(renpho.lbm) < 64.4)
+    alerts.push({ t:'bad', i:'\ud83d\udea8', title:'LBM sous le plancher',
+      text: 'LBM mesur\u00e9e \u00e0 ' + renpho.lbm + '\u202fkg \u2014 sous 64.4\u202fkg. Augmente les calories imm\u00e9diatement.' });
+
+  /* Positif */
+  var goodDays = loggedDays.filter(function(d) { return d.prot >= 140 && d.kcal >= 1800 && d.kcal <= 2400; });
+  if (goodDays.length >= 4 && trDays.length >= 4)
+    alerts.push({ t:'good', i:'\u2705', title:'Semaine coh\u00e9rente',
+      text: goodDays.length + ' jours dans les cibles + ' + trDays.length + ' s\u00e9ances. Continue.' });
+
+  if (!alerts.length)
+    alerts.push({ t:'info', i:'\ud83d\udcca', title:'Donn\u00e9es en cours',
+      text: loggedDays.length + ' jour' + (loggedDays.length>1?'s':'') + ' aliment\u00e9' + (loggedDays.length>1?'s':'') + ', ' + trDays.length + ' s\u00e9ance' + (trDays.length>1?'s':'') + '.' });
+
+  el.innerHTML = alerts.map(function(a) {
+    return '<div class="dash-alert ' + a.t + '" style="margin-bottom:8px;">' +
+      '<div class="dash-alert__icon">' + a.i + '</div>' +
+      '<div class="dash-alert__text"><div class="dash-alert__title">' + a.title + '</div>' + a.text + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════ */
 function initApp() {
@@ -7693,6 +8084,77 @@ function initApp() {
   if (trTplOverlay) trTplOverlay.addEventListener('click', function(e) {
     if (e.target === trTplOverlay) closeTrTemplateModal();
   });
+
+  /* ── Section 8 — Dashboard hebdomadaire ── */
+  var s8PrevWeek = document.getElementById('s8-prev-week');
+  if (s8PrevWeek) s8PrevWeek.addEventListener('click', function() {
+    s8WeekOffset--; renderS8Dashboard();
+  });
+
+  var s8NextWeek = document.getElementById('s8-next-week');
+  if (s8NextWeek) s8NextWeek.addEventListener('click', function() {
+    s8WeekOffset++; renderS8Dashboard();
+  });
+
+  var s8ThisWeek = document.getElementById('s8-this-week');
+  if (s8ThisWeek) s8ThisWeek.addEventListener('click', function() {
+    s8WeekOffset = 0; renderS8Dashboard();
+  });
+
+  var s8SaveRenpho = document.getElementById('s8-save-renpho');
+  if (s8SaveRenpho) s8SaveRenpho.addEventListener('click', function() {
+    var weekKey = getWeekDays(s8WeekOffset)[0];
+    var data = {};
+    var fields = ['weight','bf','muscle','lbm','visceral','bmr'];
+    fields.forEach(function(f) {
+      var el = document.getElementById('renpho-' + f);
+      if (el && el.value !== '') data[f] = parseFloat(el.value);
+    });
+    saveRenphoEntry(weekKey, data);
+    renderS8Dashboard();
+    var savedEl = document.getElementById('s8-renpho-saved');
+    if (savedEl) {
+      savedEl.style.display = 'block';
+      setTimeout(function() { savedEl.style.display = 'none'; }, 2000);
+    }
+  });
+
+  var s8HistToggle = document.getElementById('s8-history-toggle');
+  var s8HistContent = document.getElementById('s8-history-content');
+  var s8HistArrow   = document.getElementById('s8-history-arrow');
+  if (s8HistToggle && s8HistContent) {
+    s8HistToggle.addEventListener('click', function() {
+      var open = s8HistContent.classList.toggle('open');
+      if (s8HistArrow) s8HistArrow.textContent = open ? '\u25bc' : '\u25b6';
+    });
+  }
+
+  /* ── Prog table rows → navigate dashboard ── */
+  /* S0 = offset -1 relative to PROG_START (S1=offset 0) */
+  var progRows = document.querySelectorAll('.prog-table tbody tr[data-week]');
+  for (var pri = 0; pri < progRows.length; pri++) {
+    (function(row) {
+      row.addEventListener('click', function() {
+        var wLabel = row.getAttribute('data-week'); /* "S0", "S1", "S2" … */
+        var wNum   = parseInt(wLabel.replace('S',''), 10); /* 0, 1, 2 … */
+        /* offset: S1 = 0, S2 = +1, S0 = -1 */
+        s8WeekOffset = wNum - 1;
+        /* Mark active row */
+        for (var k = 0; k < progRows.length; k++) progRows[k].classList.remove('active-week');
+        row.classList.add('active-week');
+        /* Open accordion if closed */
+        if (s8HistContent && !s8HistContent.classList.contains('open')) {
+          s8HistContent.classList.add('open');
+          if (s8HistArrow) s8HistArrow.textContent = '\u25bc';
+        }
+        /* Render dashboard */
+        renderS8Dashboard();
+        /* Scroll to dashboard top */
+        var dashTop = document.getElementById('s8-kpi-strip');
+        if (dashTop) dashTop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })(progRows[pri]);
+  }
 
   refreshDataStats();
 }
