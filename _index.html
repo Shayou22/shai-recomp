@@ -1383,6 +1383,7 @@ input[type="date"].jdate-input {
 }
 .food-save-custom-btn:hover { background: var(--green) !important; color: var(--white) !important; }
 .food-save-custom-btn:disabled { opacity: .6; cursor: default; }
+
 </style>
 </head>
 <body>
@@ -3381,14 +3382,20 @@ function buildUnifiedData() {
     var meals    = safeParse(localStorage.getItem(APP_KEYS.meals),    {});
     var training = safeParse(localStorage.getItem(APP_KEYS.training), {});
     var settings = safeParse(localStorage.getItem(APP_KEYS.settings), {});
+    var customs  = safeParse(localStorage.getItem(CUSTOM_FOODS_KEY),  {});
+    var recents  = safeParse(localStorage.getItem(RECENT_FOODS_KEY),  []);
+    var favs     = safeParse(localStorage.getItem(FAV_FOODS_KEY),     []);
     var meta     = getLocalMeta();
     return {
-      meals:      meals,
-      training:   training,
-      settings:   settings,
-      updated_at: meta.updated_at || new Date(0).toISOString()
+      meals:        meals,
+      training:     training,
+      settings:     settings,
+      custom_foods: customs,
+      recent_foods: recents,
+      fav_foods:    favs,
+      updated_at:   meta.updated_at || new Date(0).toISOString()
     };
-  } catch(e) { return { meals:{}, training:{}, settings:{}, updated_at: new Date(0).toISOString() }; }
+  } catch(e) { return { meals:{}, training:{}, settings:{}, custom_foods:{}, recent_foods:[], fav_foods:[], updated_at: new Date(0).toISOString() }; }
 }
 
 /* ── Apply unified data to localStorage ── */
@@ -3397,6 +3404,12 @@ function applyUnifiedData(data) {
     if (data.meals)    localStorage.setItem(APP_KEYS.meals,    JSON.stringify(data.meals));
     if (data.training) localStorage.setItem(APP_KEYS.training, JSON.stringify(data.training));
     if (data.settings) localStorage.setItem(APP_KEYS.settings, JSON.stringify(data.settings));
+    if (data.custom_foods && typeof data.custom_foods === 'object') {
+      localStorage.setItem(CUSTOM_FOODS_KEY, JSON.stringify(data.custom_foods));
+      loadCustomFoodsIntoDB();
+    }
+    if (Array.isArray(data.recent_foods)) localStorage.setItem(RECENT_FOODS_KEY, JSON.stringify(data.recent_foods));
+    if (Array.isArray(data.fav_foods))    localStorage.setItem(FAV_FOODS_KEY,    JSON.stringify(data.fav_foods));
     if (data.updated_at) setLocalMeta({ updated_at: data.updated_at });
   } catch(e) {}
 }
@@ -3420,7 +3433,15 @@ function syncFromSupabase(callback) {
           var localTs   = localMeta.updated_at || new Date(0).toISOString();
           /* Last-updated-wins */
           if (new Date(remoteTs) > new Date(localTs)) {
-            applyUnifiedData({ meals: remote.meals || {}, training: remote.training || {}, settings: remote.settings || {}, updated_at: remoteTs });
+            applyUnifiedData({
+              meals:        remote.meals        || {},
+              training:     remote.training     || {},
+              settings:     remote.settings     || {},
+              custom_foods: remote.custom_foods || {},
+              recent_foods: Array.isArray(remote.recent_foods) ? remote.recent_foods : [],
+              fav_foods:    Array.isArray(remote.fav_foods)    ? remote.fav_foods    : [],
+              updated_at:   remoteTs
+            });
           }
           if (callback) callback(true);
         } catch(e2) { if (callback) callback(false); }
@@ -3437,9 +3458,8 @@ function syncToSupabase() {
     var now  = new Date().toISOString();
     var data = buildUnifiedData();
     data.updated_at = now;
-    var payload = { meals: data.meals, training: data.training, settings: data.settings, updated_at: now };
     sb.from('user_data')
-      .upsert({ user_id: SUPABASE_USER_ID, data: payload, updated_at: now }, { onConflict: 'user_id' })
+      .upsert({ user_id: SUPABASE_USER_ID, data: data, updated_at: now }, { onConflict: 'user_id' })
       .then(function(res) {
         if (!res.error) setLocalMeta({ updated_at: now });
       })
