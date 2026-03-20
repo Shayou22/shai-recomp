@@ -1384,6 +1384,936 @@ input[type="date"].jdate-input {
 .food-save-custom-btn:hover { background: var(--green) !important; color: var(--white) !important; }
 .food-save-custom-btn:disabled { opacity: .6; cursor: default; }
 
+
+/* ═══════════════════════════════════════════════════════
+   JOURNAL ALIMENTAIRE — UX AMÉLIORÉE
+═══════════════════════════════════════════════════════ */
+
+/* ── 1. Résumé du jour ── */
+.day-summary {
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: var(--white);
+}
+.day-summary__calories {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin-bottom: 18px;
+  text-align: center;
+}
+.day-summary__cal-block { padding: 4px 8px; }
+.day-summary__cal-block:nth-child(2) {
+  border-left: 1px solid rgba(255,255,255,.12);
+  border-right: 1px solid rgba(255,255,255,.12);
+}
+.day-summary__cal-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 4px;
+}
+.day-summary__cal-val {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--white);
+}
+.day-summary__cal-val.ok    { color: #81c784; }
+.day-summary__cal-val.warn  { color: #ffb74d; }
+.day-summary__cal-val.over  { color: #e57373; }
+.day-summary__cal-unit { font-size: 12px; color: rgba(255,255,255,.4); }
+.day-summary__equation {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  letter-spacing: .5px;
+}
+.day-summary__macros { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.day-summary__macro {
+  background: rgba(255,255,255,.07);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.day-summary__macro-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 6px;
+}
+.day-summary__macro-bar-wrap {
+  height: 4px;
+  background: rgba(255,255,255,.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.day-summary__macro-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .4s ease;
+  background: var(--blue-light);
+}
+.day-summary__macro-bar.ok   { background: #81c784; }
+.day-summary__macro-bar.warn { background: #ffb74d; }
+.day-summary__macro-bar.over { background: #e57373; }
+.day-summary__macro-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+}
+.day-summary__macro-tgt { font-size: 10px; color: rgba(255,255,255,.35); }
+
+/* ── 2. Quick Add Modal ── */
+.quick-add-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,.75);
+  z-index: 400;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+}
+.quick-add-overlay.active { display: flex; }
+.quick-add-sheet {
+  background: var(--white);
+  border-radius: 18px 18px 0 0;
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp .22s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.quick-add-sheet__handle {
+  width: 36px; height: 4px;
+  background: var(--warm-gray);
+  border-radius: 2px;
+  margin: 10px auto 0;
+  flex-shrink: 0;
+}
+.quick-add-sheet__header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--warm-gray);
+  flex-shrink: 0;
+  gap: 10px;
+}
+.quick-add-sheet__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  flex: 1;
+}
+.quick-add-sheet__close {
+  background: none; border: none; cursor: pointer;
+  color: var(--mid-gray); font-size: 20px; line-height: 1;
+  padding: 4px 6px; border-radius: 6px;
+  touch-action: manipulation;
+}
+.quick-add-search-wrap {
+  padding: 12px 16px 8px;
+  flex-shrink: 0;
+}
+.quick-add-search {
+  width: 100%;
+  background: var(--cream);
+  border: 1.5px solid var(--warm-gray);
+  border-radius: 10px;
+  padding: 11px 14px 11px 38px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s;
+  -webkit-appearance: none;
+}
+.quick-add-search:focus { border-color: var(--blue-light); background: var(--white); }
+.quick-add-search-icon {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mid-gray);
+  pointer-events: none;
+}
+.quick-add-search-wrap { position: relative; }
+.quick-add-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--warm-gray);
+  flex-shrink: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.quick-add-tab {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mid-gray);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all .15s;
+  touch-action: manipulation;
+}
+.quick-add-tab.active {
+  color: var(--navy);
+  border-bottom-color: var(--blue-light);
+}
+.quick-add-results {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.quick-add-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,.04);
+  cursor: pointer;
+  gap: 10px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .12s;
+}
+.quick-add-item:hover, .quick-add-item:active { background: rgba(46,134,193,.07); }
+.quick-add-item__icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: rgba(46,134,193,.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.quick-add-item__name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--navy);
+  line-height: 1.3;
+}
+.quick-add-item__cat {
+  font-size: 10px;
+  color: var(--mid-gray);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-top: 2px;
+}
+.quick-add-item__fav {
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  touch-action: manipulation;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.quick-add-item__fav:hover { background: rgba(212,160,23,.15); }
+.quick-add-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--mid-gray);
+  font-size: 14px;
+}
+.quick-add-section-label {
+  padding: 10px 16px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mid-gray);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  background: rgba(0,0,0,.02);
+}
+
+/* Qty confirm step */
+.quick-add-confirm {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.quick-add-confirm.active { display: flex; }
+.quick-add-confirm__food {
+  padding: 16px;
+  border-bottom: 1px solid var(--warm-gray);
+  flex-shrink: 0;
+}
+.quick-add-confirm__food-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.quick-add-confirm__food-macro {
+  font-size: 12px;
+  color: var(--mid-gray);
+  font-family: var(--font-mono);
+}
+.quick-add-confirm__inputs {
+  padding: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.quick-add-confirm__qty-wrap { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.quick-add-confirm__qty-label { font-size: 11px; font-weight: 600; color: var(--mid-gray); text-transform: uppercase; letter-spacing: .5px; }
+.quick-add-confirm__qty {
+  background: var(--white);
+  border: 2px solid var(--blue-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 20px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  width: 100%;
+  outline: none;
+  -webkit-appearance: none;
+}
+.quick-add-confirm__unit-wrap { display: flex; flex-direction: column; gap: 4px; }
+.quick-add-confirm__unit-label { font-size: 11px; font-weight: 600; color: var(--mid-gray); text-transform: uppercase; letter-spacing: .5px; }
+.quick-add-confirm__unit {
+  background: var(--white);
+  border: 2px solid var(--warm-gray);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--navy);
+  font-family: var(--font-body);
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.quick-add-confirm__preview {
+  padding: 0 16px 14px;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  flex-shrink: 0;
+}
+.quick-add-confirm__macro-pill {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+.quick-add-confirm__macro-val { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--navy); }
+.quick-add-confirm__macro-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .8px; color: var(--mid-gray); margin-top: 2px; }
+.quick-add-confirm__add-btn {
+  margin: 0 16px 16px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: calc(100% - 32px);
+  touch-action: manipulation;
+  transition: background .15s;
+  letter-spacing: .3px;
+}
+.quick-add-confirm__add-btn:hover { background: var(--blue); }
+.quick-add-confirm__back {
+  background: none; border: none; cursor: pointer;
+  color: var(--blue-light); font-size: 13px; font-weight: 600;
+  padding: 6px 0 12px 16px;
+  touch-action: manipulation;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+/* ── Add button (new style per meal) ── */
+.meal-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 14px;
+  background: rgba(46,134,193,.06);
+  border: 1.5px dashed rgba(46,134,193,.3);
+  border-radius: 8px;
+  color: var(--blue-light);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  margin-top: 4px;
+}
+.meal-add-btn:hover, .meal-add-btn:active {
+  background: rgba(46,134,193,.12);
+  border-color: var(--blue-light);
+}
+.meal-add-btn__icon {
+  width: 22px; height: 22px;
+  background: var(--blue-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white);
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── 3. Repas modèles ── */
+.meal-template-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-bottom: 12px;
+}
+.meal-template-bar::-webkit-scrollbar { display: none; }
+.meal-template-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: rgba(46,134,193,.08);
+  border: 1.5px solid rgba(46,134,193,.2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all .15s;
+  touch-action: manipulation;
+}
+.meal-template-chip:hover { background: rgba(46,134,193,.16); border-color: var(--blue-light); }
+.meal-template-chip__del {
+  color: var(--mid-gray);
+  font-size: 14px;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+/* ── 4. Copier journée ── */
+.copy-day-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.copy-day-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(0,0,0,.04);
+  border: 1px solid var(--warm-gray);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.copy-day-btn:hover { background: var(--navy); color: var(--white); }
+
+/* Template modal */
+.template-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,.6);
+  z-index: 410;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+.template-modal-overlay.active { display: flex; }
+.template-modal {
+  background: var(--white);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.template-modal__header {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--warm-gray);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.template-modal__title { font-size: 15px; font-weight: 700; color: var(--navy); flex: 1; }
+.template-modal__close { background: none; border: none; cursor: pointer; color: var(--mid-gray); font-size: 20px; padding: 4px 6px; border-radius: 6px; }
+.template-modal__body { flex: 1; overflow-y: auto; padding: 12px; }
+.template-modal__name-input {
+  width: 100%;
+  background: var(--cream);
+  border: 1.5px solid var(--warm-gray);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  color: var(--text);
+  margin-bottom: 12px;
+  outline: none;
+  -webkit-appearance: none;
+}
+.template-modal__name-input:focus { border-color: var(--blue-light); }
+.template-modal__save-btn {
+  width: 100%;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+  margin-bottom: 8px;
+}
+.template-modal__save-btn:hover { background: var(--blue); }
+.template-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--warm-gray);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.template-item:hover { border-color: var(--blue-light); background: rgba(46,134,193,.04); }
+.template-item__name { flex: 1; font-size: 14px; font-weight: 600; color: var(--navy); }
+.template-item__sub { font-size: 12px; color: var(--mid-gray); margin-top: 2px; }
+.template-item__load {
+  background: var(--navy); color: var(--white);
+  border: none; border-radius: 6px;
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; touch-action: manipulation;
+}
+.template-item__del {
+  background: none; border: none; cursor: pointer;
+  color: var(--red); font-size: 16px; padding: 4px;
+}
+
+/* ── 5. Meal section action bar ── */
+.meal-section-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.meal-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,.55);
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all .15s;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.meal-action-btn:hover { background: rgba(255,255,255,.12); color: var(--white); }
+
+/* ── Mobile tweaks ── */
+@media (max-width: 900px) {
+  .day-summary__cal-val { font-size: 22px; }
+  .day-summary { padding: 16px; }
+  .quick-add-sheet { border-radius: 18px 18px 0 0; }
+  .quick-add-confirm__preview { grid-template-columns: repeat(4,1fr); gap: 6px; }
+  .copy-day-bar { gap: 6px; }
+  .copy-day-btn { font-size: 12px; padding: 7px 11px; }
+}
+@media (max-width: 430px) {
+  .day-summary__macros { grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .day-summary__cal-val { font-size: 20px; }
+  .quick-add-confirm__add-btn { font-size: 15px; padding: 14px; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 15 — AMÉLIORATIONS JOURNAL ENTRAÎNEMENT
+═══════════════════════════════════════════════════ */
+
+/* Whoop feedback banner */
+.whoop-feedback {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.whoop-feedback.optimal  { background: rgba(39,174,96,.09);  border-left: 4px solid var(--green-light); }
+.whoop-feedback.adapted  { background: rgba(46,134,193,.08); border-left: 4px solid var(--blue-light); }
+.whoop-feedback.caution  { background: rgba(212,160,23,.09); border-left: 4px solid var(--gold); }
+.whoop-feedback.rest     { background: rgba(192,57,43,.07);  border-left: 4px solid var(--red); }
+.whoop-feedback__icon    { font-size: 22px; flex-shrink: 0; }
+.whoop-feedback__title   { font-weight: 700; font-size: 13px; margin-bottom: 2px; color: var(--navy); }
+.whoop-feedback__sub     { color: var(--text-light); font-size: 13px; }
+
+/* PR badge & trend on exercise rows */
+.ex-stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0 2px;
+  flex-wrap: wrap;
+}
+.ex-pr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(212,160,23,.15);
+  border: 1px solid rgba(212,160,23,.35);
+  color: #7a5200;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.ex-pr-badge.new-pr {
+  background: rgba(39,174,96,.15);
+  border-color: rgba(39,174,96,.4);
+  color: var(--green);
+  animation: prPulse .6s ease;
+}
+@keyframes prPulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+.ex-trend {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ex-trend.up   { color: var(--green-light); }
+.ex-trend.down { color: var(--red); }
+.ex-trend.same { color: var(--mid-gray); }
+.ex-last-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mid-gray);
+  white-space: nowrap;
+}
+
+/* Training session templates */
+.tr-template-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tr-template-bar::-webkit-scrollbar { display: none; }
+.tr-template-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  background: rgba(46,134,193,.08);
+  border: 1.5px solid rgba(46,134,193,.2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all .15s;
+  touch-action: manipulation;
+}
+.tr-template-chip:hover { background: rgba(46,134,193,.15); border-color: var(--blue-light); }
+
+/* Session copy/template buttons */
+.tr-action-bar {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.tr-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  background: rgba(0,0,0,.04);
+  border: 1px solid var(--warm-gray);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.tr-action-btn:hover { background: var(--navy); color: var(--white); }
+
+/* Progress feedback block */
+.tr-progress-block {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.tr-progress-block__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.tr-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,.04);
+  font-size: 13px;
+}
+.tr-progress-row:last-child { border-bottom: none; }
+.tr-progress-row__name  { flex: 1; color: var(--text); font-weight: 500; }
+.tr-progress-row__vals  { font-family: var(--font-mono); font-size: 12px; color: var(--mid-gray); }
+.tr-progress-row__trend { font-size: 14px; font-weight: 700; flex-shrink: 0; }
+
+/* Training template modal (reuse template-modal styles) */
+
+@media (max-width: 900px) {
+  .tr-action-bar { gap: 5px; }
+  .tr-action-btn { font-size: 11px; padding: 6px 10px; }
+  .whoop-feedback { padding: 12px 13px; }
+}
+@media (max-width: 430px) {
+  .ex-stats-bar { gap: 5px; }
+}
+
+/* ═══════════════════════════════════════════════════
+   DASHBOARD ANALYSE & TENDANCES
+═══════════════════════════════════════════════════ */
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.dash-kpi {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.dash-kpi.good  { border-top: 3px solid var(--green-light); }
+.dash-kpi.warn  { border-top: 3px solid var(--gold); }
+.dash-kpi.bad   { border-top: 3px solid var(--red); }
+.dash-kpi.neutral { border-top: 3px solid var(--blue-light); }
+.dash-kpi__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--mid-gray);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.dash-kpi__val {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.dash-kpi__sub {
+  font-size: 11px;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+.dash-kpi__trend {
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+/* Trend bar */
+.dash-trend-block {
+  background: var(--white);
+  border: 1px solid var(--warm-gray);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.dash-trend-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.dash-trend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.dash-trend-row:last-child { margin-bottom: 0; }
+.dash-trend-label {
+  font-size: 12px;
+  color: var(--text-light);
+  width: 90px;
+  flex-shrink: 0;
+}
+.dash-trend-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--warm-gray);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dash-trend-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--blue-light);
+  transition: width .5s ease;
+}
+.dash-trend-bar.good  { background: var(--green-light); }
+.dash-trend-bar.warn  { background: var(--gold); }
+.dash-trend-bar.bad   { background: var(--red); }
+.dash-trend-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--navy);
+  font-weight: 600;
+  width: 50px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Alerts */
+.dash-alert {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.dash-alert.good   { background: rgba(39,174,96,.08);  border-left: 3px solid var(--green-light); color: #0d3d1f; }
+.dash-alert.warn   { background: rgba(212,160,23,.09); border-left: 3px solid var(--gold);        color: #4a3000; }
+.dash-alert.bad    { background: rgba(192,57,43,.07);  border-left: 3px solid var(--red);         color: #5c0a0a; }
+.dash-alert.info   { background: rgba(46,134,193,.07); border-left: 3px solid var(--blue-light);  color: #1a2d3f; }
+.dash-alert__icon  { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.dash-alert__text  { flex: 1; }
+.dash-alert__title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+
+/* No data state */
+.dash-no-data {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--mid-gray);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.dash-no-data__icon { font-size: 36px; margin-bottom: 12px; }
+
+/* Period selector */
+.dash-period-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.dash-period-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--warm-gray);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+}
+.dash-period-tab.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+/* Consistency dots calendar */
+.dash-calendar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.dash-cal-dot {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--white);
+  cursor: default;
+  title: attr(title);
+}
+.dash-cal-dot.logged-good { background: var(--green-light); }
+.dash-cal-dot.logged-warn { background: var(--gold); }
+.dash-cal-dot.logged-bad  { background: var(--red); }
+.dash-cal-dot.training    { background: var(--blue-light); }
+.dash-cal-dot.empty       { background: var(--warm-gray); color: var(--mid-gray); }
+
+@media (max-width: 900px) {
+  .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-kpi__val { font-size: 20px; }
+  .dash-cal-dot { width: 24px; height: 24px; font-size: 8px; }
+}
+@media (max-width: 430px) {
+  .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .dash-kpi__val { font-size: 18px; }
+}
 </style>
 </head>
 <body>
@@ -3028,26 +3958,66 @@ input[type="date"].jdate-input {
         <span class="save-indicator" id="meal-save-indicator"><span class="save-indicator__dot"></span>Sauvegardé</span>
       </div>
 
-      <!-- Day type & target -->
-      <div class="subsection">
-        <div class="subsection-title">Type de journée &amp; Objectifs</div>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-          <select class="jday-type-select" id="meal-day-type">
-            <option value="training">Training — 2 150 kcal</option>
-            <option value="repos">Repos — 1 950 kcal</option>
-            <option value="refeed">Refeed — 2 660 kcal</option>
-            <option value="libre">Libre</option>
-          </select>
-          <span id="meal-day-badge" class="badge badge-blue">Training</span>
+      <!-- 1. RÉSUMÉ DU JOUR -->
+      <div class="day-summary" id="day-summary-block">
+        <div class="day-summary__calories">
+          <div class="day-summary__cal-block">
+            <div class="day-summary__cal-label">Objectif</div>
+            <div class="day-summary__cal-val" id="ds-kcal-target">2 150</div>
+            <div class="day-summary__cal-unit">kcal</div>
+          </div>
+          <div class="day-summary__cal-block">
+            <div class="day-summary__cal-label">Consommé</div>
+            <div class="day-summary__cal-val" id="ds-kcal-consumed">0</div>
+            <div class="day-summary__cal-unit">kcal</div>
+          </div>
+          <div class="day-summary__cal-block">
+            <div class="day-summary__cal-label">Restant</div>
+            <div class="day-summary__cal-val" id="ds-kcal-remaining">2 150</div>
+            <div class="day-summary__cal-unit">kcal</div>
+          </div>
         </div>
-        <!-- Macro summary -->
-        <div class="macro-summary" id="meal-macro-summary">
-          <div class="macro-card" id="mc-kcal"><div class="macro-card__label">Calories</div><div class="macro-card__val" id="mc-kcal-val">0</div><div class="macro-card__target" id="mc-kcal-tgt">/ 2 150 kcal</div><div class="macro-card__delta" id="mc-kcal-delta"></div></div>
-          <div class="macro-card" id="mc-prot"><div class="macro-card__label">Protéines</div><div class="macro-card__val" id="mc-prot-val">0 g</div><div class="macro-card__target" id="mc-prot-tgt">/ 150 g</div><div class="macro-card__delta" id="mc-prot-delta"></div></div>
-          <div class="macro-card" id="mc-carb"><div class="macro-card__label">Glucides</div><div class="macro-card__val" id="mc-carb-val">0 g</div><div class="macro-card__target" id="mc-carb-tgt">/ 218 g</div><div class="macro-card__delta" id="mc-carb-delta"></div></div>
-          <div class="macro-card" id="mc-fat"><div class="macro-card__label">Lipides</div><div class="macro-card__val" id="mc-fat-val">0 g</div><div class="macro-card__target" id="mc-fat-tgt">/ 75 g</div><div class="macro-card__delta" id="mc-fat-delta"></div></div>
+        <div class="day-summary__equation" id="ds-equation">Objectif − Consommé = Restant</div>
+        <div class="day-summary__macros">
+          <div class="day-summary__macro">
+            <div class="day-summary__macro-label">Protéines</div>
+            <div class="day-summary__macro-bar-wrap"><div class="day-summary__macro-bar" id="ds-prot-bar" style="width:0%"></div></div>
+            <div class="day-summary__macro-val" id="ds-prot-val">0 g</div>
+            <div class="day-summary__macro-tgt" id="ds-prot-tgt">/ 150 g</div>
+          </div>
+          <div class="day-summary__macro">
+            <div class="day-summary__macro-label">Glucides</div>
+            <div class="day-summary__macro-bar-wrap"><div class="day-summary__macro-bar" id="ds-carb-bar" style="width:0%"></div></div>
+            <div class="day-summary__macro-val" id="ds-carb-val">0 g</div>
+            <div class="day-summary__macro-tgt" id="ds-carb-tgt">/ 218 g</div>
+          </div>
+          <div class="day-summary__macro">
+            <div class="day-summary__macro-label">Lipides</div>
+            <div class="day-summary__macro-bar-wrap"><div class="day-summary__macro-bar" id="ds-fat-bar" style="width:0%"></div></div>
+            <div class="day-summary__macro-val" id="ds-fat-val">0 g</div>
+            <div class="day-summary__macro-tgt" id="ds-fat-tgt">/ 75 g</div>
+          </div>
         </div>
       </div>
+
+      <!-- Type de journée -->
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+        <select class="jday-type-select" id="meal-day-type">
+          <option value="training">Training — 2 150 kcal</option>
+          <option value="repos">Repos — 1 950 kcal</option>
+          <option value="refeed">Refeed — 2 660 kcal</option>
+          <option value="libre">Libre</option>
+        </select>
+        <span id="meal-day-badge" class="badge badge-blue">Training</span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="copy-day-btn" id="btn-copy-yesterday" title="Copier la journée d'hier">📋 Copier hier</button>
+          <button class="copy-day-btn" id="btn-save-day-template" title="Enregistrer cette journée comme modèle">💾 Modèle</button>
+          <button class="copy-day-btn" id="btn-load-template" title="Charger un repas modèle">📂 Charger</button>
+        </div>
+      </div>
+
+      <!-- Repas modèles (chips) -->
+      <div id="meal-template-bar" class="meal-template-bar" style="display:none;"></div>
 
       <!-- Meals -->
       <div class="subsection">
@@ -3056,40 +4026,52 @@ input[type="date"].jdate-input {
           <div class="meal-section__header">
             <span class="meal-section__title">🌅 Petit déjeuner</span>
             <span class="meal-section__totals" id="meal-breakfast-totals">0 kcal</span>
+            <div class="meal-section-actions">
+              <button class="meal-action-btn" onclick="copyMealFromYesterday('breakfast')" title="Copier de la veille">↺ Copier</button>
+            </div>
           </div>
           <div class="meal-section__body">
             <div id="meal-breakfast-rows"></div>
-            <button class="jbtn" onclick="addFoodRow('breakfast')">+ Ajouter un aliment</button>
+            <button class="meal-add-btn" onclick="openQuickAdd('breakfast')"><span class="meal-add-btn__icon">+</span>Ajouter un aliment</button>
           </div>
         </div>
         <div id="meal-lunch-section" class="meal-section">
           <div class="meal-section__header">
             <span class="meal-section__title">🍽 Déjeuner</span>
             <span class="meal-section__totals" id="meal-lunch-totals">0 kcal</span>
+            <div class="meal-section-actions">
+              <button class="meal-action-btn" onclick="copyMealFromYesterday('lunch')" title="Copier de la veille">↺ Copier</button>
+            </div>
           </div>
           <div class="meal-section__body">
             <div id="meal-lunch-rows"></div>
-            <button class="jbtn" onclick="addFoodRow('lunch')">+ Ajouter un aliment</button>
+            <button class="meal-add-btn" onclick="openQuickAdd('lunch')"><span class="meal-add-btn__icon">+</span>Ajouter un aliment</button>
           </div>
         </div>
         <div id="meal-snack-section" class="meal-section">
           <div class="meal-section__header">
             <span class="meal-section__title">🥜 Collation</span>
             <span class="meal-section__totals" id="meal-snack-totals">0 kcal</span>
+            <div class="meal-section-actions">
+              <button class="meal-action-btn" onclick="copyMealFromYesterday('snack')" title="Copier de la veille">↺ Copier</button>
+            </div>
           </div>
           <div class="meal-section__body">
             <div id="meal-snack-rows"></div>
-            <button class="jbtn" onclick="addFoodRow('snack')">+ Ajouter un aliment</button>
+            <button class="meal-add-btn" onclick="openQuickAdd('snack')"><span class="meal-add-btn__icon">+</span>Ajouter un aliment</button>
           </div>
         </div>
         <div id="meal-dinner-section" class="meal-section">
           <div class="meal-section__header">
             <span class="meal-section__title">🌙 Dîner</span>
             <span class="meal-section__totals" id="meal-dinner-totals">0 kcal</span>
+            <div class="meal-section-actions">
+              <button class="meal-action-btn" onclick="copyMealFromYesterday('dinner')" title="Copier de la veille">↺ Copier</button>
+            </div>
           </div>
           <div class="meal-section__body">
             <div id="meal-dinner-rows"></div>
-            <button class="jbtn" onclick="addFoodRow('dinner')">+ Ajouter un aliment</button>
+            <button class="meal-add-btn" onclick="openQuickAdd('dinner')"><span class="meal-add-btn__icon">+</span>Ajouter un aliment</button>
           </div>
         </div>
       </div>
@@ -3116,6 +4098,72 @@ input[type="date"].jdate-input {
       </div>
     </div><!-- /s14 -->
 
+    <!-- ═══ QUICK ADD OVERLAY ═══ -->
+    <div id="quick-add-overlay" class="quick-add-overlay">
+      <div class="quick-add-sheet">
+        <div class="quick-add-sheet__handle"></div>
+        <div class="quick-add-sheet__header">
+          <span class="quick-add-sheet__title" id="qa-sheet-title">Ajouter un aliment</span>
+          <button class="quick-add-sheet__close" id="qa-close">✕</button>
+        </div>
+        <!-- Search list -->
+        <div id="qa-search-panel">
+          <div class="quick-add-search-wrap">
+            <svg class="quick-add-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="qa-search-input" class="quick-add-search" type="search" placeholder="Rechercher un aliment…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </div>
+          <div class="quick-add-tabs">
+            <button class="quick-add-tab active" data-tab="all">Tous</button>
+            <button class="quick-add-tab" data-tab="recents">🕐 Récents</button>
+            <button class="quick-add-tab" data-tab="favs">⭐ Favoris</button>
+            <button class="quick-add-tab" data-tab="custom">✏️ Mes aliments</button>
+          </div>
+          <div class="quick-add-results" id="qa-results"></div>
+        </div>
+        <!-- Confirm qty step -->
+        <div id="qa-confirm-panel" class="quick-add-confirm">
+          <button class="quick-add-confirm__back" id="qa-back">← Retour</button>
+          <div class="quick-add-confirm__food">
+            <div class="quick-add-confirm__food-name" id="qa-confirm-name">—</div>
+            <div class="quick-add-confirm__food-macro" id="qa-confirm-base">0 kcal / 100g</div>
+          </div>
+          <div class="quick-add-confirm__inputs">
+            <div class="quick-add-confirm__qty-wrap">
+              <div class="quick-add-confirm__qty-label">Quantité</div>
+              <input id="qa-confirm-qty" class="quick-add-confirm__qty" type="number" inputmode="decimal" step="any" min="0" value="100" />
+            </div>
+            <div class="quick-add-confirm__unit-wrap">
+              <div class="quick-add-confirm__unit-label">Unité</div>
+              <select id="qa-confirm-unit" class="quick-add-confirm__unit">
+                <option value="g">g</option>
+                <option value="ml">ml</option>
+                <option value="piece">pièce</option>
+                <option value="scoop">scoop</option>
+              </select>
+            </div>
+          </div>
+          <div class="quick-add-confirm__preview">
+            <div class="quick-add-confirm__macro-pill"><div class="quick-add-confirm__macro-val" id="qa-prev-kcal">0</div><div class="quick-add-confirm__macro-lbl">kcal</div></div>
+            <div class="quick-add-confirm__macro-pill"><div class="quick-add-confirm__macro-val" id="qa-prev-prot">0</div><div class="quick-add-confirm__macro-lbl">Prot g</div></div>
+            <div class="quick-add-confirm__macro-pill"><div class="quick-add-confirm__macro-val" id="qa-prev-carb">0</div><div class="quick-add-confirm__macro-lbl">Gluc g</div></div>
+            <div class="quick-add-confirm__macro-pill"><div class="quick-add-confirm__macro-val" id="qa-prev-fat">0</div><div class="quick-add-confirm__macro-lbl">Lip g</div></div>
+          </div>
+          <button class="quick-add-confirm__add-btn" id="qa-confirm-add">✓ Ajouter au repas</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TEMPLATE MODAL ═══ -->
+    <div id="template-modal-overlay" class="template-modal-overlay">
+      <div class="template-modal">
+        <div class="template-modal__header">
+          <span class="template-modal__title" id="tpl-modal-title">Repas modèles</span>
+          <button class="template-modal__close" id="tpl-modal-close">✕</button>
+        </div>
+        <div class="template-modal__body" id="tpl-modal-body"></div>
+      </div>
+    </div>
+
     <!-- ══════════════════════════════════════════ -->
     <!-- SECTION 15 — JOURNAL ENTRAÎNEMENT -->
     <!-- ══════════════════════════════════════════ -->
@@ -3135,10 +4183,13 @@ input[type="date"].jdate-input {
         <span class="save-indicator" id="tr-save-indicator"><span class="save-indicator__dot"></span>Sauvegardé</span>
       </div>
 
+      <!-- Whoop feedback -->
+      <div id="tr-whoop-feedback" style="display:none;"></div>
+
       <!-- Session header -->
       <div class="subsection">
         <div class="subsection-title">Séance du jour</div>
-        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
           <select class="status-select" id="tr-session-type">
             <option value="">Type de séance…</option>
             <option value="Pectoraux">Pectoraux</option>
@@ -3158,6 +4209,17 @@ input[type="date"].jdate-input {
             <option value="annulee">❌ Annulée</option>
           </select>
         </div>
+
+        <!-- Action bar -->
+        <div class="tr-action-bar">
+          <button class="tr-action-btn" id="tr-btn-copy-prev">📋 Copier séance précédente</button>
+          <button class="tr-action-btn" id="tr-btn-save-tpl">💾 Sauvegarder modèle</button>
+          <button class="tr-action-btn" id="tr-btn-load-tpl">📂 Charger modèle</button>
+        </div>
+
+        <!-- Template chips -->
+        <div id="tr-template-bar" class="tr-template-bar" style="display:none;"></div>
+
         <!-- Recap -->
         <div class="training-recap" id="tr-recap">
           <div class="t-recap-card"><div class="t-recap-card__val" id="tr-vol-total">0</div><div class="t-recap-card__label">Volume kg</div></div>
@@ -3166,6 +4228,15 @@ input[type="date"].jdate-input {
           <div class="t-recap-card"><div class="t-recap-card__val" id="tr-cardio-total">0 min</div><div class="t-recap-card__label">Cardio</div></div>
           <div class="t-recap-card"><div class="t-recap-card__val" id="tr-dist-total">—</div><div class="t-recap-card__label">Distance</div></div>
           <div class="t-recap-card"><div class="t-recap-card__val" id="tr-abs-reps">0</div><div class="t-recap-card__label">Reps abdos</div></div>
+        </div>
+      </div>
+
+      <!-- Progression par exercice -->
+      <div class="subsection" id="tr-progress-subsection" style="display:none;">
+        <div class="subsection-title">Progression par exercice</div>
+        <div class="tr-progress-block">
+          <div class="tr-progress-block__title">vs dernière séance identique</div>
+          <div id="tr-progress-rows"></div>
         </div>
       </div>
 
@@ -3236,6 +4307,17 @@ input[type="date"].jdate-input {
       </div>
     </div><!-- /s15 -->
 
+    <!-- ═══ TRAINING TEMPLATE MODAL ═══ -->
+    <div id="tr-template-modal-overlay" class="template-modal-overlay">
+      <div class="template-modal">
+        <div class="template-modal__header">
+          <span class="template-modal__title" id="tr-tpl-modal-title">Modèles de séance</span>
+          <button class="template-modal__close" id="tr-tpl-modal-close">✕</button>
+        </div>
+        <div class="template-modal__body" id="tr-tpl-modal-body"></div>
+      </div>
+    </div>
+
     <!-- ══════════════════════════════════════════ -->
     <!-- SECTION 16 — SAUVEGARDE & DONNÉES -->
     <!-- ══════════════════════════════════════════ -->
@@ -3245,7 +4327,46 @@ input[type="date"].jdate-input {
         <div class="section-title">SAUVEGARDE & DONNÉES</div>
       </div>
 
-      <!-- Status -->
+      <!-- ══ DASHBOARD ANALYSE & TENDANCES ══ -->
+      <div class="subsection">
+        <div class="subsection-title">Analyse & Tendances</div>
+
+        <!-- Period selector -->
+        <div class="dash-period-tabs">
+          <button class="dash-period-tab active" data-days="7">7 jours</button>
+          <button class="dash-period-tab" data-days="14">14 jours</button>
+          <button class="dash-period-tab" data-days="30">30 jours</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="dash-kpi-grid" id="dash-kpi-grid">
+          <div class="dash-no-data" style="grid-column:1/-1;">
+            <div class="dash-no-data__icon">📊</div>
+            Enregistre quelques journées dans le Journal Alimentaire pour voir tes tendances ici.
+          </div>
+        </div>
+
+        <!-- Macro compliance -->
+        <div class="dash-trend-block" id="dash-macro-block" style="display:none;">
+          <div class="dash-trend-title">Respect des macros — moyenne période</div>
+          <div id="dash-macro-bars"></div>
+        </div>
+
+        <!-- Consistency calendar -->
+        <div class="dash-trend-block" id="dash-calendar-block" style="display:none;">
+          <div class="dash-trend-title">Cohérence alimentaire — 14 derniers jours</div>
+          <div class="dash-calendar" id="dash-calendar"></div>
+          <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
+            <span style="font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--green-light);display:inline-block;"></span> Dans les cibles</span>
+            <span style="font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--gold);display:inline-block;"></span> Léger écart</span>
+            <span style="font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--red);display:inline-block;"></span> Hors cible</span>
+            <span style="font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--warm-gray);display:inline-block;"></span> Non enregistré</span>
+          </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="dash-alerts"></div>
+      </div>
       <div class="subsection">
         <div class="subsection-title">Statut de la sauvegarde</div>
         <div class="data-card">
@@ -4050,6 +5171,7 @@ function loadMealDay(dateKey) {
   }
   mealState.date = dateKey;
   renderMealJournal();
+  try { renderTemplateBar(); } catch(e) {}
 }
 
 function saveMealDay() {
@@ -4671,6 +5793,8 @@ function updateMealTotals() {
       else if (f.tgt && f.val > f.tgt) card.classList.add('over');
     }
   }
+  /* Update day summary */
+  try { updateDaySummary(); } catch(e) {}
 }
 
 /* ═══════════════════════════════════════════════════
@@ -4760,6 +5884,9 @@ function renderTrainingJournal() {
   if (notesEl && trState.data) notesEl.value = trState.data.notes || '';
 
   renderExRows(); renderCardioRows(); renderAbsRows(); updateTrainingRecap();
+  try { renderWhoopFeedback(); } catch(e) {}
+  try { renderProgressBlock(); } catch(e) {}
+  try { renderTrTemplateBar(); } catch(e) {}
 }
 
 function renderExRows() {
@@ -4997,7 +6124,7 @@ function showSection(id, el) {
   // lazy-load journal sections
   if (id === 's14') loadMealDay(mealState.date);
   if (id === 's15') loadTrainingDay(trState.date);
-  if (id === 's16') refreshDataStats();
+  if (id === 's16') { refreshDataStats(); renderDashboard(dashPeriod); }
 }
 
 function showWeek(id, el) {
@@ -5217,6 +6344,1060 @@ function doSearch(query) {
   updateSearchMeta();
 }
 
+
+/* ═══════════════════════════════════════════════════
+   JOURNAL ALIMENTAIRE — UX AMÉLIORÉE
+═══════════════════════════════════════════════════ */
+
+/* ── Day Summary (résumé du jour) ── */
+function updateDaySummary() {
+  var dayType = (mealState.data && mealState.data.dayType) || 'training';
+  var targets = DEFAULT_MACRO_TARGETS[dayType];
+
+  /* Compute totals (same logic as updateMealTotals) */
+  var cats = ['breakfast','lunch','snack','dinner'];
+  var total = { kcal:0, prot:0, carb:0, fat:0 };
+  for (var i = 0; i < cats.length; i++) {
+    var s = sumMeal(cats[i]);
+    total.kcal += s.kcal; total.prot += s.prot; total.carb += s.carb; total.fat += s.fat;
+  }
+  if (mealState.data && mealState.data.supplements) {
+    var supps = mealState.data.supplements;
+    for (var si = 0; si < supps.length; si++) {
+      var sp = supps[si];
+      if (sp.includeInMacros && sp.taken) {
+        total.kcal += parseFloat(sp.calories)||0;
+        total.prot += parseFloat(sp.protein)||0;
+        total.carb += parseFloat(sp.carbs)||0;
+        total.fat  += parseFloat(sp.fat)||0;
+      }
+    }
+  }
+
+  var tgt = targets ? targets.kcal : 2150;
+  var consumed = Math.round(total.kcal);
+  var remaining = tgt - consumed;
+
+  function setText(id, v) { var el=document.getElementById(id); if(el) el.textContent=v; }
+  function setClass(id, cls) {
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.classList.remove('ok','warn','over');
+    if(cls) el.classList.add(cls);
+  }
+
+  setText('ds-kcal-target', tgt.toLocaleString('fr-FR'));
+  setText('ds-kcal-consumed', consumed.toLocaleString('fr-FR'));
+
+  var remEl = document.getElementById('ds-kcal-remaining');
+  if(remEl) {
+    remEl.textContent = Math.abs(remaining).toLocaleString('fr-FR');
+    remEl.classList.remove('ok','warn','over');
+    if(remaining < 0) { remEl.classList.add('over'); }
+    else if(remaining < tgt * 0.1) { remEl.classList.add('warn'); }
+    else { remEl.classList.add('ok'); }
+  }
+
+  var eqEl = document.getElementById('ds-equation');
+  if(eqEl) {
+    if(remaining < 0) eqEl.textContent = consumed + ' consommé − ' + tgt + ' objectif = ' + Math.abs(remaining) + ' kcal dépassé';
+    else eqEl.textContent = tgt + ' − ' + consumed + ' = ' + remaining + ' kcal restants';
+  }
+
+  /* Macros */
+  var macros = [
+    { valId:'ds-prot-val', tgtId:'ds-prot-tgt', barId:'ds-prot-bar', val:total.prot, tgt: targets?targets.protein:150, unit:'g' },
+    { valId:'ds-carb-val', tgtId:'ds-carb-tgt', barId:'ds-carb-bar', val:total.carb, tgt: targets?targets.carbs:218,   unit:'g' },
+    { valId:'ds-fat-val',  tgtId:'ds-fat-tgt',  barId:'ds-fat-bar',  val:total.fat,  tgt: targets?targets.fat:75,      unit:'g' }
+  ];
+  for (var j = 0; j < macros.length; j++) {
+    var m = macros[j];
+    var pct = m.tgt > 0 ? Math.min(Math.round(m.val/m.tgt*100), 120) : 0;
+    setText(m.valId, Math.round(m.val) + ' g');
+    setText(m.tgtId, '/ ' + m.tgt + ' g');
+    var bar = document.getElementById(m.barId);
+    if(bar) {
+      bar.style.width = Math.min(pct,100) + '%';
+      bar.classList.remove('ok','warn','over');
+      if(pct > 105) bar.classList.add('over');
+      else if(pct >= 85) bar.classList.add('ok');
+      else if(pct >= 60) bar.classList.add('warn');
+    }
+  }
+
+  /* Update type label in target */
+  setText('ds-kcal-target', tgt.toLocaleString('fr-FR'));
+}
+
+/* ── MEAL TEMPLATES ── */
+var MEAL_TEMPLATES_KEY = 'shai_recomp_meal_templates_v1';
+
+function getMealTemplates() {
+  return safeParse(localStorage.getItem(MEAL_TEMPLATES_KEY), []);
+}
+function saveMealTemplates(templates) {
+  localStorage.setItem(MEAL_TEMPLATES_KEY, JSON.stringify(templates));
+}
+
+function saveDayAsTemplate(name) {
+  if (!mealState.data || !name) return false;
+  var templates = getMealTemplates();
+  var cats = ['breakfast','lunch','snack','dinner'];
+  var total = {kcal:0, prot:0, carb:0, fat:0};
+  for (var i=0; i<cats.length; i++) {
+    var items = mealState.data.meals[cats[i]]||[];
+    for (var j=0; j<items.length; j++) {
+      total.kcal += parseFloat(items[j].calories)||0;
+      total.prot += parseFloat(items[j].protein)||0;
+      total.carb += parseFloat(items[j].carbs)||0;
+      total.fat  += parseFloat(items[j].fat)||0;
+    }
+  }
+  templates.push({
+    id: uid('tpl'),
+    name: name,
+    createdAt: new Date().toISOString(),
+    meals: JSON.parse(JSON.stringify(mealState.data.meals)),
+    summary: {
+      kcal: Math.round(total.kcal),
+      prot: Math.round(total.prot),
+      carb: Math.round(total.carb),
+      fat:  Math.round(total.fat)
+    }
+  });
+  saveMealTemplates(templates);
+  renderTemplateBar();
+  return true;
+}
+
+function loadTemplate(tplId) {
+  var templates = getMealTemplates();
+  var tpl = null;
+  for (var i=0; i<templates.length; i++) { if (templates[i].id === tplId) { tpl = templates[i]; break; } }
+  if (!tpl || !mealState.data) return;
+  /* Merge: assign new ids to avoid collisions */
+  var cats = ['breakfast','lunch','snack','dinner'];
+  for (var c=0; c<cats.length; c++) {
+    var cat = cats[c];
+    var tplItems = tpl.meals[cat] || [];
+    for (var j=0; j<tplItems.length; j++) {
+      var newItem = JSON.parse(JSON.stringify(tplItems[j]));
+      newItem.id = uid('food');
+      mealState.data.meals[cat].push(newItem);
+    }
+  }
+  saveMealDay();
+  renderMealJournal();
+  closeTemplateModal();
+}
+
+function deleteTemplate(tplId) {
+  var templates = getMealTemplates().filter(function(t) { return t.id !== tplId; });
+  saveMealTemplates(templates);
+  renderTemplateBar();
+  renderTemplateModal();
+}
+
+function renderTemplateBar() {
+  var bar = document.getElementById('meal-template-bar');
+  if (!bar) return;
+  var templates = getMealTemplates();
+  if (templates.length === 0) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '';
+  for (var i=0; i<templates.length; i++) {
+    (function(tpl) {
+      var chip = document.createElement('div');
+      chip.className = 'meal-template-chip';
+      chip.innerHTML = '📋 ' + escapeHtml(tpl.name) +
+        ' <span style="font-size:10px;opacity:.6;">' + tpl.summary.kcal + ' kcal</span>';
+      chip.addEventListener('click', function() { loadTemplate(tpl.id); });
+      bar.appendChild(chip);
+    })(templates[i]);
+  }
+}
+
+function openTemplateModal(mode) {
+  var overlay = document.getElementById('template-modal-overlay');
+  if (overlay) overlay.classList.add('active');
+  renderTemplateModal(mode);
+}
+function closeTemplateModal() {
+  var overlay = document.getElementById('template-modal-overlay');
+  if (overlay) overlay.classList.remove('active');
+}
+function renderTemplateModal(mode) {
+  var title = document.getElementById('tpl-modal-title');
+  var body  = document.getElementById('tpl-modal-body');
+  if (!body) return;
+  var templates = getMealTemplates();
+
+  if (mode === 'save') {
+    if (title) title.textContent = 'Enregistrer comme modèle';
+    body.innerHTML =
+      '<p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">Donne un nom à cette journée pour la retrouver facilement.</p>' +
+      '<input id="tpl-name-input" class="template-modal__name-input" placeholder="Ex : Petit déj training, Déjeuner poulet riz…" maxlength="50" />' +
+      '<button class="template-modal__save-btn" id="tpl-save-confirm">💾 Enregistrer ce modèle</button>';
+    var inp = document.getElementById('tpl-name-input');
+    var btn = document.getElementById('tpl-save-confirm');
+    if (inp) inp.focus();
+    if (btn) btn.addEventListener('click', function() {
+      var name = inp ? inp.value.trim() : '';
+      if (!name) { if(inp) inp.style.borderColor='var(--red)'; return; }
+      if (saveDayAsTemplate(name)) {
+        body.innerHTML = '<div style="text-align:center;padding:24px;"><div style="font-size:32px;margin-bottom:8px;">✅</div><div style="font-weight:700;color:var(--navy);">Modèle enregistré !</div></div>';
+        setTimeout(closeTemplateModal, 1200);
+      }
+    });
+    if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter') { btn && btn.click(); } });
+  } else {
+    if (title) title.textContent = 'Charger un modèle';
+    if (templates.length === 0) {
+      body.innerHTML = '<div style="text-align:center;padding:32px;color:var(--mid-gray);font-size:14px;">Aucun modèle enregistré.<br><br>Utilise "💾 Modèle" pour sauvegarder une journée.</div>';
+      return;
+    }
+    body.innerHTML = '';
+    for (var i=0; i<templates.length; i++) {
+      (function(tpl) {
+        var d = document.createElement('div');
+        d.className = 'template-item';
+        d.innerHTML =
+          '<div style="flex:1;">' +
+            '<div class="template-item__name">' + escapeHtml(tpl.name) + '</div>' +
+            '<div class="template-item__sub">' + tpl.summary.kcal + ' kcal · P' + tpl.summary.prot + 'g · G' + tpl.summary.carb + 'g · L' + tpl.summary.fat + 'g</div>' +
+          '</div>' +
+          '<button class="template-item__load">Charger</button>' +
+          '<button class="template-item__del">🗑</button>';
+        d.querySelector('.template-item__load').addEventListener('click', function() { loadTemplate(tpl.id); });
+        d.querySelector('.template-item__del').addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (confirm('Supprimer "' + tpl.name + '" ?')) deleteTemplate(tpl.id);
+        });
+        body.appendChild(d);
+      })(templates[i]);
+    }
+  }
+}
+
+/* ── COPY FROM YESTERDAY ── */
+function copyMealFromYesterday(cat) {
+  if (!mealState.data) return;
+  var yesterday = offsetDate(mealState.date, -1);
+  var appData = loadAppData();
+  var yData = appData.meals[yesterday];
+  if (!yData || !yData.meals || !yData.meals[cat] || yData.meals[cat].length === 0) {
+    alert('Aucun aliment trouvé dans "' + cat + '" pour hier (' + formatDateFr(yesterday) + ').');
+    return;
+  }
+  var items = yData.meals[cat];
+  for (var i=0; i<items.length; i++) {
+    var newItem = JSON.parse(JSON.stringify(items[i]));
+    newItem.id = uid('food');
+    mealState.data.meals[cat].push(newItem);
+  }
+  saveMealDay();
+  renderMealCategory(cat);
+  updateMealTotals();
+}
+
+function copyDayFromYesterday() {
+  if (!mealState.data) return;
+  var yesterday = offsetDate(mealState.date, -1);
+  var appData = loadAppData();
+  var yData = appData.meals[yesterday];
+  if (!yData || !yData.meals) {
+    alert('Aucune journée trouvée pour hier (' + formatDateFr(yesterday) + ').');
+    return;
+  }
+  var cats = ['breakfast','lunch','snack','dinner'];
+  var added = 0;
+  for (var c=0; c<cats.length; c++) {
+    var items = yData.meals[cats[c]] || [];
+    for (var i=0; i<items.length; i++) {
+      var newItem = JSON.parse(JSON.stringify(items[i]));
+      newItem.id = uid('food');
+      mealState.data.meals[cats[c]].push(newItem);
+      added++;
+    }
+  }
+  if (added === 0) { alert('Aucun aliment trouvé pour hier.'); return; }
+  saveMealDay();
+  renderMealJournal();
+}
+
+/* ── QUICK ADD ── */
+var qaState = { cat: null, foodName: null, activeTab: 'all' };
+
+function openQuickAdd(cat) {
+  qaState.cat = cat;
+  qaState.foodName = null;
+  var overlay = document.getElementById('quick-add-overlay');
+  var title   = document.getElementById('qa-sheet-title');
+  if (!overlay) return;
+  var catLabels = { breakfast:'Petit déjeuner', lunch:'Déjeuner', snack:'Collation', dinner:'Dîner' };
+  if (title) title.textContent = catLabels[cat] || 'Ajouter';
+  showQASearchPanel();
+  overlay.classList.add('active');
+  setTimeout(function() {
+    var inp = document.getElementById('qa-search-input');
+    if (inp) inp.focus();
+  }, 120);
+  renderQAResults('');
+}
+
+function closeQuickAdd() {
+  var overlay = document.getElementById('quick-add-overlay');
+  if (overlay) overlay.classList.remove('active');
+  var inp = document.getElementById('qa-search-input');
+  if (inp) inp.value = '';
+  qaState.foodName = null;
+}
+
+function showQASearchPanel() {
+  var sp = document.getElementById('qa-search-panel');
+  var cp = document.getElementById('qa-confirm-panel');
+  if (sp) { sp.style.display = ''; sp.style.flexDirection = 'column'; }
+  if (cp) cp.classList.remove('active');
+}
+
+function showQAConfirmPanel(foodName) {
+  qaState.foodName = foodName;
+  var sp = document.getElementById('qa-search-panel');
+  var cp = document.getElementById('qa-confirm-panel');
+  if (sp) sp.style.display = 'none';
+  if (!cp) return;
+  cp.classList.add('active');
+
+  var food = FOOD_DB[foodName];
+  var nameEl = document.getElementById('qa-confirm-name');
+  var baseEl = document.getElementById('qa-confirm-base');
+  if (nameEl) nameEl.textContent = foodName;
+
+  var qtyEl  = document.getElementById('qa-confirm-qty');
+  var unitEl = document.getElementById('qa-confirm-unit');
+
+  if (food) {
+    if (baseEl) baseEl.textContent = food.cal100 + ' kcal / 100' + (food.unit === 'ml' ? 'ml' : 'g');
+    if (unitEl) unitEl.value = food.unit || 'g';
+    /* Default qty */
+    if (qtyEl) {
+      if (food.unit === 'piece' || food.unit === 'scoop') qtyEl.value = 1;
+      else qtyEl.value = food.portionG || 100;
+    }
+  } else {
+    if (baseEl) baseEl.textContent = 'Aliment personnalisé';
+  }
+  updateQAPreview();
+}
+
+function updateQAPreview() {
+  var foodName = qaState.foodName;
+  if (!foodName) return;
+  var food = FOOD_DB[foodName];
+  if (!food) return;
+  var qty = parseFloat(document.getElementById('qa-confirm-qty').value) || 0;
+  var unit = document.getElementById('qa-confirm-unit').value;
+  var grams = (unit === 'piece' || unit === 'scoop') ? qty * (food.portionG||100) : qty;
+  var ratio = grams / 100;
+  function r2(n) { return Math.round((n||0)*10)/10; }
+  function setText(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+  setText('qa-prev-kcal', Math.round(food.cal100  * ratio));
+  setText('qa-prev-prot', r2(food.prot100 * ratio));
+  setText('qa-prev-carb', r2(food.carb100 * ratio));
+  setText('qa-prev-fat',  r2(food.fat100  * ratio));
+}
+
+function confirmQuickAdd() {
+  var foodName = qaState.foodName;
+  var cat      = qaState.cat;
+  if (!foodName || !cat || !mealState.data) return;
+  var food = FOOD_DB[foodName];
+  var qty  = parseFloat(document.getElementById('qa-confirm-qty').value) || 0;
+  var unit = document.getElementById('qa-confirm-unit').value;
+  var grams = (unit === 'piece' || unit === 'scoop') ? qty * ((food&&food.portionG)||100) : qty;
+  var ratio = grams / 100;
+  function r2(n) { return Math.round((n||0)*10)/10; }
+  var newItem = {
+    id: uid('food'),
+    sourceType: food ? 'known' : 'manual',
+    foodName:  foodName,
+    quantity:  qty,
+    unit:      unit,
+    calories:  food ? r2(food.cal100  * ratio) : 0,
+    protein:   food ? r2(food.prot100 * ratio) : 0,
+    carbs:     food ? r2(food.carb100 * ratio) : 0,
+    fat:       food ? r2(food.fat100  * ratio) : 0
+  };
+  mealState.data.meals[cat].push(newItem);
+  addRecentFood(foodName);
+  saveMealDay();
+  renderMealCategory(cat);
+  updateMealTotals();
+  closeQuickAdd();
+}
+
+function renderQAResults(query) {
+  var container = document.getElementById('qa-results');
+  if (!container) return;
+  container.innerHTML = '';
+  var tab = qaState.activeTab;
+
+  var items = [];
+  if (!query && tab === 'recents') {
+    var recs = getRecentFoods();
+    if (recs.length === 0) {
+      container.innerHTML = '<div class="quick-add-empty">Aucun aliment récent.</div>'; return;
+    }
+    container.innerHTML = '<div class="quick-add-section-label">🕐 Récemment utilisés</div>';
+    items = recs.slice(0,20).filter(function(n){ return FOOD_DB[n]; });
+  } else if (!query && tab === 'favs') {
+    var favs = getFavoriteFoods();
+    if (favs.length === 0) {
+      container.innerHTML = '<div class="quick-add-empty">Aucun favori. Appuie sur ☆ pour en ajouter.</div>'; return;
+    }
+    container.innerHTML = '<div class="quick-add-section-label">⭐ Favoris</div>';
+    items = favs.filter(function(n){ return FOOD_DB[n]; });
+  } else if (!query && tab === 'custom') {
+    var customs = getCustomFoods();
+    var customKeys = Object.keys(customs);
+    if (customKeys.length === 0) {
+      container.innerHTML = '<div class="quick-add-empty">Aucun aliment personnalisé.</div>'; return;
+    }
+    container.innerHTML = '<div class="quick-add-section-label">✏️ Mes aliments</div>';
+    items = customKeys;
+  } else {
+    /* Search / all */
+    var results = searchFoods(query, 40);
+    if (results.length === 0) {
+      container.innerHTML = '<div class="quick-add-empty">Aucun résultat pour "' + escapeHtml(query) + '"</div>'; return;
+    }
+    /* Group by tag if no query */
+    if (!query) {
+      var favItems   = results.filter(function(r){ return r.tag==='⭐'; });
+      var recItems   = results.filter(function(r){ return r.tag==='🕐'; });
+      var otherItems = results.filter(function(r){ return r.tag!=='⭐' && r.tag!=='🕐'; });
+      if (favItems.length)   { addQASectionLabel(container, '⭐ Favoris'); favItems.forEach(function(r){ addQAItem(container, r.name); }); }
+      if (recItems.length)   { addQASectionLabel(container, '🕐 Récents'); recItems.forEach(function(r){ addQAItem(container, r.name); }); }
+      if (otherItems.length) { addQASectionLabel(container, 'Tous les aliments'); otherItems.slice(0,20).forEach(function(r){ addQAItem(container, r.name); }); }
+      return;
+    }
+    results.forEach(function(r){ addQAItem(container, r.name); });
+    return;
+  }
+  items.forEach(function(name){ addQAItem(container, name); });
+}
+
+function addQASectionLabel(container, text) {
+  var el = document.createElement('div');
+  el.className = 'quick-add-section-label';
+  el.textContent = text;
+  container.appendChild(el);
+}
+
+function addQAItem(container, foodName) {
+  var food = FOOD_DB[foodName];
+  var isFav = isFavoriteFood(foodName);
+  var div = document.createElement('div');
+  div.className = 'quick-add-item';
+  var catEmojis = { proteines:'🥩', laitiers:'🥛', feculents:'🌾', legumes:'🥦', fruits:'🍎', graisses:'🥑', sauces:'🫙', sucres:'🍯', boissons:'💧', supplements:'💊', plats:'🍽', snacks:'🥜', custom:'✏️' };
+  var emoji = food ? (catEmojis[food.cat] || '🍴') : '✏️';
+  div.innerHTML =
+    '<div class="quick-add-item__icon">' + emoji + '</div>' +
+    '<div style="flex:1;min-width:0;">' +
+      '<div class="quick-add-item__name">' + escapeHtml(foodName) + '</div>' +
+      (food ? '<div class="quick-add-item__cat">' + (food.cal100||0) + ' kcal/100' + (food.unit==='ml'?'ml':'g') + (food.cat?' · '+food.cat:'') + '</div>' : '<div class="quick-add-item__cat">Personnalisé</div>') +
+    '</div>' +
+    '<div class="quick-add-item__fav">' + (isFav?'⭐':'☆') + '</div>';
+
+  var favBtn = div.querySelector('.quick-add-item__fav');
+  favBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var nowFav = toggleFavoriteFood(foodName);
+    favBtn.textContent = nowFav ? '⭐' : '☆';
+  });
+  favBtn.addEventListener('touchend', function(e) {
+    e.preventDefault(); e.stopPropagation();
+    var nowFav = toggleFavoriteFood(foodName);
+    favBtn.textContent = nowFav ? '⭐' : '☆';
+  });
+
+  div.addEventListener('click', function() { showQAConfirmPanel(foodName); });
+  div.addEventListener('touchend', function(e) { e.preventDefault(); showQAConfirmPanel(foodName); });
+  container.appendChild(div);
+}
+
+/* ═══════════════════════════════════════════════════
+   DASHBOARD ANALYSE & TENDANCES
+═══════════════════════════════════════════════════ */
+
+var dashPeriod = 7; /* current selected period in days */
+
+function computeDashStats(days) {
+  var appData = loadAppData();
+  var meals   = appData.meals || {};
+  var today   = new Date();
+
+  /* Build array of last N days */
+  var dayKeys = [];
+  for (var i = 0; i < days; i++) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dayKeys.push(getDateKey(d));
+  }
+
+  /* Aggregate nutrition */
+  var loggedDays = 0;
+  var totals = { kcal:0, prot:0, carb:0, fat:0 };
+  var proteinAlerts = 0;
+  var calorieOverDays = 0;
+  var dailyKcal = [];
+
+  for (var k = 0; k < dayKeys.length; k++) {
+    var dayKey = dayKeys[k];
+    var day = meals[dayKey];
+    if (!day || !day.meals) continue;
+
+    var cats = ['breakfast','lunch','snack','dinner'];
+    var dayTot = { kcal:0, prot:0, carb:0, fat:0 };
+
+    for (var c = 0; c < cats.length; c++) {
+      var items = day.meals[cats[c]] || [];
+      for (var j = 0; j < items.length; j++) {
+        dayTot.kcal += parseFloat(items[j].calories)||0;
+        dayTot.prot += parseFloat(items[j].protein)||0;
+        dayTot.carb += parseFloat(items[j].carbs)||0;
+        dayTot.fat  += parseFloat(items[j].fat)||0;
+      }
+    }
+    /* Supplements */
+    var supps = day.supplements || [];
+    for (var si = 0; si < supps.length; si++) {
+      if (supps[si].includeInMacros && supps[si].taken) {
+        dayTot.kcal += parseFloat(supps[si].calories)||0;
+        dayTot.prot += parseFloat(supps[si].protein)||0;
+        dayTot.carb += parseFloat(supps[si].carbs)||0;
+        dayTot.fat  += parseFloat(supps[si].fat)||0;
+      }
+    }
+
+    /* Count day as logged if has at least 1 item or note */
+    var hasContent = false;
+    for (var cc = 0; cc < cats.length; cc++) {
+      if (day.meals[cats[cc]] && day.meals[cats[cc]].length > 0) { hasContent = true; break; }
+    }
+    if (!hasContent && !(day.notes && day.notes.trim())) continue;
+
+    loggedDays++;
+    totals.kcal += dayTot.kcal;
+    totals.prot += dayTot.prot;
+    totals.carb += dayTot.carb;
+    totals.fat  += dayTot.fat;
+    dailyKcal.push({ key: dayKey, kcal: dayTot.kcal, prot: dayTot.prot, dayType: day.dayType||'training' });
+
+    /* Alerts */
+    var tgt = DEFAULT_MACRO_TARGETS[day.dayType||'training'];
+    if (tgt && dayTot.prot < tgt.protein * 0.8) proteinAlerts++;
+    if (tgt && dayTot.kcal > tgt.kcal * 1.1) calorieOverDays++;
+  }
+
+  if (loggedDays === 0) return null;
+
+  var avgKcal = Math.round(totals.kcal / loggedDays);
+  var avgProt = Math.round(totals.prot / loggedDays);
+  var avgCarb = Math.round(totals.carb / loggedDays);
+  var avgFat  = Math.round(totals.fat  / loggedDays);
+
+  /* Estimate deficit vs average TDEE 2708 */
+  var avgTDEE = 2708;
+  var estimatedDeficit = avgTDEE - avgKcal;
+
+  /* Protein compliance (using training target as reference) */
+  var protTarget = 150;
+  var protCompliance = Math.round(avgProt / protTarget * 100);
+
+  /* Calorie compliance */
+  var kcalTarget = 2150;
+  var kcalCompliance = Math.round(avgKcal / kcalTarget * 100);
+
+  return {
+    loggedDays: loggedDays,
+    totalDays: days,
+    avgKcal: avgKcal,
+    avgProt: avgProt,
+    avgCarb: avgCarb,
+    avgFat:  avgFat,
+    estimatedDeficit: estimatedDeficit,
+    protCompliance: protCompliance,
+    kcalCompliance: kcalCompliance,
+    proteinAlerts: proteinAlerts,
+    calorieOverDays: calorieOverDays,
+    dailyKcal: dailyKcal,
+    dayKeys: dayKeys,
+    meals: meals
+  };
+}
+
+function renderDashboard(days) {
+  var stats = computeDashStats(days);
+  var kpiGrid     = document.getElementById('dash-kpi-grid');
+  var macroBlock  = document.getElementById('dash-macro-block');
+  var macroBars   = document.getElementById('dash-macro-bars');
+  var calBlock    = document.getElementById('dash-calendar-block');
+  var calEl       = document.getElementById('dash-calendar');
+  var alertsEl    = document.getElementById('dash-alerts');
+
+  if (!kpiGrid) return;
+
+  if (!stats) {
+    kpiGrid.innerHTML = '<div class="dash-no-data" style="grid-column:1/-1;"><div class="dash-no-data__icon">📊</div>Enregistre quelques journ\u00e9es dans le Journal Alimentaire pour voir tes tendances ici.</div>';
+    if (macroBlock) macroBlock.style.display = 'none';
+    if (calBlock)   calBlock.style.display   = 'none';
+    if (alertsEl)   alertsEl.innerHTML = '';
+    return;
+  }
+
+  /* ── KPIs ── */
+  var deficitClass = stats.estimatedDeficit > 0 ? 'good' : (stats.estimatedDeficit > -200 ? 'warn' : 'bad');
+  var kcalClass    = stats.kcalCompliance < 85 ? 'warn' : (stats.kcalCompliance > 110 ? 'bad' : 'good');
+  var protClass    = stats.protCompliance >= 90 ? 'good' : (stats.protCompliance >= 70 ? 'warn' : 'bad');
+  var logClass     = stats.loggedDays >= days * 0.7 ? 'good' : (stats.loggedDays >= days * 0.4 ? 'warn' : 'bad');
+
+  var deficitLabel = stats.estimatedDeficit >= 0
+    ? '\u2212' + stats.estimatedDeficit + ' kcal/j'
+    : '+' + Math.abs(stats.estimatedDeficit) + ' kcal/j';
+  var deficitSub = stats.estimatedDeficit >= 0
+    ? 'vs TDEE 2\u2009708 kcal'
+    : 'D\u00e9passement estim\u00e9';
+
+  kpiGrid.innerHTML =
+    kpiCard('Moy. calories', stats.avgKcal + '<span style="font-size:13px;color:var(--mid-gray)"> kcal</span>', 'Cible ~' + (stats.kcalCompliance) + '% respect\u00e9', kcalClass, '🔥') +
+    kpiCard('Moy. prot\u00e9ines', stats.avgProt + '<span style="font-size:13px;color:var(--mid-gray)">g</span>', stats.protCompliance + '% / objectif 150g', protClass, '💪') +
+    kpiCard('D\u00e9ficit estim\u00e9', deficitLabel, deficitSub, deficitClass, '📉') +
+    kpiCard('Jours journal\u00e9s', stats.loggedDays + '<span style="font-size:13px;color:var(--mid-gray)">/' + days + '</span>', Math.round(stats.loggedDays/days*100) + '% de coh\u00e9rence', logClass, '📋') +
+    kpiCard('Moy. glucides', stats.avgCarb + '<span style="font-size:13px;color:var(--mid-gray)">g</span>', 'Cible training: 218g', stats.avgCarb >= 180 ? 'good' : 'warn', '🌾') +
+    kpiCard('Moy. lipides', stats.avgFat + '<span style="font-size:13px;color:var(--mid-gray)">g</span>', 'Cible training: 75g', (stats.avgFat >= 60 && stats.avgFat <= 90) ? 'good' : 'warn', '🥑');
+
+  /* ── Macro bars ── */
+  if (macroBlock && macroBars) {
+    macroBlock.style.display = '';
+    var macroData = [
+      { label: 'Calories',  val: stats.avgKcal,  tgt: 2150, unit: 'kcal' },
+      { label: 'Prot\u00e9ines', val: stats.avgProt,  tgt: 150,  unit: 'g' },
+      { label: 'Glucides',  val: stats.avgCarb,  tgt: 218,  unit: 'g' },
+      { label: 'Lipides',   val: stats.avgFat,   tgt: 75,   unit: 'g' }
+    ];
+    macroBars.innerHTML = macroData.map(function(m) {
+      var pct = Math.min(Math.round(m.val / m.tgt * 100), 120);
+      var barPct = Math.min(pct, 100);
+      var cls = pct > 110 ? 'bad' : (pct >= 85 ? 'good' : 'warn');
+      return '<div class="dash-trend-row">' +
+        '<div class="dash-trend-label">' + m.label + '</div>' +
+        '<div class="dash-trend-bar-wrap"><div class="dash-trend-bar ' + cls + '" style="width:' + barPct + '%"></div></div>' +
+        '<div class="dash-trend-val">' + m.val + ' ' + m.unit + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  /* ── Calendar (14 days fixed) ── */
+  if (calBlock && calEl) {
+    calBlock.style.display = '';
+    var today2 = new Date();
+    var calHTML = '';
+    for (var ci = 13; ci >= 0; ci--) {
+      var d2 = new Date(today2);
+      d2.setDate(d2.getDate() - ci);
+      var dk = getDateKey(d2);
+      var dayMeals = stats.meals[dk];
+      var dotClass = 'empty';
+      var dayNum = d2.getDate();
+      if (dayMeals && dayMeals.meals) {
+        var cats2 = ['breakfast','lunch','snack','dinner'];
+        var hasFood = false;
+        var dayKcal2 = 0;
+        for (var cc2 = 0; cc2 < cats2.length; cc2++) {
+          var its = dayMeals.meals[cats2[cc2]]||[];
+          if (its.length > 0) hasFood = true;
+          for (var ii = 0; ii < its.length; ii++) dayKcal2 += parseFloat(its[ii].calories)||0;
+        }
+        if (hasFood) {
+          var tgt2 = DEFAULT_MACRO_TARGETS[dayMeals.dayType||'training'];
+          var tgtKcal2 = tgt2 ? tgt2.kcal : 2150;
+          var pct2 = dayKcal2 / tgtKcal2;
+          dotClass = pct2 > 1.1 ? 'logged-bad' : (pct2 < 0.7 ? 'logged-warn' : 'logged-good');
+        }
+      }
+      calHTML += '<div class="dash-cal-dot ' + dotClass + '" title="' + dk + '">' + dayNum + '</div>';
+    }
+    calEl.innerHTML = calHTML;
+  }
+
+  /* ── Alerts ── */
+  if (alertsEl) {
+    var alerts = [];
+
+    if (stats.proteinAlerts >= 2)
+      alerts.push({ type:'bad', icon:'⚠️', title:'Prot\u00e9ines insuffisantes', text: stats.proteinAlerts + ' jour' + (stats.proteinAlerts>1?'s':'') + ' sur ' + stats.loggedDays + ' sous 80% de l\'objectif (150g). Risque de perte musculaire. Augmente les sources prot\u00e9iques.' });
+
+    if (stats.calorieOverDays >= 2)
+      alerts.push({ type:'warn', icon:'📈', title:'Calories d\u00e9pass\u00e9es', text: stats.calorieOverDays + ' jour' + (stats.calorieOverDays>1?'s':'') + ' au-dessus de la cible +10%. V\u00e9rifie les portions et les sauces.' });
+
+    if (stats.estimatedDeficit < 0)
+      alerts.push({ type:'warn', icon:'🔄', title:'D\u00e9ficit n\u00e9gatif', text: 'En moyenne tu consommes ' + Math.abs(stats.estimatedDeficit) + ' kcal de plus que ton TDEE estim\u00e9. Ajuste les portions pour cr\u00e9er un d\u00e9ficit r\u00e9el.' });
+
+    if (stats.loggedDays < stats.totalDays * 0.5)
+      alerts.push({ type:'info', icon:'📋', title:'Journal incomplet', text: 'Seulement ' + stats.loggedDays + ' jours sur ' + stats.totalDays + ' enregistr\u00e9s. Plus tu journalises, plus l\'analyse est fiable.' });
+
+    if (stats.protCompliance >= 90 && stats.kcalCompliance >= 85 && stats.kcalCompliance <= 110 && stats.loggedDays >= days * 0.6)
+      alerts.push({ type:'good', icon:'✅', title:'Protocole respect\u00e9', text: 'Excellente coh\u00e9rence sur la p\u00e9riode. Calories et prot\u00e9ines dans les cibles. Continue sur cette lanc\u00e9e.' });
+
+    if (alerts.length === 0)
+      alerts.push({ type:'info', icon:'📊', title:'Analyse en cours', text: 'Continue d\'enregistrer tes repas pour obtenir des alertes personnalis\u00e9es.' });
+
+    alertsEl.innerHTML = alerts.map(function(a) {
+      return '<div class="dash-alert ' + a.type + '">' +
+        '<div class="dash-alert__icon">' + a.icon + '</div>' +
+        '<div class="dash-alert__text"><div class="dash-alert__title">' + a.title + '</div>' + a.text + '</div>' +
+        '</div>';
+    }).join('');
+  }
+}
+
+function kpiCard(label, val, sub, cls, icon) {
+  return '<div class="dash-kpi ' + cls + '">' +
+    '<div class="dash-kpi__trend">' + icon + '</div>' +
+    '<div class="dash-kpi__label">' + label + '</div>' +
+    '<div class="dash-kpi__val">' + val + '</div>' +
+    '<div class="dash-kpi__sub">' + sub + '</div>' +
+    '</div>';
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 15 — AMÉLIORATIONS JOURNAL ENTRAÎNEMENT
+═══════════════════════════════════════════════════ */
+
+var TR_TEMPLATES_KEY = 'shai_recomp_tr_templates_v1';
+
+/* ── Get/Set training templates ── */
+function getTrTemplates() { return safeParse(localStorage.getItem(TR_TEMPLATES_KEY), []); }
+function saveTrTemplates(t) { localStorage.setItem(TR_TEMPLATES_KEY, JSON.stringify(t)); }
+
+/* ── Find last session of same type (for PR/trend comparison) ── */
+function findPrevSessionOfType(sessionType, excludeDate) {
+  var appData = loadAppData();
+  var training = appData.training || {};
+  var keys = Object.keys(training).sort().reverse();
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    if (k === excludeDate) continue;
+    var s = training[k];
+    if (s && s.sessionType === sessionType && s.exercises && s.exercises.length > 0) {
+      /* Check has real data */
+      var hasReal = false;
+      for (var j = 0; j < s.exercises.length; j++) {
+        if ((parseFloat(s.exercises[j].weight)||0) > 0) { hasReal = true; break; }
+      }
+      if (hasReal) return { date: k, session: s };
+    }
+  }
+  return null;
+}
+
+/* ── Find PR for an exercise across all sessions ── */
+function findExercisePR(exerciseName) {
+  if (!exerciseName || !exerciseName.trim()) return null;
+  var appData = loadAppData();
+  var training = appData.training || {};
+  var nameLower = exerciseName.trim().toLowerCase();
+  var bestVol = 0;
+  var bestWeight = 0;
+  var bestDate = null;
+  var keys = Object.keys(training);
+  for (var i = 0; i < keys.length; i++) {
+    var s = training[keys[i]];
+    if (!s || !s.exercises) continue;
+    for (var j = 0; j < s.exercises.length; j++) {
+      var ex = s.exercises[j];
+      if (!ex.name || ex.name.trim().toLowerCase() !== nameLower) continue;
+      var vol = (parseFloat(ex.weight)||0) * (parseInt(ex.reps)||0) * (parseInt(ex.sets)||0);
+      var w   = parseFloat(ex.weight)||0;
+      if (vol > bestVol || (vol === bestVol && w > bestWeight)) {
+        bestVol = vol; bestWeight = w; bestDate = keys[i];
+      }
+    }
+  }
+  return bestVol > 0 ? { vol: bestVol, weight: bestWeight, date: bestDate } : null;
+}
+
+/* ── Whoop feedback ── */
+function renderWhoopFeedback() {
+  var el = document.getElementById('tr-whoop-feedback');
+  if (!el || !trState.data) return;
+  var recovery = parseFloat(trState.data.recovery) || 0;
+  var strain   = parseFloat(trState.data.strain)   || 0;
+  var sleep    = parseFloat(trState.data.sleepHours) || 0;
+
+  if (!recovery && !strain && !sleep) { el.style.display = 'none'; return; }
+  el.style.display = '';
+
+  var cls, icon, title, sub;
+  if (recovery >= 67) {
+    if (strain >= 14) {
+      cls = 'optimal'; icon = '🟢'; title = 'S\u00e9ance optimale';
+      sub = 'Recovery ' + recovery + '% \u2022 Strain ' + strain + ' \u2014 Tu \u00e9tais dans la zone id\u00e9ale. Continue sur cette lanc\u00e9e.';
+    } else if (strain >= 10) {
+      cls = 'adapted'; icon = '🔵'; title = 'Charge bien calibr\u00e9e';
+      sub = 'Recovery ' + recovery + '% \u2022 Strain ' + strain + ' \u2014 Bon \u00e9quilibre intensit\u00e9/r\u00e9cup\u00e9ration.';
+    } else {
+      cls = 'adapted'; icon = '🔵'; title = 'S\u00e9ance l\u00e9g\u00e8re';
+      sub = 'Recovery ' + recovery + '% mais Strain ' + strain + ' seulement \u2014 Tu pouvais pousser davantage.';
+    }
+  } else if (recovery >= 34) {
+    cls = 'caution'; icon = '🟡'; title = 'Prudence recommand\u00e9e';
+    sub = 'Recovery ' + recovery + '% (zone jaune)' + (strain ? ' \u2022 Strain ' + strain : '') + ' \u2014 Maintiens le volume, \u00e9vite de pousser au maximum.';
+  } else {
+    cls = 'rest'; icon = '🔴'; title = 'R\u00e9cup\u00e9ration insuffisante';
+    sub = 'Recovery ' + recovery + '% (zone rouge)' + (sleep ? ' \u2022 Sommeil ' + sleep + 'h' : '') + ' \u2014 R\u00e9duis le volume de \u221230%. Pas de HIIT.';
+  }
+
+  if (sleep > 0 && sleep < 7 && cls !== 'rest') {
+    sub += ' \u26a0\ufe0f Sommeil court (' + sleep + 'h) \u2014 vise 7h15+.';
+  }
+
+  el.innerHTML = '<div class="whoop-feedback ' + cls + '">' +
+    '<div class="whoop-feedback__icon">' + icon + '</div>' +
+    '<div><div class="whoop-feedback__title">' + title + '</div><div class="whoop-feedback__sub">' + sub + '</div></div>' +
+    '</div>';
+}
+
+/* ── Progress block (vs last same-type session) ── */
+function renderProgressBlock() {
+  var subsection = document.getElementById('tr-progress-subsection');
+  var container  = document.getElementById('tr-progress-rows');
+  if (!subsection || !container || !trState.data) return;
+
+  var sessionType = trState.data.sessionType;
+  var exs = trState.data.exercises || [];
+  if (!sessionType || exs.length === 0) { subsection.style.display = 'none'; return; }
+
+  /* Check if any exercise has real data */
+  var hasReal = exs.some(function(e) { return (parseFloat(e.weight)||0) > 0; });
+  if (!hasReal) { subsection.style.display = 'none'; return; }
+
+  var prev = findPrevSessionOfType(sessionType, trState.date);
+  subsection.style.display = '';
+  container.innerHTML = '';
+
+  if (!prev) {
+    container.innerHTML = '<div style="font-size:13px;color:var(--mid-gray);padding:8px 0;">Premi\u00e8re s\u00e9ance de type "' + escapeHtml(sessionType) + '" enregistr\u00e9e. Les progressions appara\u00eetront \u00e0 partir de la prochaine.</div>';
+    return;
+  }
+
+  /* Build a map of prev exercises by name */
+  var prevMap = {};
+  (prev.session.exercises || []).forEach(function(e) {
+    if (e.name && e.name.trim()) prevMap[e.name.trim().toLowerCase()] = e;
+  });
+
+  exs.forEach(function(ex) {
+    if (!ex.name || !ex.name.trim()) return;
+    var currVol    = (parseFloat(ex.weight)||0) * (parseInt(ex.reps)||0) * (parseInt(ex.sets)||0);
+    var currWeight = parseFloat(ex.weight)||0;
+    if (currVol === 0) return;
+
+    var prevEx = prevMap[ex.name.trim().toLowerCase()];
+    var pr     = findExercisePR(ex.name);
+    var isNewPR = pr && currVol >= pr.vol && pr.date !== trState.date;
+
+    var trendHtml = '';
+    if (prevEx) {
+      var prevVol = (parseFloat(prevEx.weight)||0) * (parseInt(prevEx.reps)||0) * (parseInt(prevEx.sets)||0);
+      var diff = currVol - prevVol;
+      var pct  = prevVol > 0 ? Math.round(diff / prevVol * 100) : 0;
+      if (diff > 0)      trendHtml = '<span class="ex-trend up">\u2191 +' + pct + '%</span>';
+      else if (diff < 0) trendHtml = '<span class="ex-trend down">\u2193 ' + pct + '%</span>';
+      else               trendHtml = '<span class="ex-trend same">\u2192 =</span>';
+    }
+
+    var prHtml = (pr && pr.vol > 0)
+      ? '<span class="ex-pr-badge' + (isNewPR ? ' new-pr' : '') + '">' + (isNewPR ? '\ud83c\udfc6 NOUVEAU PR' : 'PR ' + pr.weight + 'kg') + '</span>'
+      : '';
+
+    var prevValsHtml = prevEx
+      ? '<span class="ex-last-val">Pr\u00e9c. ' + (prevEx.weight||0) + 'kg \u00d7' + (prevEx.reps||0) + ' \u00d7' + (prevEx.sets||0) + '</span>'
+      : '<span class="ex-last-val">1\u00e8re fois</span>';
+
+    var row = document.createElement('div');
+    row.className = 'tr-progress-row';
+    row.innerHTML =
+      '<div class="tr-progress-row__name">' + escapeHtml(ex.name) + '</div>' +
+      '<div class="tr-progress-row__vals">' + currWeight + 'kg \u00d7' + (parseInt(ex.reps)||0) + ' \u00d7' + (parseInt(ex.sets)||0) + '</div>' +
+      '<div>' + trendHtml + '</div>' +
+      '<div>' + prHtml + '</div>';
+    container.appendChild(row);
+
+    /* Also add stats bar to the live ex-row */
+    var exDiv = document.querySelector('.ex-row[data-id="' + ex.id + '"]');
+    if (exDiv && !exDiv.querySelector('.ex-stats-bar')) {
+      var statsBar = document.createElement('div');
+      statsBar.className = 'ex-stats-bar';
+      statsBar.innerHTML = prevValsHtml + trendHtml + prHtml;
+      exDiv.appendChild(statsBar);
+    }
+  });
+}
+
+/* ── Training templates ── */
+function saveTrSessionAsTemplate(name) {
+  if (!trState.data || !name) return false;
+  var templates = getTrTemplates();
+  var exs = trState.data.exercises || [];
+  var vol = exs.reduce(function(s, e) {
+    return s + (parseFloat(e.weight)||0) * (parseInt(e.reps)||0) * (parseInt(e.sets)||0);
+  }, 0);
+  templates.push({
+    id: uid('trtpl'),
+    name: name,
+    sessionType: trState.data.sessionType || '',
+    createdAt: new Date().toISOString(),
+    exercises: JSON.parse(JSON.stringify(exs)),
+    cardio:    JSON.parse(JSON.stringify(trState.data.cardio||[])),
+    abs:       JSON.parse(JSON.stringify(trState.data.abs||[])),
+    summary: { vol: vol, sets: exs.reduce(function(s,e){ return s+(parseInt(e.sets)||0); }, 0) }
+  });
+  saveTrTemplates(templates);
+  renderTrTemplateBar();
+  return true;
+}
+
+function loadTrTemplate(tplId) {
+  var templates = getTrTemplates();
+  var tpl = null;
+  for (var i = 0; i < templates.length; i++) { if (templates[i].id === tplId) { tpl = templates[i]; break; } }
+  if (!tpl || !trState.data) return;
+  /* Assign new IDs to avoid collisions */
+  trState.data.exercises = tpl.exercises.map(function(e) {
+    var n = JSON.parse(JSON.stringify(e)); n.id = uid('ex'); return n;
+  });
+  trState.data.cardio = tpl.cardio.map(function(c) {
+    var n = JSON.parse(JSON.stringify(c)); n.id = uid('c'); return n;
+  });
+  trState.data.abs = tpl.abs.map(function(a) {
+    var n = JSON.parse(JSON.stringify(a)); n.id = uid('ab'); return n;
+  });
+  if (tpl.sessionType) {
+    trState.data.sessionType = tpl.sessionType;
+    var stEl = document.getElementById('tr-session-type');
+    if (stEl) stEl.value = tpl.sessionType;
+  }
+  saveTrainingDay();
+  renderTrainingJournal();
+  closeTrTemplateModal();
+}
+
+function deleteTrTemplate(tplId) {
+  var templates = getTrTemplates().filter(function(t){ return t.id !== tplId; });
+  saveTrTemplates(templates);
+  renderTrTemplateBar();
+  renderTrTemplateModal();
+}
+
+function renderTrTemplateBar() {
+  var bar = document.getElementById('tr-template-bar');
+  if (!bar) return;
+  var templates = getTrTemplates();
+  if (templates.length === 0) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '';
+  templates.forEach(function(tpl) {
+    var chip = document.createElement('div');
+    chip.className = 'tr-template-chip';
+    chip.textContent = '\ud83d\udccb ' + tpl.name;
+    chip.addEventListener('click', function(){ loadTrTemplate(tpl.id); });
+    bar.appendChild(chip);
+  });
+}
+
+function openTrTemplateModal(mode) {
+  var overlay = document.getElementById('tr-template-modal-overlay');
+  if (overlay) overlay.classList.add('active');
+  renderTrTemplateModal(mode);
+}
+function closeTrTemplateModal() {
+  var overlay = document.getElementById('tr-template-modal-overlay');
+  if (overlay) overlay.classList.remove('active');
+}
+function renderTrTemplateModal(mode) {
+  var title = document.getElementById('tr-tpl-modal-title');
+  var body  = document.getElementById('tr-tpl-modal-body');
+  if (!body) return;
+  var templates = getTrTemplates();
+
+  if (mode === 'save') {
+    if (title) title.textContent = 'Enregistrer cette s\u00e9ance';
+    body.innerHTML =
+      '<p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">Donne un nom \u00e0 cette s\u00e9ance.</p>' +
+      '<input id="tr-tpl-name-input" class="template-modal__name-input" placeholder="Ex : Pec heavy, Back volume\u2026" maxlength="50" />' +
+      '<button class="template-modal__save-btn" id="tr-tpl-save-confirm">💾 Enregistrer</button>';
+    var inp = document.getElementById('tr-tpl-name-input');
+    var btn = document.getElementById('tr-tpl-save-confirm');
+    if (inp) inp.focus();
+    if (btn) btn.addEventListener('click', function() {
+      var name = inp ? inp.value.trim() : '';
+      if (!name) { if(inp) inp.style.borderColor='var(--red)'; return; }
+      if (saveTrSessionAsTemplate(name)) {
+        body.innerHTML = '<div style="text-align:center;padding:24px;"><div style="font-size:32px;margin-bottom:8px;">\u2705</div><div style="font-weight:700;color:var(--navy);">Mod\u00e8le enregistr\u00e9&nbsp;!</div></div>';
+        setTimeout(closeTrTemplateModal, 1200);
+      }
+    });
+    if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ btn&&btn.click(); } });
+  } else {
+    if (title) title.textContent = 'Charger un mod\u00e8le';
+    if (templates.length === 0) {
+      body.innerHTML = '<div style="text-align:center;padding:32px;color:var(--mid-gray);font-size:14px;">Aucun mod\u00e8le enregistr\u00e9.<br><br>Utilise \u201c\ud83d\udcbe Sauvegarder mod\u00e8le\u201d apr\u00e8s une s\u00e9ance.</div>';
+      return;
+    }
+    body.innerHTML = '';
+    templates.forEach(function(tpl) {
+      var d = document.createElement('div');
+      d.className = 'template-item';
+      d.innerHTML =
+        '<div style="flex:1;">' +
+          '<div class="template-item__name">' + escapeHtml(tpl.name) + '</div>' +
+          '<div class="template-item__sub">' + (tpl.sessionType||'') + (tpl.summary.vol?' \u2022 Vol. '+tpl.summary.vol+' kg':'') + (tpl.summary.sets?' \u2022 '+tpl.summary.sets+' s\u00e9ries':'') + '</div>' +
+        '</div>' +
+        '<button class="template-item__load">Charger</button>' +
+        '<button class="template-item__del">\ud83d\uddd1</button>';
+      d.querySelector('.template-item__load').addEventListener('click', function(){ loadTrTemplate(tpl.id); });
+      d.querySelector('.template-item__del').addEventListener('click', function(e){
+        e.stopPropagation();
+        if (confirm('Supprimer ce mod\u00e8le ?')) deleteTrTemplate(tpl.id);
+      });
+      body.appendChild(d);
+    });
+  }
+}
+
+/* ── Copy previous session of same type ── */
+function copyPrevSessionOfType() {
+  if (!trState.data) return;
+  var sessionType = trState.data.sessionType;
+  if (!sessionType) { alert('S\u00e9lectionne d\'abord un type de s\u00e9ance.'); return; }
+  var prev = findPrevSessionOfType(sessionType, trState.date);
+  if (!prev) { alert('Aucune s\u00e9ance "' + sessionType + '" trouv\u00e9e dans l\'historique.'); return; }
+  if (!confirm('Copier les exercices de la s\u00e9ance du ' + formatDateFr(prev.date) + ' ?')) return;
+  trState.data.exercises = (prev.session.exercises||[]).map(function(e) {
+    var n = JSON.parse(JSON.stringify(e)); n.id = uid('ex'); return n;
+  });
+  trState.data.cardio = (prev.session.cardio||[]).map(function(c) {
+    var n = JSON.parse(JSON.stringify(c)); n.id = uid('c'); return n;
+  });
+  trState.data.abs = (prev.session.abs||[]).map(function(a) {
+    var n = JSON.parse(JSON.stringify(a)); n.id = uid('ab'); return n;
+  });
+  saveTrainingDay();
+  renderTrainingJournal();
+}
+
 /* ═══════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════ */
@@ -5382,6 +7563,8 @@ function initApp() {
       if (!el) return;
       el.addEventListener('input', function() {
         if (trState.data) { trState.data[fkey] = this.value; saveTrainingDay(); }
+        try { renderWhoopFeedback(); } catch(e2) {}
+        try { renderProgressBlock(); } catch(e2) {}
       });
     })(feelingIds[fi], feelingKeys[fi]);
   }
@@ -5405,6 +7588,111 @@ function initApp() {
   if (btnResetTr) btnResetTr.addEventListener('click', resetTrainingData);
   var btnResetAll   = document.getElementById('btn-reset-all');
   if (btnResetAll) btnResetAll.addEventListener('click', resetAllData);
+
+  /* ── Dashboard period tabs ── */
+  var periodTabs = document.querySelectorAll('.dash-period-tab');
+  for (var pt = 0; pt < periodTabs.length; pt++) {
+    (function(tab) {
+      tab.addEventListener('click', function() {
+        for (var k = 0; k < periodTabs.length; k++) periodTabs[k].classList.remove('active');
+        tab.classList.add('active');
+        dashPeriod = parseInt(tab.getAttribute('data-days')) || 7;
+        renderDashboard(dashPeriod);
+      });
+    })(periodTabs[pt]);
+  }
+
+  /* ── Quick Add overlay ── */
+  var qaClose = document.getElementById('qa-close');
+  if (qaClose) qaClose.addEventListener('click', closeQuickAdd);
+
+  var qaOverlay = document.getElementById('quick-add-overlay');
+  if (qaOverlay) qaOverlay.addEventListener('click', function(e) {
+    if (e.target === qaOverlay) closeQuickAdd();
+  });
+
+  var qaSearchInput = document.getElementById('qa-search-input');
+  var qaSearchTimer;
+  if (qaSearchInput) {
+    qaSearchInput.addEventListener('input', function() {
+      clearTimeout(qaSearchTimer);
+      var val = qaSearchInput.value;
+      qaSearchTimer = setTimeout(function() { renderQAResults(val); }, 180);
+    });
+    qaSearchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeQuickAdd();
+    });
+  }
+
+  var qaTabs = document.querySelectorAll('.quick-add-tab');
+  for (var qt = 0; qt < qaTabs.length; qt++) {
+    (function(tab) {
+      tab.addEventListener('click', function() {
+        for (var k=0; k<qaTabs.length; k++) qaTabs[k].classList.remove('active');
+        tab.classList.add('active');
+        qaState.activeTab = tab.getAttribute('data-tab');
+        var inp = document.getElementById('qa-search-input');
+        renderQAResults(inp ? inp.value : '');
+      });
+    })(qaTabs[qt]);
+  }
+
+  var qaBack = document.getElementById('qa-back');
+  if (qaBack) qaBack.addEventListener('click', function() {
+    showQASearchPanel();
+  });
+
+  var qaConfirmQty  = document.getElementById('qa-confirm-qty');
+  var qaConfirmUnit = document.getElementById('qa-confirm-unit');
+  if (qaConfirmQty)  qaConfirmQty.addEventListener('input',  updateQAPreview);
+  if (qaConfirmUnit) qaConfirmUnit.addEventListener('change', updateQAPreview);
+
+  var qaConfirmAdd = document.getElementById('qa-confirm-add');
+  if (qaConfirmAdd) qaConfirmAdd.addEventListener('click', confirmQuickAdd);
+
+  /* ── Template buttons ── */
+  var btnSaveTpl = document.getElementById('btn-save-day-template');
+  if (btnSaveTpl) btnSaveTpl.addEventListener('click', function() { openTemplateModal('save'); });
+
+  var btnLoadTpl = document.getElementById('btn-load-template');
+  if (btnLoadTpl) btnLoadTpl.addEventListener('click', function() { openTemplateModal('load'); });
+
+  var tplClose = document.getElementById('tpl-modal-close');
+  if (tplClose) tplClose.addEventListener('click', closeTemplateModal);
+
+  var tplOverlay = document.getElementById('template-modal-overlay');
+  if (tplOverlay) tplOverlay.addEventListener('click', function(e) {
+    if (e.target === tplOverlay) closeTemplateModal();
+  });
+
+  /* ── Copy yesterday ── */
+  var btnCopyYday = document.getElementById('btn-copy-yesterday');
+  if (btnCopyYday) btnCopyYday.addEventListener('click', function() {
+    if (confirm('Copier tous les repas d\u2019hier vers aujourd\u2019hui ?')) copyDayFromYesterday();
+  });
+
+  /* Escape closes modals */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeQuickAdd(); closeTemplateModal(); closeTrTemplateModal(); }
+  });
+
+  /* ── Training template & copy buttons ── */
+  var trBtnSaveTpl = document.getElementById('tr-btn-save-tpl');
+  if (trBtnSaveTpl) trBtnSaveTpl.addEventListener('click', function() { openTrTemplateModal('save'); });
+
+  var trBtnLoadTpl = document.getElementById('tr-btn-load-tpl');
+  if (trBtnLoadTpl) trBtnLoadTpl.addEventListener('click', function() { openTrTemplateModal('load'); });
+
+  var trBtnCopyPrev = document.getElementById('tr-btn-copy-prev');
+  if (trBtnCopyPrev) trBtnCopyPrev.addEventListener('click', copyPrevSessionOfType);
+
+  var trTplClose = document.getElementById('tr-tpl-modal-close');
+  if (trTplClose) trTplClose.addEventListener('click', closeTrTemplateModal);
+
+  var trTplOverlay = document.getElementById('tr-template-modal-overlay');
+  if (trTplOverlay) trTplOverlay.addEventListener('click', function(e) {
+    if (e.target === trTplOverlay) closeTrTemplateModal();
+  });
 
   refreshDataStats();
 }
