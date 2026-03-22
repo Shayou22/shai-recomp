@@ -2205,6 +2205,7 @@ input[type="date"].jdate-input {
 .s8-day__date        { font-family: var(--font-mono); font-size: 10px; color: var(--mid-gray); margin-bottom: 6px; }
 .s8-day__pill        { display: inline-block; width: 22px; height: 22px; border-radius: 50%; margin: 2px auto; font-size: 11px; line-height: 22px; }
 .s8-day__pill.done   { background: var(--green-light); color: var(--white); }
+.s8-day__pill.part   { background: var(--gold); color: var(--white); }
 .s8-day__pill.none   { background: var(--warm-gray); color: var(--mid-gray); }
 .s8-day__val         { font-family: var(--font-mono); font-size: 10px; color: var(--navy); display: block; margin-top: 1px; }
 .s8-day__sub         { font-size: 9px; color: var(--mid-gray); display: block; }
@@ -4777,16 +4778,7 @@ function refreshDataStats() {
     for (var i = 0; i < mKeys.length; i++) {
       var day = d.meals[mKeys[i]];
       if (!day) continue;
-      var hasMeals = false;
-      if (day.meals) {
-        var cats = Object.keys(day.meals);
-        for (var c = 0; c < cats.length; c++) {
-          if (day.meals[cats[c]] && day.meals[cats[c]].length > 0) { hasMeals = true; break; }
-        }
-      }
-      var hasSupps = day.supplements && day.supplements.length > 0;
-      var hasNotes = day.notes && day.notes.trim().length > 0;
-      if (hasMeals || hasSupps || hasNotes) mealDays++;
+      if (classifyMealDay(day) === 'full') mealDays++; /* single source of truth */
     }
 
     /* Compte uniquement les jours d'entraînement avec au moins 1 exercice réellement saisi OU cardio OU note */
@@ -6962,12 +6954,8 @@ function computeDashStats(days) {
       }
     }
 
-    /* Count day as logged if has at least 1 item or note */
-    var hasContent = false;
-    for (var cc = 0; cc < cats.length; cc++) {
-      if (day.meals[cats[cc]] && day.meals[cats[cc]].length > 0) { hasContent = true; break; }
-    }
-    if (!hasContent && !(day.notes && day.notes.trim())) continue;
+    /* Only count full days */
+    if (classifyMealDay(day) !== 'full') continue;
 
     loggedDays++;
     totals.kcal += dayTot.kcal;
@@ -7092,21 +7080,10 @@ function renderDashboard(days) {
       var dayMeals = stats.meals[dk];
       var dotClass = 'empty';
       var dayNum = d2.getDate();
-      if (dayMeals && dayMeals.meals) {
-        var cats2 = ['breakfast','lunch','snack','dinner'];
-        var hasFood = false;
-        var dayKcal2 = 0;
-        for (var cc2 = 0; cc2 < cats2.length; cc2++) {
-          var its = dayMeals.meals[cats2[cc2]]||[];
-          if (its.length > 0) hasFood = true;
-          for (var ii = 0; ii < its.length; ii++) dayKcal2 += parseFloat(its[ii].calories)||0;
-        }
-        if (hasFood) {
-          var tgt2 = DEFAULT_MACRO_TARGETS[dayMeals.dayType||'training'];
-          var tgtKcal2 = tgt2 ? tgt2.kcal : 2150;
-          var pct2 = dayKcal2 / tgtKcal2;
-          dotClass = pct2 > 1.1 ? 'logged-bad' : (pct2 < 0.7 ? 'logged-warn' : 'logged-good');
-        }
+      if (dayMeals) {
+        var ds2 = classifyMealDay(dayMeals);
+        if (ds2 === 'full')         dotClass = 'logged-good';
+        else if (ds2 === 'partial') dotClass = 'logged-warn';
       }
       calHTML += '<div class="dash-cal-dot ' + dotClass + '" title="' + dk + '">' + dayNum + '</div>';
     }
@@ -7533,6 +7510,29 @@ function saveRenphoEntry(wk, data)    {
 }
 
 /* ── Aggregate one day from S14+S15 ── */
+/* ─ Single source of truth for meal day classification ─
+   'empty'   = 0 real items (cal>0 or prot>0)
+   'partial' = 1-2 real items OR total kcal < 400
+   'full'    = >=3 real items AND total kcal >= 400
+   Supplements, notes, and zero-value entries are ignored.
+*/
+function classifyMealDay(dayData) {
+  if (!dayData || !dayData.meals) return 'empty';
+  var cats = ['breakfast','lunch','snack','dinner'];
+  var n = 0; var kcal = 0;
+  for (var c = 0; c < cats.length; c++) {
+    var items = dayData.meals[cats[c]] || [];
+    for (var j = 0; j < items.length; j++) {
+      var kc = parseFloat(items[j].calories) || 0;
+      var pr = parseFloat(items[j].protein)  || 0;
+      if (kc > 0 || pr > 0) { n++; kcal += kc; }
+    }
+  }
+  if (n === 0)               return 'empty';
+  if (n >= 3 && kcal >= 400) return 'full';
+  return 'partial';
+}
+
 function getDayData(dateKey) {
   var appData = loadAppData();
   var mDay    = (appData.meals    || {})[dateKey] || null;
@@ -7540,6 +7540,8 @@ function getDayData(dateKey) {
   var r = {
     dateKey: dateKey,
     hasMeals: false, hasTraining: false,
+    mealStatus: 'empty',     /* 'empty' | 'partial' | 'full' */
+    trainingStatus: 'empty', /* 'empty' | 'partial' | 'full' */
     kcal: 0, prot: 0, carb: 0, fat: 0,
     sessionType: '', strain: 0, recovery: 0, sleep: 0,
     feeling: 0, trainingDone: false
@@ -7547,16 +7549,22 @@ function getDayData(dateKey) {
 
   if (mDay && mDay.meals) {
     var cats = ['breakfast','lunch','snack','dinner'];
+    var realItems = 0;
     for (var c = 0; c < cats.length; c++) {
       var items = mDay.meals[cats[c]] || [];
-      if (items.length) r.hasMeals = true;
       for (var j = 0; j < items.length; j++) {
-        r.kcal += parseFloat(items[j].calories) || 0;
-        r.prot += parseFloat(items[j].protein)  || 0;
-        r.carb += parseFloat(items[j].carbs)    || 0;
-        r.fat  += parseFloat(items[j].fat)      || 0;
+        var kcalVal = parseFloat(items[j].calories) || 0;
+        var protVal = parseFloat(items[j].protein)  || 0;
+        if (kcalVal > 0 || protVal > 0) {
+          realItems++;
+          r.kcal += kcalVal;
+          r.prot += protVal;
+          r.carb += parseFloat(items[j].carbs) || 0;
+          r.fat  += parseFloat(items[j].fat)   || 0;
+        }
       }
     }
+    /* Supplements: macros only, never influence mealStatus */
     var supps = mDay.supplements || [];
     for (var si = 0; si < supps.length; si++) {
       if (supps[si].includeInMacros && supps[si].taken) {
@@ -7570,22 +7578,39 @@ function getDayData(dateKey) {
     r.prot = Math.round(r.prot);
     r.carb = Math.round(r.carb);
     r.fat  = Math.round(r.fat);
+    r.mealStatus = classifyMealDay(mDay);
+    r.hasMeals   = r.mealStatus !== 'empty';
   }
 
   if (tDay) {
     r.sessionType  = tDay.sessionType || '';
-    r.strain       = parseFloat(tDay.strain)      || 0;
-    r.recovery     = parseFloat(tDay.recovery)    || 0;
-    r.sleep        = parseFloat(tDay.sleepHours)  || 0;
-    r.feeling      = parseFloat(tDay.feeling)     || 0;
+    r.strain       = parseFloat(tDay.strain)     || 0;
+    r.recovery     = parseFloat(tDay.recovery)   || 0;
+    r.sleep        = parseFloat(tDay.sleepHours) || 0;
+    r.feeling      = parseFloat(tDay.feeling)    || 0;
     r.trainingDone = tDay.status === 'faite' || tDay.status === 'partielle';
+    var exVol = 0;
     var exs = tDay.exercises || [];
     for (var ei = 0; ei < exs.length; ei++) {
-      if ((parseFloat(exs[ei].weight)||0) > 0 || (parseInt(exs[ei].reps)||0) > 0) {
-        r.hasTraining = true; break;
-      }
+      exVol += (parseFloat(exs[ei].weight)||0) * (parseInt(exs[ei].reps)||0) * (parseInt(exs[ei].sets)||1);
     }
-    if (!r.hasTraining && tDay.cardio && tDay.cardio.length) r.hasTraining = true;
+    var cardioDur = 0;
+    var cardio = tDay.cardio || [];
+    for (var ci = 0; ci < cardio.length; ci++) {
+      cardioDur += parseFloat(cardio[ci].duration) || 0;
+    }
+    /* trainingStatus:
+       empty   = no real data
+       partial = some data but light (vol < 1000 AND cardio < 15 min)
+       full    = vol >= 1000 OR cardio >= 15 min */
+    if (exVol === 0 && cardioDur === 0) {
+      r.trainingStatus = 'empty';
+    } else if (exVol >= 1000 || cardioDur >= 15) {
+      r.trainingStatus = 'full';
+    } else {
+      r.trainingStatus = 'partial';
+    }
+    r.hasTraining = r.trainingStatus !== 'empty';
   }
   return r;
 }
@@ -7648,15 +7673,25 @@ function renderS8Dashboard() {
     s8SetKpi('s8k-prot', '<span style="font-size:14px;color:var(--mid-gray)">—</span>', 'non tracé', 'info');
   }
 
-  /* KPI: Jours tracés */
-  var logCls = loggedDays.length >= 5 ? 'good' : loggedDays.length >= 3 ? 'warn' : 'bad';
-  s8SetKpi('s8k-logged', loggedDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
-    loggedDays.length >= 5 ? 'excellent' : loggedDays.length >= 3 ? 'à améliorer' : 'insuffisant', logCls);
+  /* KPI: Jours tracés — full days only */
+  var fullMealDays    = days.filter(function(d) { return d.mealStatus === 'full'; });
+  var partialMealDays = days.filter(function(d) { return d.mealStatus === 'partial'; });
+  var logCls = fullMealDays.length >= 5 ? 'good' : fullMealDays.length >= 3 ? 'warn' : (fullMealDays.length > 0 ? 'warn' : 'bad');
+  var logSub = fullMealDays.length + ' complet' + (fullMealDays.length !== 1 ? 's' : '') +
+    (partialMealDays.length > 0 ? ' · ' + partialMealDays.length + ' partiel' + (partialMealDays.length !== 1 ? 's' : '') : '');
+  s8SetKpi('s8k-logged',
+    fullMealDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
+    logSub, logCls);
 
-  /* KPI: Séances */
-  var sCls = trDays.length >= 5 ? 'good' : trDays.length >= 3 ? 'warn' : (trDays.length > 0 ? 'warn' : 'bad');
-  s8SetKpi('s8k-sessions', trDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
-    trDays.length >= 5 ? 'programme respecté' : trDays.length >= 3 ? 'partiel' : 'insuffisant', sCls);
+  /* KPI: Séances — full sessions only */
+  var fullTrDays    = days.filter(function(d) { return d.trainingStatus === 'full'; });
+  var partialTrDays = days.filter(function(d) { return d.trainingStatus === 'partial'; });
+  var sCls = fullTrDays.length >= 5 ? 'good' : fullTrDays.length >= 3 ? 'warn' : (fullTrDays.length > 0 ? 'warn' : 'bad');
+  var sSub = fullTrDays.length + ' complet' + (fullTrDays.length !== 1 ? 'es' : 'e') +
+    (partialTrDays.length > 0 ? ' · ' + partialTrDays.length + ' partielle' + (partialTrDays.length !== 1 ? 's' : '') : '');
+  s8SetKpi('s8k-sessions',
+    fullTrDays.length + '<span style="font-size:11px;color:var(--mid-gray)">/7</span>',
+    sSub, sCls);
 
   /* KPI: Recovery */
   if (avgRec !== null) {
@@ -7684,43 +7719,49 @@ function renderS8Dashboard() {
   });
 
   /* ── Day grid ── */
-  var gridEl   = document.getElementById('s8-day-grid');
+  var gridEl    = document.getElementById('s8-day-grid');
   var DAY_NAMES = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
   if (gridEl) {
     gridEl.innerHTML = '';
     for (var i = 0; i < 7; i++) {
-      var d     = days[i];
-      var dk    = weekDays[i];
+      var d       = days[i];
+      var dk      = weekDays[i];
       var isToday = dk === today;
       var dayNum  = parseInt(dk.split('-')[2]);
 
-      /* card colour */
+      /* card border based on meal completion */
       var cardCls = 'empty';
-      if (d.hasMeals || d.hasTraining) {
+      if (d.mealStatus === 'full') {
         var tgt2  = DEFAULT_MACRO_TARGETS['training'];
         var ratio = tgt2 && d.kcal > 0 ? d.kcal / tgt2.kcal : 0;
-        if (d.hasMeals && ratio > 1.1)       cardCls = 'bad';
-        else if (d.hasMeals && ratio >= 0.7)  cardCls = 'good';
-        else if (d.hasMeals)                  cardCls = 'warn';
-        else if (d.hasTraining)               cardCls = '';
+        cardCls = ratio > 1.1 ? 'bad' : 'good';
+      } else if (d.mealStatus === 'partial') {
+        cardCls = 'warn';
+      } else if (d.trainingStatus !== 'empty') {
+        cardCls = '';
       }
 
-      var mealIcon = d.hasMeals
-        ? '<span class="s8-day__pill done" title="Repas tracé">🍽</span>'
-        : '<span class="s8-day__pill none">·</span>';
-      var trIcon = d.hasTraining
-        ? '<span class="s8-day__pill done" title="' + escapeHtml(d.sessionType || 'Séance') + '">💪</span>'
-        : '<span class="s8-day__pill none">·</span>';
+      /* meal icon: full / partial / empty */
+      var mealIcon;
+      if (d.mealStatus === 'full')         mealIcon = '<span class="s8-day__pill done" title="Journée complète">🍽️</span>';
+      else if (d.mealStatus === 'partial') mealIcon = '<span class="s8-day__pill part" title="Journée partielle">🍴</span>';
+      else                                 mealIcon = '<span class="s8-day__pill none" title="Non tracé">·</span>';
 
-      var kcalLine   = d.kcal > 0   ? '<span class="s8-day__val">' + d.kcal  + '</span><span class="s8-day__sub">kcal</span>' : '';
-      var strainLine = d.strain > 0 ? '<span class="s8-day__val">' + d.strain + '</span><span class="s8-day__sub">strain</span>' : '';
-      var recLine    = d.recovery > 0 ? '<span class="s8-day__val">' + d.recovery + '%</span><span class="s8-day__sub">rec.</span>' : '';
+      /* training icon: full / partial / empty */
+      var trIcon;
+      if (d.trainingStatus === 'full')         trIcon = '<span class="s8-day__pill done" title="' + escapeHtml(d.sessionType || 'Séance') + '">💪</span>';
+      else if (d.trainingStatus === 'partial') trIcon = '<span class="s8-day__pill part" title="Séance partielle">⚡</span>';
+      else                                     trIcon = '<span class="s8-day__pill none">·</span>';
+
+      var kcalLine   = d.kcal > 0     ? '<span class="s8-day__val">' + d.kcal     + '</span><span class="s8-day__sub">kcal</span>'   : '';
+      var strainLine = d.strain > 0   ? '<span class="s8-day__val">' + d.strain   + '</span><span class="s8-day__sub">strain</span>' : '';
+      var recLine    = d.recovery > 0 ? '<span class="s8-day__val">' + d.recovery + '%</span><span class="s8-day__sub">rec.</span>'   : '';
 
       var card = document.createElement('div');
       card.className = 's8-day-card ' + cardCls + (isToday ? ' today' : '');
       card.innerHTML =
-        '<div class="s8-day__name">'  + DAY_NAMES[i] + '</div>' +
-        '<div class="s8-day__date">'  + dayNum + '</div>' +
+        '<div class="s8-day__name">' + DAY_NAMES[i] + '</div>' +
+        '<div class="s8-day__date">' + dayNum       + '</div>' +
         mealIcon + trIcon + kcalLine + strainLine + recLine;
       gridEl.appendChild(card);
     }
