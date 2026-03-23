@@ -1129,6 +1129,8 @@ input[type="date"].jdate-input {
   touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 .food-source-toggle.manual-mode { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+.food-source-toggle.overridden-mode { background: var(--orange); color: var(--white); border-color: var(--orange); }
+.food-row__macros input.macro-overridden { border-color: var(--orange); background: rgba(192,57,43,.04); }
 .food-del-btn {
   background: none; border: none; cursor: pointer; color: var(--red);
   font-size: 18px; padding: 4px 6px; line-height: 1; border-radius: 4px;
@@ -2477,6 +2479,16 @@ input[type="date"].jdate-input {
   .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .dash-kpi__val { font-size: 18px; }
 }
+
+/* ── S10 week navigation ── */
+.s10-week-nav { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.s10-week-label-wrap { flex:1; text-align:center; min-width:180px; }
+.s10-week-label { font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--navy); display:block; }
+.s10-week-sub { font-size:11px; color:var(--mid-gray); display:block; margin-top:2px; }
+.s10-empty-state { text-align:center; padding:48px 20px; color:var(--mid-gray); }
+.s10-empty-state__icon { font-size:36px; margin-bottom:12px; }
+.s10-empty-state__title { font-size:15px; font-weight:600; color:var(--navy); margin-bottom:8px; }
+.s10-empty-state__sub { font-size:13px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -3493,12 +3505,13 @@ input[type="date"].jdate-input {
             <tbody>
               <tr data-week="S0"><td>S0</td><td>01/03</td><td class="num">76.4</td><td class="num">60.6 kg</td><td class="num">16.5%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr data-week="S1"><td>S1</td><td>09/03</td><td class="num">77.35</td><td class="num">61.1 kg</td><td class="num">16.8%</td><td class="num">~38</td><td class="num">~68</td><td>—</td><td>—</td></tr>
-              <tr class="current" data-week="S2"><td><strong>S2 ←</strong></td><td>16/03</td><td class="num"><strong>77.85</strong></td><td class="num"><strong>61.4 kg</strong></td><td class="num">16.9%</td><td class="num">39</td><td class="num">67</td><td class="num">69%</td><td class="num">77%</td></tr>
+              <tr class="current" data-week="S2"><td><strong>S2 ←</strong></td><td>16/03</td><td class="num"><strong>77.85</strong></td><td class="num"><strong>61.4 kg</strong></td><td class="num">16.9%</td><td class="num" title="Donnée partielle S2 — moyenne S1 : ~38">~39*</td><td class="num" title="Donnée partielle S2 — moyenne S1 : ~68">~67*</td><td class="num">69%†</td><td class="num" title="Source non confirmée">—</td></tr>
               <tr data-week="S3"><td>S3</td><td>23/03</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr><td>S4–S16</td><td>…</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr class="objective"><td><strong>S16</strong></td><td>Objectif</td><td class="num"><strong>70–71</strong></td><td class="num"><strong>≥ 64.0</strong></td><td class="num"><strong>9–10%</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             </tbody>
           </table></div>
+          <p style="font-size:12px;color:var(--mid-gray);margin-top:8px;font-style:italic;">* HRV et RHR S2 partiels — données complètes au check-in S3 (lundi 23/03). † Recovery 69% = 17/03 uniquement (1 jour S2). Sleep S2 non confirmé.</p>
         </div>
       </div><!-- /s8-history-content -->
     </div>
@@ -3518,26 +3531,27 @@ input[type="date"].jdate-input {
           <thead><tr><th>Observation</th><th>Interprétation</th></tr></thead>
           <tbody>
             <tr><td>Poids +0.50 kg vs S1</td><td>Rétention hydrique — pas de stockage graisseux réel</td></tr>
-            <tr><td>Masse grasse +0.1 kg vs S1</td><td>Dans marge d'erreur Renpho (±0.3 kg) — non significatif</td></tr>
+            <tr><td>Masse grasse +0.1 kg vs S1</td><td>Dans marge d’erreur Renpho (±0.3 kg) — non significatif</td></tr>
             <tr class="green-row"><td>Masse musculaire +0.3 kg vs S1</td><td>Signal positif — adaptation neuromusculaire active ✅</td></tr>
             <tr class="green-row"><td>LBM 64.7 kg vs plancher 64.4 kg</td><td>Plancher respecté — +0.3 kg de marge ✅</td></tr>
           </tbody>
         </table></div>
-        <div class="alert alert-green"><strong>Lecture clef</strong> Le poids monte mais la masse musculaire aussi. Signal classique d'une recomposition qui démarre correctement. La perte grasse nette sera visible sur la balance à partir de S3–S4 quand le déficit calorique dominera.</div>
+        <div class="alert alert-green"><strong>Lecture clef</strong> Le poids monte mais la masse musculaire aussi. Signal classique d’une recomposition qui démarre correctement. La perte grasse nette sera visible sur la balance à partir de S3–S4 quand le déficit calorique dominera.</div>
       </div>
 
       <div class="subsection">
-        <div class="subsection-title">Analyse Whoop — Points Clés S2</div>
+        <div class="subsection-title">Analyse Whoop — Référence S1 (base de comparaison)</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Indicateur</th><th>Lecture</th><th>Action</th></tr></thead>
           <tbody>
-            <tr><td>Recovery 69%</td><td>Zone jaune — jours training tirent vers le bas</td><td>Normal — surveiller tendance S2–S3</td></tr>
-            <tr><td>HRV 39 ms</td><td>Normal homme 30 ans actif</td><td>Alerte si &lt; 32 ms 3 jours consécutifs</td></tr>
-            <tr class="green-row"><td>RHR 67 bpm</td><td>Excellent &lt; 70 bpm</td><td>Surveiller si &gt; 72 bpm plusieurs jours</td></tr>
-            <tr class="orange-row"><td>Sommeil 6h48</td><td>Insuffisant — GH nocturne compromise</td><td><strong>Coucher 22h00 MAX — objectif 7h15+</strong></td></tr>
-            <tr class="green-row"><td>Strain 11.4</td><td>Zone optimale recompo (10–14)</td><td>Maintenir 11–13 en S2</td></tr>
+            <tr><td>Recovery ~69%</td><td>Zone jaune/verte limite — jours training tirent vers le bas</td><td>Surveiller tendance S2–S3</td></tr>
+            <tr><td>HRV ~38 ms</td><td>Normal homme 30 ans actif</td><td>Alerte si &lt; 32 ms 3 jours consécutifs</td></tr>
+            <tr class="green-row"><td>RHR ~68 bpm</td><td>Excellent &lt; 70 bpm</td><td>Surveiller si &gt; 72 bpm plusieurs jours</td></tr>
+            <tr class="orange-row"><td>Sommeil ~5.6h (17/03)</td><td>Insuffisant — GH nocturne compromise</td><td><strong>Coucher 22h00 MAX — objectif 7h15+</strong></td></tr>
+            <tr class="green-row"><td>Strain moy. S1 : 11.4 — S2 Dos : 16.9</td><td>S1 zone optimale recompo · S2 dos : élevé ✅</td><td>Maintenir 11–16 selon type de séance</td></tr>
           </tbody>
         </table></div>
+        <div class="alert alert-blue" style="font-size:13px;">Les données HRV, RHR et Recovery moyennes sont issues de S1 (9–13 mars). Les données S2 complètes seront disponibles au check-in lundi suivant.</div>
       </div>
 
       <div class="subsection">
@@ -3551,7 +3565,65 @@ input[type="date"].jdate-input {
             <tr class="green-row"><td>Performance baisse</td><td class="center"><span class="badge badge-green">Non ✅</span></td><td>Toutes charges maintenues ou progressées</td></tr>
           </tbody>
         </table></div>
-        <div class="alert alert-green">Aucun signe de plateau en S2. Le protocole est en phase d'activation normale.</div>
+        <div class="alert alert-green">Aucun signe de plateau en S2. Le protocole est en phase d’activation normale.</div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Signaux Faibles &amp; Lecture Prospective</div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Signal</th><th>Niveau</th><th>Impact probable S3</th><th>Directive</th></tr></thead>
+          <tbody>
+            <tr class="orange-row">
+              <td>Sommeil ~5.6h (17/03)</td>
+              <td class="center"><span class="badge badge-gold">⚠ Modéré</span></td>
+              <td>GH nocturne réduite → récupération musculaire sous-optimale. Si persistant, risque de cortisol élevé et rétention eau en S3.</td>
+              <td><strong>Ajuster</strong></td>
+            </tr>
+            <tr>
+              <td>Recovery S1 non renseigné — base incomplète</td>
+              <td class="center"><span class="badge badge-blue">ℹ Info</span></td>
+              <td>Impossible de confirmer la tendance récupération. Premier check-in complet S2 sera déterminant pour valider la trajectoire Whoop.</td>
+              <td><strong>Surveiller</strong></td>
+            </tr>
+            <tr class="green-row">
+              <td>Strain S2 Dos : 16.9 (élevé)</td>
+              <td class="center"><span class="badge badge-green">✓ Favorable</span></td>
+              <td>Stimulus mécanique fort → signal anabolique positif. À condition que le sommeil compense. Si sommeil &lt; 6h, le rapport stimulus/récupération bascule en négatif.</td>
+              <td><strong>Maintenir</strong></td>
+            </tr>
+            <tr>
+              <td>Déficit calorique non encore dominant (S2)</td>
+              <td class="center"><span class="badge badge-gray">— Neutre</span></td>
+              <td>Normal en phase d’activation. Le basculement en déficit dominant est attendu S3–S4. À surveiller : si le poids ne commence pas à descendre en S4, ajuster la densité calorique.</td>
+              <td><strong>Maintenir</strong></td>
+            </tr>
+            <tr class="green-row">
+              <td>LBM en hausse (+0.9 kg vs S0, +0.3 vs S1)</td>
+              <td class="center"><span class="badge badge-green">✓ Fort</span></td>
+              <td>Protection musculaire assurée à court terme. La marge LBM (+0.3 kg au-dessus du plancher) absorbe les fluctuations normales sans risque.</td>
+              <td><strong>Maintenir</strong></td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
+          <div style="background:rgba(192,57,43,.06);border:1px solid var(--red);border-radius:10px;padding:14px;">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:8px;">⚠ Risque élevé</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;">Aucun signal à risque élevé identifié en S2. Programme en phase d’activation normale.</div>
+          </div>
+          <div style="background:rgba(212,160,23,.07);border:1px solid var(--gold);border-radius:10px;padding:14px;">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a5200;margin-bottom:8px;">⚠ Risque modéré</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>Sommeil</strong> — 5.6h insuffisant. Si le pattern se confirme en S3, il deviendra le facteur limitant n° 1 de la recomposition avant même l’alimentation.</div>
+          </div>
+          <div style="background:rgba(46,134,193,.06);border:1px solid var(--blue-light);border-radius:10px;padding:14px;">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px;">ℹ À surveiller</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>Données Whoop S2 incomplètes.</strong> Le check-in S3 est le premier point de mesure complet. Il déterminera si Recovery et HRV tiennent sous la charge MFT28.</div>
+          </div>
+        </div>
+
+        <div class="alert alert-gold" style="margin-top:16px;">
+          <strong>Anticipation S3</strong> La semaine suivante est charnière : c’est en S3–S4 que le déficit calorique devient dominant et que la perte grasse nette devient visible sur la balance. Le facteur limitant identifié est le <strong>sommeil</strong>. Si les nuits restent sous 6h, la GH nocturne insuffisante ralentira la recomposition musculaire et amplifiera la rétention d’eau par cortisol. Objectif concret : <strong>coucher avant 22h30 minimum 5 nuits sur 7</strong>.
+        </div>
       </div>
     </div>
 
@@ -3563,6 +3635,19 @@ input[type="date"].jdate-input {
         <div class="section-num">Section 10</div>
         <div class="section-title">SCORE DE PROGRESSION</div>
       </div>
+      <!-- nav semaine S10 -->
+      <div class="s10-week-nav">
+        <button class="jbtn-sm" id="s10-prev-week">&#8592;</button>
+        <div class="s10-week-label-wrap">
+          <span class="s10-week-label" id="s10-week-label">S1 — 9 mars – 15 mars 2026</span>
+          <span class="s10-week-sub" id="s10-week-sub">Semaine 1 du programme</span>
+        </div>
+        <button class="jbtn-sm" id="s10-today-week">Auj.</button>
+        <button class="jbtn-sm" id="s10-next-week">&#8594;</button>
+      </div>
+      <div id="s10-content-wrap">
+        <div id="s10-s1-content">
+
 
       <div class="score-ring">
         <div class="score-circle"><div class="score-number">66</div></div>
@@ -3599,14 +3684,87 @@ input[type="date"].jdate-input {
       <div class="tbl-wrap"><table>
         <thead><tr><th>Critère</th><th>Score</th><th>Justification</th></tr></thead>
         <tbody>
-          <tr><td>Perte de graisse</td><td class="num"><span class="badge badge-gold">12/20</span></td><td>Masse grasse quasi stable — déficit pas encore dominant</td></tr>
-          <tr class="green-row"><td>Progression musculaire</td><td class="num"><span class="badge badge-green">18/20</span></td><td>+0.3 kg masse musculaire — excellent pour S1</td></tr>
-          <tr><td>Récupération Whoop</td><td class="num"><span class="badge badge-gold">13/20</span></td><td>Recovery 69% — zone jaune — améliorable</td></tr>
-          <tr class="orange-row"><td>Qualité du sommeil</td><td class="num"><span class="badge badge-red">11/20</span></td><td>6h48 — insuffisant — point faible #1</td></tr>
+          <tr><td>Perte de graisse</td><td class="num"><span class="badge badge-gold">12/20</span></td><td>Masse grasse S1 : 13.0 kg (+0.4 kg vs S0) — déficit pas encore dominant en semaine 1</td></tr>
+          <tr class="green-row"><td>Progression musculaire</td><td class="num"><span class="badge badge-green">18/20</span></td><td>Masse musculaire S1 : 61.1 kg (+0.5 kg vs S0) — excellent signal d’adaptation neuromusculaire</td></tr>
+          <tr><td>Récupération Whoop</td><td class="num"><span class="badge badge-gold">13/20</span></td><td>Strain moy. S1 : 11.4 (zone optimale 10–14) — Recovery S1 non renseigné — base établie</td></tr>
+          <tr class="orange-row"><td>Qualité du sommeil</td><td class="num"><span class="badge badge-gold">11/20</span></td><td>Sommeil S1 non renseigné sur Whoop — pénalité appliquée sur base décalages horaires connus</td></tr>
           <tr><td>Cohérence programme</td><td class="num"><span class="badge badge-blue">12/20</span></td><td>5/5 séances ✅ — légère pénalité décalages horaires</td></tr>
-          <tr class="total-row"><td>TOTAL S1</td><td class="num">66/100</td><td>Fondations solides — activation normale</td></tr>
+          <tr class="total-row"><td>TOTAL S1</td><td class="num">66/100</td><td>Fondations solides — activation normale — base de référence pour le suivi S2+</td></tr>
         </tbody>
       </table></div>
+
+      <div class="subsection" style="margin-top:24px;">
+        <div class="subsection-title">Interprétation du Score — Lecture Avancée</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+          <div style="background:var(--white);border:1px solid var(--warm-gray);border-radius:12px;padding:16px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;">Ce que signifie 66/100</div>
+            <p style="font-size:13px;color:var(--text);line-height:1.7;margin:0;">Un score de 66 en semaine 1 correspond à une <strong>progression fragile mais orientée correctement</strong>. Ce n’est pas un score de performance — c’est un score de <em>mise en route</em>. Le programme est en phase d’activation : le corps charge, les fondations s’installent, le déficit n’est pas encore dominant. Un score de 66 à ce stade est <strong>cohérent et attendu</strong> pour un début de recomposition sérieux.</p>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--warm-gray);border-radius:12px;padding:16px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;">Dynamique réelle du programme</div>
+            <p style="font-size:13px;color:var(--text);line-height:1.7;margin:0;">Le score est tiré vers le haut par la progression musculaire (18/20) et vers le bas par le sommeil (11/20). Cette configuration est typique d’un profil <strong>entraînement solide / récupération insuffisante</strong>. Le levier le plus immédiat pour augmenter le score S2 n’est pas l’entraînement — c’est le sommeil.</p>
+          </div>
+        </div>
+
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Critère</th><th>Lecture avancée</th><th>Impact S2+</th></tr></thead>
+          <tbody>
+            <tr class="green-row">
+              <td>Progression musculaire 18/20</td>
+              <td>Point fort structurel. Le stimulus MFT28 est adapté et le corps répond. Signal que la charge d’entraînement est dans la bonne fourchette.</td>
+              <td>Si le sommeil s’améliore, ce critère peut atteindre 19–20/20 dès S2.</td>
+            </tr>
+            <tr class="orange-row">
+              <td>Qualité du sommeil 11/20</td>
+              <td>Point faible n° 1. La pénalité n’est pas punitive — elle reflète un réel risque physiologique. Moins de 6h = cortisol élevé, GH compressée, récup musculaire dégradée.</td>
+              <td>Chaque heure de sommeil gagnée représente +1 à +2 points potentiels sur ce critère.</td>
+            </tr>
+            <tr>
+              <td>Perte de graisse 12/20</td>
+              <td>Score juste pour S1 : pas un échec, mais un reflet du timing. Le déficit met 2–3 semaines à devenir dominant après le chargement initial.</td>
+              <td>Ce critère devrait monter automatiquement à S3–4 si l’alimentation est maintenue. Cible : 15–17/20 en S4.</td>
+            </tr>
+            <tr>
+              <td>Cohérence programme 12/20</td>
+              <td>5/5 séances complètes. La pénalité porte sur les décalages horaires, pas sur l’exécution. Le programme est suivi — la discipline est là.</td>
+              <td>Score peut atteindre 15/20 en S2 avec une meilleure gestion des créneaux 6h00 ponctuels.</td>
+            </tr>
+            <tr>
+              <td>Récupération Whoop 13/20</td>
+              <td>Score conservateur faute de Recovery complet S1. Le Strain 11.4 en zone optimale est un signal positif. La vraie base sera connue au check-in S2.</td>
+              <td>Critère à remettre à jour avec les données S2 complètes (Recovery moyen, HRV moyen).</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
+          <div style="background:rgba(39,174,96,.07);border:1px solid var(--green-light);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px;">Trajectoire validée</div>
+            <div style="font-size:12px;color:var(--navy);line-height:1.5;">Score 66–100<br>Programme en ordre</div>
+          </div>
+          <div style="background:rgba(212,160,23,.08);border:2px solid var(--gold);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7a5200;margin-bottom:6px;">Situation actuelle</div>
+            <div style="font-size:22px;font-weight:700;color:var(--navy);font-family:var(--font-mono);">66/100</div>
+            <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Progression fragile<br>mais orientée</div>
+          </div>
+          <div style="background:rgba(192,57,43,.06);border:1px solid var(--red);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--red);margin-bottom:6px;">Zone à risque</div>
+            <div style="font-size:12px;color:var(--navy);line-height:1.5;">Score &lt; 50<br>Risque de dérive</div>
+          </div>
+        </div>
+
+        <div class="alert alert-gold" style="margin-top:16px;">
+          <strong>Lien avec la projection S11</strong> Un score de 66/100 en S1 est cohérent avec la trajectoire de la section 11 : la projection attend une stabilisation puis un retournement du poids en S3–S4, pas avant. Pour que le score S2 monte au-dessus de 72–75/100, deux conditions doivent être réunies : <strong>(1)</strong> le déficit commence à dominer (perte grasse visible), <strong>(2)</strong> la qualité du sommeil s’améliore. Si l’une des deux fait défaut, le score restera dans la fourchette 60–70 et la trajectoire S11 sera à réévaluer dès S4.
+        </div>
+              </div><!-- /s10-s1-content -->
+        <div id="s10-empty-state" style="display:none;" class="s10-empty-state">
+          <div class="s10-empty-state__icon">&#128202;</div>
+          <div class="s10-empty-state__title" id="s10-empty-title">Score non disponible</div>
+          <div class="s10-empty-state__sub">Les données de cette semaine seront ajoutées<br>au prochain check-in du lundi matin.</div>
+        </div>
+      </div><!-- /s10-content-wrap -->
+</div>
     </div>
 
     <!-- ══════════════════════════════════════════ -->
@@ -3622,19 +3780,22 @@ input[type="date"].jdate-input {
         <thead><tr><th>Semaine</th><th>Poids estimé</th><th>BF% estimé</th><th>LBM estimée</th><th>Phase</th></tr></thead>
         <tbody>
           <tr><td>S0 — Réel</td><td class="num">76.4 kg</td><td class="num">16.5%</td><td class="num">63.8 kg</td><td>Baseline</td></tr>
-          <tr class="current"><td>S2 — Réel ←</td><td class="num">77.85 kg</td><td class="num">16.9%</td><td class="num">64.7 kg</td><td>Activation</td></tr>
-          <tr><td>S4</td><td class="num">76.5 kg</td><td class="num">15.5%</td><td class="num">64.5 kg</td><td>Transition</td></tr>
-          <tr><td>S6</td><td class="num">75.0 kg</td><td class="num">14.0%</td><td class="num">64.4 kg</td><td>Recomposition active</td></tr>
-          <tr><td>S8</td><td class="num">73.5 kg</td><td class="num">12.5%</td><td class="num">64.3 kg</td><td>Accélération</td></tr>
-          <tr><td>S10</td><td class="num">72.0 kg</td><td class="num">11.0%</td><td class="num">64.2 kg</td><td>Affinement</td></tr>
-          <tr><td>S12</td><td class="num">71.5 kg</td><td class="num">11.5%</td><td class="num">63.9 kg</td><td>Pic intensité</td></tr>
-          <tr><td>S14</td><td class="num">70.8 kg</td><td class="num">10.5%</td><td class="num">63.8 kg</td><td>Consolidation</td></tr>
-          <tr><td>S15</td><td class="num">70.5 kg</td><td class="num">10.0%</td><td class="num">63.7 kg</td><td>Finition</td></tr>
+          <tr><td>S1 — Réel</td><td class="num">77.35 kg</td><td class="num">16.7%</td><td class="num">64.4 kg</td><td>Activation — chargement glycogène</td></tr>
+          <tr class="current"><td>S2 — Réel ←</td><td class="num">77.85 kg</td><td class="num">16.9%</td><td class="num">64.7 kg</td><td>Activation — LBM peak</td></tr>
+          <tr><td>S4</td><td class="num">76.75 kg</td><td class="num">15.8%</td><td class="num">64.65 kg</td><td>Recomposition active — déficit dominant</td></tr>
+          <tr class="orange-row"><td>S5 — Pessah ⟳</td><td class="num">77.05 kg</td><td class="num">16.1%</td><td class="num">64.65 kg</td><td>Pause Yom Tov — rétention hydrique</td></tr>
+          <tr><td>S6</td><td class="num">76.55 kg</td><td class="num">15.5%</td><td class="num">64.65 kg</td><td>Reprise post-Pessah — flush eau</td></tr>
+          <tr><td>S8</td><td class="num">75.3 kg</td><td class="num">14.3%</td><td class="num">64.5 kg</td><td>Recomposition active — perte grasse nette</td></tr>
+          <tr><td>S10</td><td class="num">74.15 kg</td><td class="num">13.1%</td><td class="num">64.45 kg</td><td>Affinement — adaptation métabolique</td></tr>
+          <tr><td>S12</td><td class="num">73.3 kg</td><td class="num">12.1%</td><td class="num">64.4 kg</td><td>Affinement intensif — déficit ajusté</td></tr>
+          <tr><td>S14</td><td class="num">72.65 kg</td><td class="num">11.5%</td><td class="num">64.3 kg</td><td>Consolidation — protéines critiques</td></tr>
+          <tr><td>S15</td><td class="num">72.3 kg</td><td class="num">11.3%</td><td class="num">64.15 kg</td><td>Finition — ajustements fins</td></tr>
           <tr class="objective"><td><strong>S16 — OBJECTIF</strong></td><td class="num"><strong>70–71 kg</strong></td><td class="num"><strong>9–10%</strong></td><td class="num"><strong>≥ 64.0 kg</strong></td><td><strong>OBJECTIF FINAL</strong></td></tr>
         </tbody>
       </table></div>
 
-      <div class="alert alert-gold"><strong>Trajectoire actuelle</strong> Légèrement en retard sur le poids mais OPTIMALE sur la composition. La perte grasse nette s'accélère en S3–S4. Pessah (1–12 avril) = pause partielle prévue → programme ajusté à ~17–18 semaines effectives.</div>
+      <div class="alert alert-gold"><strong>Trajectoire actuelle</strong> Légèrement en retard sur le poids mais OPTIMALE sur la composition. La perte grasse nette s’accélère en S3–S4. Pessah (1–12 avril) = pause partielle prévue → programme ajusté à ~17–18 semaines effectives.</div>
+      <div class="alert alert-blue" style="font-size:13px;margin-top:8px;"><strong>Lecture de la projection</strong> Rythme non linéaire : fort au départ (flush eau + première perte grasse), rebond attendu pendant Pessah (S5), accélération S6–S8, adaptation progressive S10+. Poids = LBM + Masse grasse. BF% = Masse grasse ÷ Poids. Les trois colonnes sont alignées à chaque étape.</div>
     </div>
 
     <!-- ══════════════════════════════════════════ -->
@@ -5314,15 +5475,18 @@ function buildFoodRow(cat, item) {
   div.setAttribute('data-id', item.id);
   div.setAttribute('data-cat', cat);
 
-  var isManual = item.sourceType === 'manual';
+  var isManual     = item.sourceType === 'manual';
+  var isOverridden = item.sourceType === 'overridden';
+  var macrosEditable = isManual || isOverridden;
 
   var units = ['g','ml','piece','scoop','c. a soupe'];
   var unitOpts = '';
   for (var j = 0; j < units.length; j++) {
     unitOpts += '<option value="' + units[j] + '"' + (item.unit === units[j] ? ' selected' : '') + '>' + units[j] + '</option>';
   }
-  var modeLabel = isManual ? 'Manuel' : 'Base';
-  var modeCls   = isManual ? 'food-source-toggle manual-mode' : 'food-source-toggle';
+  var modeLabel = isManual ? 'Manuel' : (isOverridden ? 'Modifié' : 'Base');
+  var modeCls   = isManual ? 'food-source-toggle manual-mode' :
+                  (isOverridden ? 'food-source-toggle overridden-mode' : 'food-source-toggle');
 
   div.innerHTML =
     '<div class="food-row__top">' +
@@ -5337,10 +5501,10 @@ function buildFoodRow(cat, item) {
     '</div>' +
     '<div class="macro-grid-labels"><span class="macro-label-mini">Kcal</span><span class="macro-label-mini">Prot g</span><span class="macro-label-mini">Gluc g</span><span class="macro-label-mini">Lip g</span></div>' +
     '<div class="food-row__macros">' +
-      '<input type="number" inputmode="decimal" step="any" class="macro-in-kcal" placeholder="0" value="' + round2(item.calories) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" inputmode="decimal" step="any" class="macro-in-prot" placeholder="0" value="' + round2(item.protein) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" inputmode="decimal" step="any" class="macro-in-carb" placeholder="0" value="' + round2(item.carbs) + '" ' + (isManual ? '' : 'readonly') + '>' +
-      '<input type="number" inputmode="decimal" step="any" class="macro-in-fat"  placeholder="0" value="' + round2(item.fat) + '" ' + (isManual ? '' : 'readonly') + '>' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-kcal' + (isOverridden ? ' macro-overridden' : '') + '" placeholder="0" value="' + round2(item.calories) + '">' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-prot' + (isOverridden ? ' macro-overridden' : '') + '" placeholder="0" value="' + round2(item.protein) + '">' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-carb' + (isOverridden ? ' macro-overridden' : '') + '" placeholder="0" value="' + round2(item.carbs) + '">' +
+      '<input type="number" inputmode="decimal" step="any" class="macro-in-fat' + (isOverridden ? ' macro-overridden' : '') + '"  placeholder="0" value="' + round2(item.fat) + '">' +
     '</div>';
 
   /* ── Element refs ── */
@@ -5418,11 +5582,14 @@ function buildFoodRow(cat, item) {
     it.foodName = name;
     var food = FOOD_DB[name];
     if (food) {
-      it.sourceType = 'known';
+      /* Only reset to Base if not already in overridden/manual mode */
+      if (it.sourceType !== 'overridden' && it.sourceType !== 'manual') {
+        it.sourceType = 'known';
+      }
       unitSel.value = food.unit || 'g';
       it.unit = unitSel.value;
-      recalcFromKnown();
-      addRecentFood(name); // track recents
+      recalcFromKnown(); /* guarded inside — no-op if overridden/manual */
+      addRecentFood(name);
     }
     nameInput.blur();
   }
@@ -5434,10 +5601,12 @@ function buildFoodRow(cat, item) {
     it.foodName = nameInput.value;
     var food = FOOD_DB[nameInput.value.trim()];
     if (food) {
-      it.sourceType = 'known';
+      if (it.sourceType !== 'overridden' && it.sourceType !== 'manual') {
+        it.sourceType = 'known';
+      }
       unitSel.value = food.unit || 'g';
       it.unit = unitSel.value;
-      recalcFromKnown();
+      recalcFromKnown(); /* guarded inside — no-op if overridden/manual */
     } else { saveMealDay(); }
   });
   nameInput.addEventListener('blur', function() {
@@ -5456,6 +5625,8 @@ function buildFoodRow(cat, item) {
   /* ── Quantity ── */
   function recalcFromKnown() {
     var it = getItem(); if (!it) return;
+    /* Never overwrite manually-set values */
+    if (it.sourceType === 'overridden' || it.sourceType === 'manual') return;
     var name = nameInput.value.trim();
     var food = FOOD_DB[name];
     if (!food) return;
@@ -5488,30 +5659,41 @@ function buildFoodRow(cat, item) {
   });
 
   /* ── Manual macro inputs ── */
-  [kcalIn, protIn, carbIn, fatIn].forEach(function(inp, idx) {
+  [kcalIn, protIn, carbIn, fatIn].forEach(function(inp, idx2) {
     inp.addEventListener('input', function() {
-      var it = getItem(); if (!it || it.sourceType !== 'manual') return;
-      var vals = ['calories','protein','carbs','fat'];
-      it[vals[idx]] = parseFloat(inp.value) || 0;
-      updateMealTotals(); saveMealDay();
+      var it = getItem(); if (!it) return;
+      /* If user edits a macro in Base mode → switch to overridden */
+      if (it.sourceType === 'known') {
+        it.sourceType = 'overridden';
+        toggleBtn.textContent = 'Modifié';
+        toggleBtn.className   = 'food-source-toggle overridden-mode';
+        [kcalIn, protIn, carbIn, fatIn].forEach(function(i2) {
+          i2.classList.add('macro-overridden');
+        });
+      }
+      if (it.sourceType === 'manual' || it.sourceType === 'overridden') {
+        var vals = ['calories','protein','carbs','fat'];
+        it[vals[idx2]] = parseFloat(inp.value) || 0;
+        updateMealTotals(); saveMealDay();
+      }
     });
   });
 
   /* ── Mode toggle (Base / Manuel) ── */
   toggleBtn.addEventListener('click', function() {
     var it = getItem(); if (!it) return;
-    if (it.sourceType === 'manual') {
+    if (it.sourceType === 'manual' || it.sourceType === 'overridden') {
+      /* Return to Base — recalculate from DB */
       it.sourceType = 'known';
       toggleBtn.textContent = 'Base'; toggleBtn.className = 'food-source-toggle';
-      kcalIn.readOnly = true; protIn.readOnly = true; carbIn.readOnly = true; fatIn.readOnly = true;
-      // Remove save-custom button if present
+      [kcalIn, protIn, carbIn, fatIn].forEach(function(i2) { i2.classList.remove('macro-overridden'); });
       var existing = div.querySelector('.food-save-custom-btn');
       if (existing) existing.remove();
       recalcFromKnown();
     } else {
+      /* Base → Manuel (full manual, all macros editable) */
       it.sourceType = 'manual';
       toggleBtn.textContent = 'Manuel'; toggleBtn.className = 'food-source-toggle manual-mode';
-      kcalIn.readOnly = false; protIn.readOnly = false; carbIn.readOnly = false; fatIn.readOnly = false;
       // Add "save to my foods" button
       if (!div.querySelector('.food-save-custom-btn')) {
         var saveBtn = document.createElement('button');
@@ -6199,6 +6381,7 @@ function showSection(id, el) {
   if (id === 's15') loadTrainingDay(trState.date);
   if (id === 's16') { refreshDataStats(); renderDashboard(dashPeriod); }
   if (id === 's8')  { try { renderS8Dashboard(); } catch(e) {} }
+  if (id === 's10') { try { renderS10Week(s10WeekOffset); } catch(e) {} }
 }
 
 function showWeek(id, el) {
@@ -7830,6 +8013,67 @@ function renderS8AutoSummary(days, renpho) {
   }).join('');
 }
 
+
+/* ═══════════════════════════════════════════════════
+   SECTION 10 — NAVIGATION HEBDOMADAIRE
+═══════════════════════════════════════════════════ */
+
+var S10_PROG_START = '2026-03-09';
+var s10WeekOffset  = 0;
+
+var S10_SCORES = {
+  'S1': { available: true,
+    label: 'S1 — 9 mars – 15 mars 2026',
+    sub:   'Semaine 1 du programme' }
+};
+
+function getS10WeekKey(offset) {
+  return 'S' + (offset + 1);
+}
+
+function getS10WeekLabel(offset) {
+  var MONTHS = ['jan.','fév.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  var mon = new Date(S10_PROG_START + 'T12:00:00');
+  mon.setDate(mon.getDate() + offset * 7);
+  var sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  var key = getS10WeekKey(offset);
+  if (S10_SCORES[key] && S10_SCORES[key].available) {
+    return { label: S10_SCORES[key].label, sub: S10_SCORES[key].sub };
+  }
+  return {
+    label: key + ' — ' + mon.getDate() + ' ' + MONTHS[mon.getMonth()] +
+           ' – ' + sun.getDate() + ' ' + MONTHS[sun.getMonth()] + ' ' + sun.getFullYear(),
+    sub: 'Semaine ' + (offset + 1) + ' du programme'
+  };
+}
+
+function renderS10Week(offset) {
+  var key    = getS10WeekKey(offset);
+  var lbl    = getS10WeekLabel(offset);
+  var lblEl  = document.getElementById('s10-week-label');
+  var subEl  = document.getElementById('s10-week-sub');
+  var s1Div  = document.getElementById('s10-s1-content');
+  var emDiv  = document.getElementById('s10-empty-state');
+  var emTit  = document.getElementById('s10-empty-title');
+
+  if (lblEl) lblEl.textContent = lbl.label;
+  if (subEl) subEl.textContent = lbl.sub;
+
+  var isS1 = (key === 'S1');
+  if (s1Div)  s1Div.style.display  = isS1 ? '' : 'none';
+  if (emDiv)  emDiv.style.display  = isS1 ? 'none' : '';
+  if (emTit && !isS1) emTit.textContent = 'Score ' + key + ' non disponible';
+
+  s10WeekOffset = offset;
+}
+
+function s10GetCurrentOffset() {
+  var progMon = new Date(S10_PROG_START + 'T12:00:00');
+  var diff    = new Date() - progMon;
+  return Math.max(0, Math.floor(diff / (7 * 24 * 3600 * 1000)));
+}
+
 /* ═══════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════ */
@@ -8020,6 +8264,14 @@ function initApp() {
   if (btnResetTr) btnResetTr.addEventListener('click', resetTrainingData);
   var btnResetAll   = document.getElementById('btn-reset-all');
   if (btnResetAll) btnResetAll.addEventListener('click', resetAllData);
+
+  /* ── S10 week navigation ── */
+  var s10Prev  = document.getElementById('s10-prev-week');
+  var s10Next  = document.getElementById('s10-next-week');
+  var s10Today = document.getElementById('s10-today-week');
+  if (s10Prev)  s10Prev.addEventListener('click',  function() { if (s10WeekOffset > 0) renderS10Week(s10WeekOffset - 1); });
+  if (s10Next)  s10Next.addEventListener('click',  function() { renderS10Week(s10WeekOffset + 1); });
+  if (s10Today) s10Today.addEventListener('click', function() { renderS10Week(s10GetCurrentOffset()); });
 
   /* ── Dashboard period tabs ── */
   var periodTabs = document.querySelectorAll('.dash-period-tab');
