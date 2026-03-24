@@ -3506,12 +3506,12 @@ input[type="date"].jdate-input {
               <tr data-week="S0"><td>S0</td><td>01/03</td><td class="num">76.4</td><td class="num">60.6 kg</td><td class="num">16.5%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr data-week="S1"><td>S1</td><td>09/03</td><td class="num">77.35</td><td class="num">61.1 kg</td><td class="num">16.8%</td><td class="num">~38</td><td class="num">~68</td><td>—</td><td>—</td></tr>
               <tr data-week="S2"><td>S2</td><td>16/03</td><td class="num">77.85</td><td class="num">61.4 kg</td><td class="num">16.9%</td><td class="num">44</td><td class="num">66</td><td class="num">72%</td><td class="num">7h18</td></tr>
-              <tr class="current" data-week="S3"><td><strong>S3 ←</strong></td><td>23/03</td><td class="num"><strong>76.50</strong></td><td class="num"><strong>60.59 kg</strong></td><td class="num">16.6%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr class="current" data-week="S3"><td><strong>S3 ←</strong></td><td>23/03</td><td class="num"><strong>76.50</strong></td><td class="num"><strong>60.59 kg</strong></td><td class="num">16.6%</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">44</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">66</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">72%</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">7h18</td></tr>
               <tr><td>S4–S16</td><td>…</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr class="objective"><td><strong>S16</strong></td><td>Objectif</td><td class="num"><strong>70–71</strong></td><td class="num"><strong>≥ 64.0</strong></td><td class="num"><strong>9–10%</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             </tbody>
           </table></div>
-          <p style="font-size:12px;color:var(--mid-gray);margin-top:8px;font-style:italic;">Données S2 Whoop complètes confirmées au check-in S3 (23/03).</p>
+          <p style="font-size:12px;color:var(--mid-gray);margin-top:8px;font-style:italic;">Lecture : <strong>Renpho</strong> = mesure du lundi matin du check-in. <strong>Whoop HRV/RHR/Recovery/Sleep</strong> = moyenne de la semaine écoulée. La ligne S3 affiche le Renpho du 23/03 + le Whoop de la semaine S2 (16–22 mars).</p>
 
           <div style="margin-top:20px;">
             <div class="s8-archive-week-title">SEMAINE 3 — CHECK-IN</div>
@@ -3928,7 +3928,7 @@ input[type="date"].jdate-input {
           <tr><td>S1 — Réel</td><td class="num">77.35 kg</td><td class="num">16.7%</td><td class="num">64.4 kg</td><td>Activation — chargement glycogène</td></tr>
           <tr><td>S2 — Réel</td><td class="num">77.85 kg</td><td class="num">16.9%</td><td class="num">64.7 kg</td><td>Activation — LBM peak</td></tr>
           <tr class="current"><td>S3 — Réel ←</td><td class="num">76.50 kg</td><td class="num">16.6%</td><td class="num">63.8 kg</td><td>Recomposition active — déficit dominant</td></tr>
-          <tr><td>S4</td><td class="num">76.75 kg</td><td class="num">15.8%</td><td class="num">64.65 kg</td><td>Recomposition active — déficit dominant</td></tr>
+          <tr><td>S4</td><td class="num">76.10 kg</td><td class="num">15.5%</td><td class="num">64.30 kg</td><td>Recomposition active — déficit dominant</td></tr>
           <tr class="orange-row"><td>S5 — Pessah ⟳</td><td class="num">77.05 kg</td><td class="num">16.1%</td><td class="num">64.65 kg</td><td>Pause Yom Tov — rétention hydrique</td></tr>
           <tr><td>S6</td><td class="num">76.55 kg</td><td class="num">15.5%</td><td class="num">64.65 kg</td><td>Reprise post-Pessah — flush eau</td></tr>
           <tr><td>S8</td><td class="num">75.3 kg</td><td class="num">14.3%</td><td class="num">64.5 kg</td><td>Recomposition active — perte grasse nette</td></tr>
@@ -5898,7 +5898,8 @@ var KNOWN_SUPPLEMENTS = [
   { name:'Vitamine B6',                    type:'Comprimé', calorific:false, cal:0,   prot:0,  carbs:0,  fat:0,  portionCal:0   },
   { name:'Vitamine A (Solgar)',            type:'Comprimé', calorific:false, cal:0,   prot:0,  carbs:0,  fat:0,  portionCal:0   },
   { name:'Magnésium Bisglycinate',         type:'Gélule',   calorific:false, cal:0,   prot:0,  carbs:0,  fat:0,  portionCal:0   },
-  { name:'Oméga 3-6-9',                   type:'Gélule',   calorific:true,  cal:10,  prot:0,  carbs:0,  fat:1,  portionCal:10  }
+  { name:'Oméga 3-6-9',                   type:'Gélule',   calorific:true,  cal:10,  prot:0,  carbs:0,  fat:1,  portionCal:10  },
+  { name:'Naked Pea Chocolate',             type:'Poudre',   calorific:true,  cal:160, prot:25, carbs:8,  fat:3,  portionCal:160 }
 ];
 
 /* Recalcul macros d'un complément selon sa quantité et la référence connue */
@@ -8643,6 +8644,27 @@ function initApp() {
     localStorage.setItem('shai_recomp_meta_v1', '{"updated_at":"2026-03-18T01:09:33.894Z"}');
   } catch(e) {}
 })();
+
+/* ── SEED RENPHO DATA — données connues pré-chargées ── */
+(function() {
+  try {
+    var SEED_RENPHO = {
+      '2026-03-02': { weight:76.40, bf:16.5, muscle:60.60, lbm:63.80, visceral:9,  bmr:1747, updatedAt:'2026-03-02T00:00:00.000Z' },
+      '2026-03-09': { weight:77.35, bf:16.8, muscle:61.10, lbm:64.40, visceral:10, bmr:1759, updatedAt:'2026-03-09T00:00:00.000Z' },
+      '2026-03-16': { weight:77.85, bf:16.9, muscle:61.40, lbm:64.70, visceral:10, bmr:1765, updatedAt:'2026-03-16T00:00:00.000Z' },
+      '2026-03-23': { weight:76.50, bf:16.6, muscle:60.59, lbm:63.80, visceral:9,  bmr:1756, updatedAt:'2026-03-23T06:00:00.000Z' }
+    };
+    var existingRenpho = JSON.parse(localStorage.getItem('shai_recomp_renpho_v1') || '{}');
+    for (var wk in SEED_RENPHO) {
+      var ex  = existingRenpho[wk];
+      var sts = SEED_RENPHO[wk].updatedAt || '0';
+      var lts = (ex && ex.updatedAt) ? ex.updatedAt : '0';
+      if (!ex || sts >= lts) { existingRenpho[wk] = SEED_RENPHO[wk]; }
+    }
+    localStorage.setItem('shai_recomp_renpho_v1', JSON.stringify(existingRenpho));
+  } catch(e) {}
+})();
+
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
