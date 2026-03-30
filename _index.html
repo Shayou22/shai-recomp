@@ -2583,9 +2583,26 @@ input[type="date"].jdate-input {
   margin-left: 6px; vertical-align: middle;
 }
 .ex-picker-empty {
-  text-align: center; padding: 32px 16px;
+  text-align: center; padding: 24px 16px;
   color: var(--mid-gray); font-size: 14px;
 }
+.ex-add-custom-btn {
+  background: var(--navy); color: var(--white);
+  border: none; border-radius: 12px; padding: 13px 18px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  width: 100%; max-width: 340px; display: inline-flex;
+  align-items: center; justify-content: center; gap: 8px;
+  touch-action: manipulation; transition: background .15s;
+  line-height: 1.3;
+}
+.ex-add-custom-btn:hover, .ex-add-custom-btn:active { background: var(--blue); }
+.ex-add-custom-btn--small {
+  background: rgba(46,134,193,.1); color: var(--blue-light);
+  border: 1.5px solid rgba(46,134,193,.3);
+  font-size: 13px; padding: 9px 14px;
+  width: auto; max-width: none; border-radius: 10px;
+}
+.ex-add-custom-btn--small:hover { background: var(--blue-light); color: var(--white); }
 .ex-add-smart-btn {
   background: var(--navy); color: var(--white);
   border: none; border-radius: 10px; padding: 11px 16px;
@@ -2618,7 +2635,7 @@ input[type="date"].jdate-input {
 <div id="mobile-bar">
   <div class="mobile-brand">
     <span class="mobile-brand__initials">SL</span>
-    <span class="mobile-brand__title">Recomposition · S3</span>
+    <span class="mobile-brand__title">Recomposition · S4</span>
   </div>
   <div class="mobile-actions">
     <button id="search-btn" aria-label="Rechercher" title="Rechercher dans le document">
@@ -2652,9 +2669,9 @@ input[type="date"].jdate-input {
     <div class="subtitle">Recomposition · 16 Semaines</div>
   </div>
   <div class="sidebar-meta">
-    <span class="meta-pill">23 mars 2026</span>
+    <span class="meta-pill">30 mars 2026</span>
     <span class="meta-pill">76.50 kg</span>
-    <span class="meta-pill">S3</span>
+    <span class="meta-pill">S4</span>
   </div>
   
   <div class="nav-section">
@@ -2678,7 +2695,7 @@ input[type="date"].jdate-input {
     <a class="nav-item" onclick="showSection('s9')"><span class="num">09</span>Journal & Projection</a>
     <a class="nav-item" onclick="showSection('s10')"><span class="num">10</span>Score de Progression</a>
     <a class="nav-item" onclick="showSection('s11')"><span class="num">11</span>Projection 16 Semaines</a>
-    <a class="nav-item" onclick="showSection('s12')"><span class="num">12</span>Recommandations S3</a>
+    <a class="nav-item" onclick="showSection('s12')"><span class="num">12</span>Recommandations S4</a>
     <a class="nav-item" onclick="showSection('s13')"><span class="num">✦</span>Évolution Corporelle</a>
   </div>
 
@@ -3625,12 +3642,46 @@ input[type="date"].jdate-input {
               <tr data-week="S0"><td>S0</td><td>01/03</td><td class="num">76.4</td><td class="num">60.6 kg</td><td class="num">16.5%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr data-week="S1"><td>S1</td><td>09/03</td><td class="num">77.35</td><td class="num">61.1 kg</td><td class="num">16.8%</td><td class="num">~38</td><td class="num">~68</td><td>—</td><td>—</td></tr>
               <tr data-week="S2"><td>S2</td><td>16/03</td><td class="num">77.85</td><td class="num">61.4 kg</td><td class="num">16.9%</td><td class="num">44</td><td class="num">66</td><td class="num">72%</td><td class="num">7h18</td></tr>
-              <tr class="current" data-week="S3"><td><strong>S3 ←</strong></td><td>23/03</td><td class="num"><strong>76.50</strong></td><td class="num"><strong>60.59 kg</strong></td><td class="num">16.6%</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">44</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">66</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">72%</td><td class="num" title="Whoop moy. semaine S2 (16–22 mars)">7h18</td></tr>
+              <tr data-week="S3"><td>S3</td><td>23/03</td><td class="num">76.50</td><td class="num">60.59 kg</td><td class="num">16.6%</td><td class="num" title="Whoop moy. semaine S3 (23–29 mars)">43</td><td class="num" title="Whoop moy. semaine S3 (23–29 mars)">65</td><td class="num" title="Whoop moy. semaine S3 (23–29 mars)">69%</td><td class="num" title="Whoop moy. semaine S3 (23–29 mars)">6h48</td></tr>
+              <tr class="current" data-week="S4"><td><strong>S4 ←</strong></td><td>30/03</td><td class="num"><strong>76.50</strong></td><td class="num"><strong>60.59 kg</strong></td><td class="num">16.6%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
               <tr><td>S4–S16</td><td>…</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
               <tr class="objective"><td><strong>S16</strong></td><td>Objectif</td><td class="num"><strong>70–71</strong></td><td class="num"><strong>≥ 64.0</strong></td><td class="num"><strong>9–10%</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             </tbody>
           </table></div>
-          <p style="font-size:12px;color:var(--mid-gray);margin-top:8px;font-style:italic;">Lecture : <strong>Renpho</strong> = mesure du lundi matin du check-in. <strong>Whoop HRV/RHR/Recovery/Sleep</strong> = moyenne de la semaine écoulée. La ligne S3 affiche le Renpho du 23/03 + le Whoop de la semaine S2 (16–22 mars).</p>
+          <p style="font-size:12px;color:var(--mid-gray);margin-top:8px;font-style:italic;">Lecture : <strong>Renpho</strong> = mesure du lundi matin du check-in. <strong>Whoop HRV/RHR/Recovery/Sleep</strong> = moyenne de la semaine écoulée. La ligne S4 affiche le Renpho du 30/03 + le Whoop de la semaine S3 (23–29 mars).</p>
+
+          <div style="margin-top:20px;">
+            <div class="s8-archive-week-title">SEMAINE 4 — CHECK-IN</div>
+            <div style="font-size:11px;color:var(--mid-gray);margin-bottom:10px;">30 mars 2026</div>
+
+            <div class="s8-archive-section-label">Renpho S4</div>
+            <div class="tbl-wrap"><table>
+              <thead><tr><th>Indicateur</th><th>S3</th><th>S4</th><th>Évolution</th></tr></thead>
+              <tbody>
+                <tr><td>Poids</td><td>76.50</td><td class="num"><strong>76.50 kg</strong></td><td>= Consolidation ✅</td></tr>
+                <tr><td>BF %</td><td>16.6</td><td class="num"><strong>16.6 %</strong></td><td>= Stable</td></tr>
+                <tr><td>Masse musc.</td><td>60.59</td><td class="num"><strong>60.59 kg</strong></td><td>= LBM plancher tenu ✅</td></tr>
+                <tr><td>LBM</td><td>63.80</td><td class="num"><strong>63.80 kg</strong></td><td>= Stabilisation confirmée ✅</td></tr>
+                <tr><td>Gr. viscérale</td><td>9</td><td class="num">9</td><td>= Stable</td></tr>
+                <tr><td>BMR</td><td>1 756 kcal</td><td class="num">1 756 kcal</td><td>= Stable</td></tr>
+              </tbody>
+            </table></div>
+
+            <div class="s8-archive-section-label" style="margin-top:14px;">Whoop S3 — Données complètes (23–29 mars)</div>
+            <div class="tbl-wrap"><table>
+              <thead><tr><th>Indicateur</th><th>Valeur</th><th>vs S2</th></tr></thead>
+              <tbody>
+                <tr><td>Recovery moy.</td><td class="num"><strong>69%</strong></td><td class="orange-text">−3% ⚠ zone jaune</td></tr>
+                <tr><td>HRV moyen</td><td class="num"><strong>43 ms</strong></td><td>−1 ms — stable malgré la charge accrue</td></tr>
+                <tr class="green-row"><td>RHR moyen</td><td class="num"><strong>65 bpm</strong></td><td class="green-text">−1 bpm ✅ meilleur depuis S0</td></tr>
+                <tr class="orange-row"><td>Sommeil moy.</td><td class="num"><strong>6h48</strong></td><td class="orange-text">−30 min ⚠ légère baisse vs 7h18</td></tr>
+                <tr class="green-row"><td>Strain moy. training</td><td class="num"><strong>13.3</strong></td><td class="green-text">+3.2 vs S2 ✅ charge plus élevée</td></tr>
+              </tbody>
+            </table></div>
+            <div class="alert alert-blue" style="margin-top:10px;font-size:13px;">
+              <strong>Lecture S4</strong> Semaine de consolidation. Poids et composition identiques à S3 — le corps absorbe la chute de −1.35 kg de la semaine précédente. LBM tient à 63.80 kg : confirme que la baisse S3 était du glycogène, pas du muscle. Strain 13.3 = charge productive. Pessah arrive dès mardi 1er avril — rebond hydrique attendu en S5.
+            </div>
+          </div>
 
           <div style="margin-top:20px;">
             <div class="s8-archive-week-title">SEMAINE 3 — CHECK-IN</div>
@@ -3678,98 +3729,99 @@ input[type="date"].jdate-input {
       </div>
 
       <div class="subsection">
-        <div class="subsection-title">Analyse Stratégique — Semaine 3 (check-in 23/03)</div>
+        <div class="subsection-title">Analyse Stratégique — Semaine 3 (check-in 30/03)</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Observation</th><th>Interprétation</th></tr></thead>
           <tbody>
-            <tr class="green-row"><td>Poids −1.35 kg vs S2</td><td>Déficit dominant — perte réelle amorcée ✅ Conforme à la projection S11</td></tr>
-            <tr class="green-row"><td>Masse grasse −0.46 kg vs S2 (13.2→12.7 kg)</td><td>Perte grasse nette confirmée ✅</td></tr>
-            <tr class="orange-row"><td>LBM 63.80 kg — sous plancher 64.4 kg (−0.60 kg)</td><td>Probable vidange glycogène + eau en déficit soutenu. BF% baisse → pas de catabolisme musculaire réel. À confirmer en S4.</td></tr>
-            <tr class="orange-row"><td>Kcal moy. tracées : ~1 177 kcal/jour</td><td>Sous-tracking important — cible 2 150 kcal training. Les repas non saisis (notamment soir et week-end) expliquent l'écart. Tracker plus rigoureusement en S3.</td></tr>
-            <tr class="orange-row"><td>Protéines moy. tracées : 114g/jour</td><td>Sous l'objectif 150g. 3 jours sous 120g. Risque musculaire si déficit se prolonge avec protéines insuffisantes.</td></tr>
+            <tr class="green-row"><td>Poids stable 76.50 kg (= S3)</td><td>Semaine de consolidation après chute de −1.35 kg la semaine précédente. Attendu et normal.</td></tr>
+            <tr class="green-row"><td>LBM 63.80 kg — plancher tenu</td><td>La baisse de S3 était bien transitoire (glycogène). LBM stable = pas de catabolisme musculaire ✅</td></tr>
+            <tr class="green-row"><td>RHR 65 bpm — meilleur depuis S0</td><td>Signal cardiovasculaire positif. Adaptation au programme confirmée malgré la charge accrue.</td></tr>
+            <tr class="orange-row"><td>Strain 13.3 — charge plus haute</td><td>Bonne nouvelle pour la stimulation musculaire, mais explique la baisse de Recovery (69%) et de sommeil (6h48).</td></tr>
+            <tr class="orange-row"><td>Pas de perte grasse cette semaine</td><td>Déficit non exprimé. Probable sous-tracking (26–29 mars non saisis) + semaine de transition pré-Pessah.</td></tr>
+            <tr class="orange-row"><td>Séance Jambes absente</td><td>Vendredi 27/03 = repos ou non enregistré. Groupe musculaire major non stimulé cette semaine.</td></tr>
           </tbody>
         </table></div>
-        <div class="alert alert-green"><strong>Lecture clef S3</strong> Le déficit calorique domine enfin : −1.35 kg en une semaine avec BF% en baisse. C'est exactement le signal attendu à S3–S4 selon la projection. La LBM sous plancher est probablement transitoire (glycogène). Le point critique à corriger : tracker les repas complets et atteindre 150g de protéines quotidiennes pour protéger la masse musculaire.</div>
+        <div class="alert alert-blue"><strong>Lecture clé S4</strong> S3 est une semaine de plateau de consolidation. Le corps absorbe la chute de −1.35 kg de S2. La composition est identique, ce qui est un signal positif : la perte de S2 était de la vraie graisse, pas de l’eau que le corps reprend. Le programme reste sur trajectoire. Pessah (1–12 avril) arrive avec un rebond hydrique attendu en S5.</div>
       </div>
 
       <div class="subsection">
-        <div class="subsection-title">Analyse Whoop — S2 Complète (16–22 mars)</div>
+        <div class="subsection-title">Analyse Whoop — S3 Complète (23–29 mars)</div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>Indicateur</th><th>S2 réel</th><th>Lecture</th><th>Action S3</th></tr></thead>
+          <thead><tr><th>Indicateur</th><th>S3 réel</th><th>Lecture</th><th>Action S4</th></tr></thead>
           <tbody>
-            <tr class="green-row"><td>Recovery 72%</td><td class="num">72%</td><td>Zone verte — nette amélioration vs S1 (69%)</td><td>Maintenir</td></tr>
-            <tr class="green-row"><td>HRV 44 ms</td><td class="num">44 ms</td><td>+6 ms vs S1 — adaptation cardiovasculaire positive ✅</td><td>Surveiller si &lt; 38 ms</td></tr>
-            <tr class="green-row"><td>RHR 66 bpm</td><td class="num">66 bpm</td><td>Excellent — progression vs 68 S1</td><td>Surveiller si &gt; 72 bpm</td></tr>
-            <tr class="green-row"><td>Sommeil 7h18</td><td class="num">7h18</td><td>Objectif quasi atteint — +1h42 vs S1 ✅ amélioration majeure</td><td>Maintenir 7h15+</td></tr>
-            <tr><td>Strain moy. 10.1</td><td class="num">10.1</td><td>Légèrement sous S1 (11.4) — 4 séances sur 5 prévues</td><td>Viser 5 séances S3</td></tr>
+            <tr class="orange-row"><td>Recovery 69%</td><td class="num">69%</td><td>Zone jaune — baisse de 3% vs S2. Liée à la charge accrue (Strain +3.2) + sommeil légèrement inférieur.</td><td>Protéger le sommeil S4</td></tr>
+            <tr><td>HRV 43 ms</td><td class="num">43 ms</td><td>Stable malgré la charge — adaptation cardiovasculaire tient. Pas de signal de surentraînement.</td><td>Surveiller si &lt; 38 ms</td></tr>
+            <tr class="green-row"><td>RHR 65 bpm</td><td class="num">65 bpm</td><td>Meilleure valeur depuis le début ✅. Signal d’adaptation cardiovasculaire sur le long terme.</td><td>Maintenir</td></tr>
+            <tr class="orange-row"><td>Sommeil 6h48</td><td class="num">6h48</td><td>Légère baisse vs 7h18 S2 (−30 min). À corriger en S4 pour préserver la récupération avant Pessah.</td><td>Coucher 22h30 max</td></tr>
+            <tr class="green-row"><td>Strain 13.3</td><td class="num">13.3</td><td>Charge productive — +3.2 vs S2. 4 séances intenses dont Biceps+Triceps (10 exercices). Bonne stimulation.</td><td>Maintenir</td></tr>
           </tbody>
         </table></div>
-        <div class="alert alert-blue" style="font-size:13px;">Whoop S2 est la meilleure semaine depuis le début du programme sur tous les indicateurs de récupération. La correction du sommeil a eu un impact direct et mesurable sur HRV et Recovery.</div>
+        <div class="alert alert-blue" style="font-size:13px;">Le couple RHR 65 bpm + HRV 43 ms stable malgré un Strain 13.3 est un signal d’adaptation solide. Le programme fonctionne physiologiquement même si la perte de poids marque pause cette semaine.</div>
       </div>
 
       <div class="subsection">
-        <div class="subsection-title">Détection de Plateau — S3</div>
+        <div class="subsection-title">Détection de Plateau — S4</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Critère</th><th>Statut</th><th>Analyse</th></tr></thead>
           <tbody>
-            <tr class="green-row"><td>Perte grasse ralentit</td><td class="center"><span class="badge badge-green">Non ✅</span></td><td>−0.30 kg fat net en S2 — déficit bien actif</td></tr>
-            <tr class="green-row"><td>Poids stagne</td><td class="center"><span class="badge badge-green">Non ✅</span></td><td>−0.90 kg — première vraie baisse du programme</td></tr>
-            <tr class="green-row"><td>Récupération baisse</td><td class="center"><span class="badge badge-green">Non ✅</span></td><td>Recovery 72% — en hausse vs S1</td></tr>
-            <tr><td>Tracking alimentaire incomplet</td><td class="center"><span class="badge badge-gold">⚠ Vigilance</span></td><td>Kcal moy. tracées ~1 177 kcal — sous-tracking probable. Risque de décision incorrecte sur l'alimentation.</td></tr>
+            <tr class="orange-row"><td>Perte grasse stagne</td><td class="center"><span class="badge badge-gold">⚠ Vigilance</span></td><td>Poids stable cette semaine. Probable consolidation post-perte. À surveiller après Pessah.</td></tr>
+            <tr class="green-row"><td>LBM plancher tenu</td><td class="center"><span class="badge badge-green">✅ Positif</span></td><td>63.80 kg stable — la chute de S3 était bien du glycogène. Pas de catabolisme musculaire.</td></tr>
+            <tr class="green-row"><td>Récupération tient</td><td class="center"><span class="badge badge-green">✓ OK</span></td><td>Recovery 69% malgré Strain 13.3 — corps en adaptation, pas en surmenage.</td></tr>
+            <tr class="orange-row"><td>Tracking incomplet</td><td class="center"><span class="badge badge-gold">⚠ Vigilance</span></td><td>26–29 mars non saisis. Impossible de piloter précisément le déficit sans données complètes.</td></tr>
           </tbody>
         </table></div>
-        <div class="alert alert-green">Aucun signe de plateau en S3. Le programme est en phase de recomposition active. Point d'attention : améliorer la rigueur du tracking alimentaire pour avoir des données fiables.</div>
+        <div class="alert alert-gold">S4 = dernierè semaine avant Pessah. Pas de plateau réel détecté — c’est une semaine de transition. Après Pessah (retour S6), le déficit devra se réexprimer. Si le poids ne reprend pas sa trajectoire descendante en S6, il faudra ajuster.</div>
       </div>
 
       <div class="subsection">
         <div class="subsection-title">Signaux Faibles &amp; Lecture Prospective</div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>Signal</th><th>Niveau</th><th>Impact probable S4</th><th>Directive</th></tr></thead>
+          <thead><tr><th>Signal</th><th>Niveau</th><th>Impact probable S5/S6</th><th>Directive</th></tr></thead>
           <tbody>
+            <tr class="green-row">
+              <td>LBM 63.80 kg stable</td>
+              <td class="center"><span class="badge badge-green">✓ Excellent</span></td>
+              <td>Signal que la masse musculaire est préservée. Après Pessah, si protéines maintenues, LBM devrait remonter vers 64.0+.</td>
+              <td><strong>Maintenir protéines</strong></td>
+            </tr>
             <tr class="orange-row">
-              <td>LBM 63.80 kg (−0.90 vs S2)</td>
-              <td class="center"><span class="badge badge-gold">⚠ Modéré</span></td>
-              <td>Si LBM remonte en S4 → baisse transitoire glycogène confirmée. Si LBM continue de baisser → ajuster protéines à 160g+ et réduire le déficit.</td>
+              <td>Pessah S5 (1–12 avril)</td>
+              <td class="center"><span class="badge badge-gold">⚠ Anticiper</span></td>
+              <td>Repas libres Yom Tov = surplus calorique. Rebond hydrique +0.5–1.5 kg prévisible. Ne pas paniquer en S5.</td>
+              <td><strong>Gérer l’attente</strong></td>
+            </tr>
+            <tr>
+              <td>RHR 65 bpm en baisse continue</td>
+              <td class="center"><span class="badge badge-green">✓ Fort</span></td>
+              <td>Meilleur indicateur d’adaptation cardiovasculaire sur 4 semaines. Si RHR continue sous 65, le programme fonctionne correctement en profondeur.</td>
               <td><strong>Surveiller</strong></td>
             </tr>
             <tr class="orange-row">
-              <td>Protéines 114g/jour moy. (sous 150g)</td>
+              <td>Sommeil 6h48 (baisse)</td>
               <td class="center"><span class="badge badge-gold">⚠ Modéré</span></td>
-              <td>En déficit calorique soutenu, protéines insuffisantes = risque de catabolisme réel dès S4–S5. Priorité absolue : atteindre 150g/jour.</td>
-              <td><strong>Ajuster</strong></td>
-            </tr>
-            <tr class="green-row">
-              <td>Sommeil 7h18 — objectif atteint</td>
-              <td class="center"><span class="badge badge-green">✓ Excellent</span></td>
-              <td>Maintenir ce rythme. L'amélioration HRV (+6ms) est la conséquence directe. Si sommeil reste &gt; 7h, Recovery devrait progresser vers 75–80% en S4.</td>
-              <td><strong>Maintenir</strong></td>
-            </tr>
-            <tr class="green-row">
-              <td>Poids −0.90 kg — déficit actif</td>
-              <td class="center"><span class="badge badge-green">✓ Fort</span></td>
-              <td>Trajectoire conforme à S11 (attendu ~−1.1 kg S2→S4 — réalisé −1.35 kg). Maintenir le déficit sans l'aggraver. La perte grasse est en cours.</td>
-              <td><strong>Maintenir</strong></td>
+              <td>Avant Pessah, le sommeil doit remonter vers 7h15+ pour maximiser la récupération musculaire pendant la pause.</td>
+              <td><strong>Priorité S4</strong></td>
             </tr>
           </tbody>
         </table></div>
 
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
-          <div style="background:rgba(212,160,23,.07);border:1px solid var(--gold);border-radius:10px;padding:14px;">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a5200;margin-bottom:8px;">⚠ Risque modéré</div>
-            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>LBM sous plancher</strong> et <strong>protéines insuffisantes</strong>. Ces deux signaux combinés en déficit soutenu = surveiller S4 attentivement.</div>
-          </div>
           <div style="background:rgba(39,174,96,.07);border:1px solid var(--green-light);border-radius:10px;padding:14px;">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:8px;">✓ Signal fort positif</div>
-            <div style="font-size:13px;color:var(--navy);line-height:1.6;">Sommeil + HRV + Recovery tous en hausse. La base physiologique est solide pour encaisser la phase de déficit dominant.</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:8px;">✓ Signal positif</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>LBM stabilisée</strong> + RHR en baisse. La physiologie progresse même si la balance ne bouge pas.</div>
+          </div>
+          <div style="background:rgba(212,160,23,.07);border:1px solid var(--gold);border-radius:10px;padding:14px;">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a5200;margin-bottom:8px;">⚠ Pessah S5</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;">Rebond hydrique attendu. <strong>Ne pas interpréter comme une prise de poids réelle</strong>. La vraie reprise du déficit se voit en S6.</div>
           </div>
           <div style="background:rgba(46,134,193,.06);border:1px solid var(--blue-light);border-radius:10px;padding:14px;">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px;">ℹ À corriger</div>
-            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>Tracking alimentaire.</strong> Données actuelles (~1 177 kcal/j) non représentatives. Saisir tous les repas en S3 pour un pilotage fiable.</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px;">ℹ Priorité S4</div>
+            <div style="font-size:13px;color:var(--navy);line-height:1.6;"><strong>Sommeil 7h15+</strong>, tracking complet, 150g prot/jour avant d’entrer dans Pessah.</div>
           </div>
         </div>
 
         <div class="alert alert-gold" style="margin-top:16px;">
-          <strong>Anticipation S4</strong> S4 est la semaine clé avant Pessah (1 avril). Objectif : maintenir le déficit, atteindre 150g protéines/jour, compléter 5 séances. La projection S11 attend 76.75 kg à S4. Si le tracking s'améliore et les protéines montent, la LBM devrait se stabiliser ou remonter vers 64.4+. C'est le signal décisif pour confirmer que la recomposition est sur trajectoire.
+          <strong>Anticipation S5 — Pessah</strong> Les Yom Tov (1–2 et 9–10 avril) = repas libres + pas d’entraînement. Le Hol HaMoed (3–8 avril) permet de s’entraîner. Cible S5 : maintenir les protéines même en repas de fête, limiter le rebond, reprendre le déficit dès le retour en S6. La projection S11 intègre déjà ce rebond.
         </div>
       </div>
     </div>
@@ -3782,8 +3834,8 @@ input[type="date"].jdate-input {
       <div class="s10-week-nav">
         <button class="jbtn-sm" id="s10-prev-week">&#8592;</button>
         <div class="s10-week-label-wrap">
-          <span class="s10-week-label" id="s10-week-label">S2 — 16 mars – 22 mars 2026</span>
-          <span class="s10-week-sub" id="s10-week-sub">Semaine 2 du programme — dernier score disponible</span>
+          <span class="s10-week-label" id="s10-week-label">S3 — 23 mars – 29 mars 2026</span>
+          <span class="s10-week-sub" id="s10-week-sub">Semaine 3 du programme — dernier score disponible</span>
         </div>
         <button class="jbtn-sm" id="s10-today-week">Auj.</button>
         <button class="jbtn-sm" id="s10-next-week">&#8594;</button>
@@ -4015,14 +4067,81 @@ input[type="date"].jdate-input {
         </div>
       </div><!-- /subsection -->
         </div><!-- /s10-s2-content -->
-        <div id="s10-s3-content" style="display:none;">
-          <div class="alert alert-blue" style="margin-bottom:16px;font-size:13px;">Score S3 disponible au prochain check-in — lundi 30 mars 2026.</div>
+        <div id="s10-s3-content">
+
+      <div class="score-ring">
+        <div class="score-circle"><div class="score-number">66</div></div>
+        <div class="score-details">
+          <div style="font-size:16px;font-weight:600;color:var(--navy);margin-bottom:14px">Semaine 3 — Consolidation</div>
+          <div class="score-row"><span style="width:200px;font-size:14px">Perte de graisse</span><div class="score-bar-wrap"><div class="score-bar" style="width:55%;background:var(--gold)"></div></div><span class="score-pts">11/20</span></div>
+          <div class="score-row"><span style="width:200px;font-size:14px">Progression musculaire</span><div class="score-bar-wrap"><div class="score-bar" style="width:70%;background:var(--green-light)"></div></div><span class="score-pts">14/20</span></div>
+          <div class="score-row"><span style="width:200px;font-size:14px">Récupération Whoop</span><div class="score-bar-wrap"><div class="score-bar" style="width:65%;background:var(--gold)"></div></div><span class="score-pts">13/20</span></div>
+          <div class="score-row"><span style="width:200px;font-size:14px">Qualité du sommeil</span><div class="score-bar-wrap"><div class="score-bar" style="width:70%;background:var(--green-light)"></div></div><span class="score-pts">14/20</span></div>
+          <div class="score-row"><span style="width:200px;font-size:14px">Cohérence programme</span><div class="score-bar-wrap"><div class="score-bar" style="width:70%;background:var(--blue-light)"></div></div><span class="score-pts">14/20</span></div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Critère</th><th>Score</th><th>Justification</th></tr></thead>
+        <tbody>
+          <tr class="orange-row"><td>Perte de graisse</td><td class="num"><span class="badge badge-gold">11/20</span></td><td>Poids stable 76.50 kg, fat stable 12.7 kg. Consolidation post-perte −1.35 kg S2.</td></tr>
+          <tr class="green-row"><td>Progression musculaire</td><td class="num"><span class="badge badge-green">14/20</span></td><td>LBM 63.80 kg stable — plancher tenu ✅. Baisse S3 était du glycogène. Confirmé.</td></tr>
+          <tr><td>Récupération Whoop</td><td class="num"><span class="badge badge-gold">13/20</span></td><td>Recovery 69% zone jaune. HRV 43 ms. RHR 65 bpm — meilleur depuis S0 ✅.</td></tr>
+          <tr><td>Qualité du sommeil</td><td class="num"><span class="badge badge-gold">14/20</span></td><td>6h48 — légère baisse vs 7h18 S2. Liée à la charge (Strain 13.3).</td></tr>
+          <tr class="green-row"><td>Cohérence programme</td><td class="num"><span class="badge badge-blue">14/20</span></td><td>4 séances, Strain 13.3 (record du programme). Jambes manquantes.</td></tr>
+          <tr class="total-row"><td>TOTAL S3</td><td class="num">66/100</td><td>Consolidation — −5 pts vs S2. Atténué par LBM stable + RHR 65 bpm.</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="subsection" style="margin-top:24px;">
+        <div class="subsection-title">Interprétation du Score — Lecture Avancée</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+          <div style="background:var(--white);border:1px solid var(--warm-gray);border-radius:12px;padding:16px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;">Ce que signifie 66/100</div>
+            <p style="font-size:13px;color:var(--text);line-height:1.7;margin:0;">Score de <strong>transition</strong>. Après −1.35 kg la semaine précédente, le corps consolide. La composition identique confirme que la perte de S2 était réelle — pas de rebond.</p>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--warm-gray);border-radius:12px;padding:16px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;">Dynamique réelle</div>
+            <p style="font-size:13px;color:var(--text);line-height:1.7;margin:0;">Gain sur <strong>LBM (+2 pts)</strong> et <strong>cohérence (+1 pt)</strong>. Baisse uniquement sur l’absence de perte grasse. RHR 65 bpm = meilleur indicateur long terme du programme.</p>
+          </div>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Critère</th><th>Lecture avancée</th><th>Impact S4+</th></tr></thead>
+          <tbody>
+            <tr class="green-row"><td>LBM stable 14/20</td><td>Signal le plus important. Protéines + charge protègent la masse maigre en déficit.</td><td>Si LBM remonte vers 64.0+ après Pessah, trajectoire parfaite confirmée.</td></tr>
+            <tr class="orange-row"><td>Perte graisse 11/20</td><td>Consolidation post-perte + sous-tracking 26–29/03. Le déficit n’a pas disparu.</td><td>Après Pessah (S6), reprise du déficit attendue vers 14–15/20.</td></tr>
+            <tr><td>Strain 13.3</td><td>Meilleure semaine d’entraînement. 4 séances intenses. Fatigue a comprimé sommeil et Recovery.</td><td>Maintenir la charge + Jambes systématiquement.</td></tr>
+          </tbody>
+        </table></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
+          <div style="background:rgba(39,174,96,.07);border:1px solid var(--green-light);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px;">Trajectoire validée</div>
+            <div style="font-size:12px;color:var(--navy);line-height:1.5;">Score 66–100<br>Programme en ordre</div>
+          </div>
+          <div style="background:rgba(212,160,23,.08);border:2px solid var(--gold);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7a5200;margin-bottom:6px;">Score S3</div>
+            <div style="font-size:22px;font-weight:700;color:var(--navy);font-family:var(--font-mono);">66/100</div>
+            <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Consolidation<br>−5 pts vs S2</div>
+          </div>
+          <div style="background:rgba(192,57,43,.06);border:1px solid var(--red);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--red);margin-bottom:6px;">Zone à risque</div>
+            <div style="font-size:12px;color:var(--navy);line-height:1.5;">Score &lt; 50<br>Risque de dérive</div>
+          </div>
+        </div>
+        <div class="alert alert-gold" style="margin-top:16px;">
+          <strong>Lien S11</strong> Score 66/100 ne remet pas en cause la trajectoire. Test décisif après Pessah : poids sous 76 kg en S6 = programme exactement sur trajectoire.
+        </div>
+      </div><!-- /subsection -->
+        </div><!-- /s10-s3-content -->
+
+        <div id="s10-s4-content" style="display:none;">
+          <div class="alert alert-blue" style="margin-bottom:16px;font-size:13px;">Score S4 disponible au prochain check-in — après Pessah (lundi 13 avril 2026).</div>
           <div class="s10-empty-state" style="padding:32px 20px;">
             <div class="s10-empty-state__icon">&#128202;</div>
-            <div class="s10-empty-state__title">Score S3 — En attente</div>
-            <div class="s10-empty-state__sub">Les données Renpho + Whoop S3 seront ajoutées<br>au check-in du lundi 30 mars 2026.</div>
+            <div class="s10-empty-state__title">Score S4 — En attente</div>
+            <div class="s10-empty-state__sub">Données disponibles au check-in<br>du lundi 13 avril 2026 (retour Pessah).</div>
           </div>
-        </div><!-- /s10-s3-content -->
+        </div><!-- /s10-s4-content -->
         <div id="s10-empty-state" style="display:none;" class="s10-empty-state">
           <div class="s10-empty-state__icon">&#128202;</div>
           <div class="s10-empty-state__title" id="s10-empty-title">Score non disponible</div>
@@ -4046,7 +4165,8 @@ input[type="date"].jdate-input {
           <tr><td>S0 — Réel</td><td class="num">76.4 kg</td><td class="num">16.5%</td><td class="num">63.8 kg</td><td>Baseline</td></tr>
           <tr><td>S1 — Réel</td><td class="num">77.35 kg</td><td class="num">16.7%</td><td class="num">64.4 kg</td><td>Activation — chargement glycogène</td></tr>
           <tr><td>S2 — Réel</td><td class="num">77.85 kg</td><td class="num">16.9%</td><td class="num">64.7 kg</td><td>Activation — LBM peak</td></tr>
-          <tr class="current"><td>S3 — Réel ←</td><td class="num">76.50 kg</td><td class="num">16.6%</td><td class="num">63.8 kg</td><td>Recomposition active — déficit dominant</td></tr>
+          <tr><td>S3 — Réel</td><td class="num">76.50 kg</td><td class="num">16.6%</td><td class="num">63.8 kg</td><td>Consolidation — plateau de transition</td></tr>
+          <tr class="current"><td>S4 — Réel ←</td><td class="num">76.50 kg</td><td class="num">16.6%</td><td class="num">63.8 kg</td><td>Consolidation — dernière semaine avant Pessah</td></tr>
           <tr><td>S4</td><td class="num">76.10 kg</td><td class="num">15.5%</td><td class="num">64.30 kg</td><td>Recomposition active — déficit dominant</td></tr>
           <tr class="orange-row"><td>S5 — Pessah ⟳</td><td class="num">77.05 kg</td><td class="num">16.1%</td><td class="num">64.65 kg</td><td>Pause Yom Tov — rétention hydrique</td></tr>
           <tr><td>S6</td><td class="num">76.55 kg</td><td class="num">15.5%</td><td class="num">64.65 kg</td><td>Reprise post-Pessah — flush eau</td></tr>
@@ -4069,55 +4189,40 @@ input[type="date"].jdate-input {
     <div id="s12" class="section">
       <div class="section-header">
         <div class="section-num">Section 12</div>
-        <div class="section-title">RECOMMANDATIONS S3</div>
+        <div class="section-title">RECOMMANDATIONS S4</div>
       </div>
-
       <div class="subsection">
-        <div class="subsection-title">Contexte S3 — 23 mars 2026</div>
-        <div class="alert alert-blue" style="font-size:13px;">
-          Semaine 3 en cours. Poids 76.50 kg (−1.35 kg vs S2) ✅ · Fat −0.46 kg ✅ · LBM 63.80 kg ⚠ sous plancher (−0.60 kg) · Recovery 72% ✅ · HRV 44 ms ✅ · Sommeil 7h18 ✅ · Score S2 : 71/100 (+5 pts vs S1).
-        </div>
-
+        <div class="subsection-title">Contexte S4 — 30 mars 2026</div>
+        <div class="alert alert-blue" style="font-size:13px;">Dernière semaine avant Pessah. Poids 76.50 kg (consolidation) · LBM 63.80 kg stabilisée ✅ · Strain S3 = 13.3 · Recovery 69% · Sommeil 6h48 · Score S3 : 66/100.</div>
         <div class="subsection-title" style="margin-top:20px;">Nutrition</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Point</th><th>Recommandation</th></tr></thead>
           <tbody>
-            <tr class="orange-row"><td><strong>Protéines — PRIORITÉ #1</strong></td><td><strong>150–170 g/jour minimum.</strong> Moyenne S2 = 114g — insuffisant en déficit avec LBM à 63.80 kg (sous plancher). Sources : poulet, thon, œufs, yaourt grec, protéine pois. Saisir chaque repas.</td></tr>
-            <tr class="orange-row"><td><strong>Tracking complet</strong></td><td>Saisir TOUS les repas y compris soir et week-end. Les données S2 (~1 177 kcal/j) sont non représentatives — probable sous-tracking. Cible réelle : 1 950–2 150 kcal/j.</td></tr>
-            <tr><td>Calories</td><td>Maintenir 2 150 kcal training / 1 950 kcal repos. Ne pas réduire — le déficit est déjà actif. Risque de catabolisme si calories réelles trop basses.</td></tr>
-            <tr><td>Glucides</td><td>Conserver glucides complexes matin + post-WO. Réduire soir sur jours repos. Favoriser riz, quinoa, flocons avoine, patate douce.</td></tr>
-            <tr><td>Hydratation</td><td>2.5–3 L eau/jour — aide à stabiliser la LBM et purger rétention hydrique.</td></tr>
+            <tr class="orange-row"><td><strong>Tracking complet</strong></td><td>26–29 mars non saisis. Dernière semaine avant Pessah — saisir tous les repas pour une base propre avant la pause.</td></tr>
+            <tr class="orange-row"><td><strong>Protéines 150g+</strong></td><td>Entrer dans Pessah avec LBM maximale. Moy. S3 = 137g — peut mieux faire. Sources : poulet, thon, œufs, yaourt grec, whey.</td></tr>
+            <tr><td>Calories</td><td>Maintenir 2 150 kcal training / 1 950 kcal repos. Ne pas créer surplus pré-Pessah.</td></tr>
+            <tr><td>Pendant Pessah</td><td>Yom Tov (1–2 et 9–10 avril) : repas libres. Hol HaMoed (3–8 avril) : maintenir protéines.</td></tr>
           </tbody>
         </table></div>
-
         <div class="subsection-title" style="margin-top:20px;">Entraînement</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Point</th><th>Recommandation</th></tr></thead>
           <tbody>
-            <tr class="orange-row"><td><strong>5 séances S3</strong></td><td>S2 = 4 séances (dimanche manquant). S3 : viser 5 séances complètes Lun–Sam. Pessah arrive S4/S5 — maximiser le volume avant la pause.</td></tr>
-            <tr><td>Cardio LISS</td><td>Maintenir 15 min zone 2 après chaque séance muscu. Strain cible 10–13 par jour training.</td></tr>
-            <tr><td>Horaire</td><td>Maintenir 6h00 — créneau confirmé optimal sur S1 et S2.</td></tr>
-            <tr><td>Volume</td><td>Maintenir les charges actuelles. Ne pas augmenter le volume tant que LBM est sous plancher.</td></tr>
+            <tr class="orange-row"><td><strong>Séance Jambes</strong></td><td>Absente en S3. Dernière chance avant la pause. Vendredi 3 avril (Hol HaMoed) = créneau possible.</td></tr>
+            <tr><td>Volume</td><td>Maintenir Strain autour de 13. Ne pas augmenter avant la pause.</td></tr>
           </tbody>
         </table></div>
-
-        <div class="subsection-title" style="margin-top:20px;">✅ Récupération — Maintenir les acquis</div>
+        <div class="subsection-title" style="margin-top:20px;">Récupération</div>
         <div class="tbl-wrap"><table>
           <thead><tr><th>Point</th><th>Recommandation</th></tr></thead>
           <tbody>
-            <tr class="green-row"><td>Sommeil 7h18 ✅</td><td>Objectif quasi atteint. Maintenir coucher avant 22h30. Continuer magnésium bisglycinate 300–400 mg au coucher.</td></tr>
-            <tr class="green-row"><td>HRV 44 ms ✅</td><td>Progression signéificative (+6 ms vs S1). Si HRV reste ≥ 40 ms, programme à pleine charge.</td></tr>
-            <tr class="green-row"><td>Recovery 72% ✅</td><td>Zone verte confirmée. Alerte si Recovery &lt; 50% : réduire volume séance −30%.</td></tr>
-            <tr><td>LBM à surveiller</td><td>Check-in S4 (30 mars) décisif : si LBM remonte vers 64.4+ → baisse S3 était transitoire ✅. Si LBM continue de baisser → augmenter protéines à 170g+ et réduire déficit.</td></tr>
+            <tr class="orange-row"><td><strong>Sommeil 7h15+</strong></td><td>6h48 en S3. Coucher 22h30 MAX. Entrer dans Pessah avec récupération maximale.</td></tr>
+            <tr class="green-row"><td>RHR 65 bpm ✅</td><td>Ne rien changer — la progression continue naturellement.</td></tr>
+            <tr><td>Pendant Pessah</td><td>Utiliser les Yom Tov comme récupération complète. C’est prévu dans la projection.</td></tr>
           </tbody>
         </table></div>
-
-        <div class="alert alert-gold" style="margin-top:16px;">
-          <strong>Priorités S3 en 3 points</strong><br>
-          1. <strong>Protéines 150g+ /jour</strong> — protection musculaire en déficit dominant<br>
-          2. <strong>Tracking complet tous les repas</strong> — données fiables pour piloter<br>
-          3. <strong>5 séances avant Pessah</strong> — maximiser le volume avant la pause partielle S4–S5
-        </div>
+        <div class="alert alert-gold" style="margin-top:16px;"><strong>Priorités S4</strong><br>1. <strong>Tracking complet</strong> — base propre avant la pause<br>2. <strong>Protéines 150g+</strong> — LBM maximale en entrant Pessah<br>3. <strong>Sommeil 7h15+</strong> — récupération maximale</div>
+        <div class="alert alert-blue" style="margin-top:12px;"><strong>Prochain check-in</strong> Lundi 13 avril 2026. Le rebond hydrique post-Pessah est prévu dans la projection S11 — ne pas paniquer.</div>
       </div>
     </div>
 
@@ -4189,9 +4294,9 @@ input[type="date"].jdate-input {
 
           <!-- S3 — ACTUEL (featured) -->
           <div class="evo-stage evo-stage--current">
-            <div class="evo-stage__now-badge">📍 Aujourd'hui · S3</div>
-            <div class="evo-stage__label">S3 — Actuel</div>
-            <div class="evo-stage__date">23 mars 2026</div>
+            <div class="evo-stage__now-badge">📍 Aujourd'hui · S4</div>
+            <div class="evo-stage__label">S4 — Actuel</div>
+            <div class="evo-stage__date">30 mars 2026</div>
             <div class="evo-stage__figure">
               <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg" aria-label="Silhouette actuel S3">
                 <!-- head -->
@@ -4330,10 +4435,10 @@ input[type="date"].jdate-input {
           <div class="evo-progress-item">
             <div class="evo-progress-header">
               <span class="evo-progress-label">Poids (kg)</span>
-              <span class="evo-progress-values">76.50 kg (S3) → <strong>70–71 kg</strong></span>
+              <span class="evo-progress-values">76.50 kg (S4) → <strong>70–71 kg</strong></span>
             </div>
             <div class="evo-progress-track">
-              <div class="evo-progress-bar current" style="width:100%">S3 — 76.50 kg</div>
+              <div class="evo-progress-bar current" style="width:100%">S4 — 76.50 kg</div>
             </div>
             <div class="evo-progress-track goal-track">
               <div class="evo-progress-bar target" style="width:91%">Cible 70–71</div>
@@ -4343,10 +4448,10 @@ input[type="date"].jdate-input {
           <div class="evo-progress-item">
             <div class="evo-progress-header">
               <span class="evo-progress-label">Body Fat %</span>
-              <span class="evo-progress-values">16.6% (S3) → <strong>9–10%</strong></span>
+              <span class="evo-progress-values">16.6% (S4) → <strong>9–10%</strong></span>
             </div>
             <div class="evo-progress-track">
-              <div class="evo-progress-bar current-bf" style="width:100%">S3 — 16.6%</div>
+              <div class="evo-progress-bar current-bf" style="width:100%">S4 — 16.6%</div>
             </div>
             <div class="evo-progress-track goal-track">
               <div class="evo-progress-bar target-bf" style="width:57%">Cible 9.5%</div>
@@ -4356,10 +4461,10 @@ input[type="date"].jdate-input {
           <div class="evo-progress-item">
             <div class="evo-progress-header">
               <span class="evo-progress-label">Masse Musculaire (kg)</span>
-              <span class="evo-progress-values">60.59 kg (S3) → <strong>≥ 62 kg</strong></span>
+              <span class="evo-progress-values">60.59 kg (S4) → <strong>≥ 62 kg</strong></span>
             </div>
             <div class="evo-progress-track">
-              <div class="evo-progress-bar current-muscle" style="width:95%">S3 — 60.59 kg</div>
+              <div class="evo-progress-bar current-muscle" style="width:95%">S4 — 60.59 kg</div>
             </div>
             <div class="evo-progress-track goal-track">
               <div class="evo-progress-bar target-muscle" style="width:100%">Cible ≥ 62 kg</div>
@@ -4369,10 +4474,10 @@ input[type="date"].jdate-input {
           <div class="evo-progress-item">
             <div class="evo-progress-header">
               <span class="evo-progress-label">LBM — Masse Maigre (kg)</span>
-              <span class="evo-progress-values">63.80 kg (S3) → <strong>≥ 64.0 kg</strong></span>
+              <span class="evo-progress-values">63.80 kg (S4) → <strong>≥ 64.0 kg</strong></span>
             </div>
             <div class="evo-progress-track">
-              <div class="evo-progress-bar current-lbm" style="width:100%">S3 — 63.80 kg</div>
+              <div class="evo-progress-bar current-lbm" style="width:100%">S4 — 63.80 kg</div>
             </div>
             <div class="evo-progress-track goal-track">
               <div class="evo-progress-bar target-lbm" style="width:99%">Plancher 64.0 — Ne pas descendre</div>
@@ -4398,7 +4503,7 @@ input[type="date"].jdate-input {
             </div>
           </div>
           <div class="evo-compo-card">
-            <div class="evo-compo-title">S3 — Actuel (23 mars · 76.50 kg)</div>
+            <div class="evo-compo-title">S4 — Actuel (30 mars · 76.50 kg)</div>
             <div class="evo-compo-bar-wrap">
               <div class="evo-compo-fat" style="width:16.6%"><span>16.6%</span></div>
               <div class="evo-compo-lean" style="width:83.4%"><span>83.4% LBM</span></div>
@@ -6529,26 +6634,102 @@ function renderExPickerTabs(sessionType) {
   });
 }
 
+/* ── Custom exercises storage ── */
+var CUSTOM_EX_KEY = 'shai_recomp_custom_exercises_v1';
+
+function getCustomExercises() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_EX_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveCustomExercise(name) {
+  if (!name || !name.trim()) return;
+  var customs = getCustomExercises();
+  var normalized = name.trim();
+  /* Avoid duplicates (case-insensitive) */
+  var exists = customs.some(function(c) { return c.name.toLowerCase() === normalized.toLowerCase(); });
+  /* Also check if it's already in EXERCISE_DB */
+  var inDB = false;
+  Object.values(EXERCISE_DB).forEach(function(arr) {
+    arr.forEach(function(ex) { if (ex.name.toLowerCase() === normalized.toLowerCase()) inDB = true; });
+  });
+  if (!exists && !inDB) {
+    customs.push({ name: normalized, icon: '⚡', group: 'Personnalisé', addedAt: new Date().toISOString() });
+    localStorage.setItem(CUSTOM_EX_KEY, JSON.stringify(customs));
+  }
+}
+
+/* ── Fuzzy match: all query tokens must appear somewhere in the name ── */
+function fuzzyMatch(name, query) {
+  if (!query) return true;
+  var nameLow = name.toLowerCase()
+    .replace(/[éèêë]/g,'e').replace(/[àâä]/g,'a')
+    .replace(/[ùûü]/g,'u').replace(/[îï]/g,'i')
+    .replace(/[ôö]/g,'o').replace(/[ç]/g,'c');
+  var qLow = query.toLowerCase()
+    .replace(/[éèêë]/g,'e').replace(/[àâä]/g,'a')
+    .replace(/[ùûü]/g,'u').replace(/[îï]/g,'i')
+    .replace(/[ôö]/g,'o').replace(/[ç]/g,'c');
+  /* All space-separated tokens must match */
+  var tokens = qLow.split(/\s+/).filter(function(t) { return t.length > 0; });
+  return tokens.every(function(t) { return nameLow.indexOf(t) >= 0; });
+}
+
 function renderExPickerList() {
   var container = document.getElementById('ex-picker-list');
   if (!container) return;
-  var query = exPickerState.query.toLowerCase().trim();
+  var query = exPickerState.query.trim();
   var group = exPickerState.activeGroup;
-  /* Build flat list */
+
+  /* Build flat list from DB + custom exercises */
   var items = [];
   var groups = (group === 'all') ? Object.keys(EXERCISE_DB) : [group];
+
+  /* Custom exercises (always in 'all', or in 'Personnalisé' group) */
+  var customs = getCustomExercises();
+  var showCustom = (group === 'all' || group === 'Personnalisé');
+  if (showCustom) {
+    customs.forEach(function(c) {
+      if (fuzzyMatch(c.name, query)) {
+        items.push({ name: c.name, icon: c.icon || '⚡', group: 'Personnalisé', custom: true });
+      }
+    });
+  }
+
+  /* Built-in exercises */
   groups.forEach(function(g) {
     (EXERCISE_DB[g] || []).forEach(function(ex) {
-      if (!query || ex.name.toLowerCase().indexOf(query) >= 0) {
-        items.push({ name: ex.name, icon: ex.icon, group: g });
+      if (fuzzyMatch(ex.name, query)) {
+        items.push({ name: ex.name, icon: ex.icon, group: g, custom: false });
       }
     });
   });
+
+  container.innerHTML = '';
+
+  /* If no results — show "Add this exercise" option */
   if (items.length === 0) {
-    container.innerHTML = '<div class="ex-picker-empty">Aucun exercice trouvé pour « ' + exPickerState.query + ' »</div>';
+    var emptyDiv = document.createElement('div');
+    emptyDiv.className = 'ex-picker-empty';
+    if (query) {
+      emptyDiv.innerHTML =
+        '<div style="margin-bottom:12px;color:var(--mid-gray);font-size:13px;">Aucun résultat pour « ' + escapeHtml(query) + ' »</div>' +
+        '<button class="ex-add-custom-btn" id="ex-add-custom-now">' +
+          '<span>＋</span> Ajouter « ' + escapeHtml(query) + ' » comme exercice' +
+        '</button>';
+      container.appendChild(emptyDiv);
+      var btn = document.getElementById('ex-add-custom-now');
+      if (btn) btn.onclick = function() {
+        saveCustomExercise(query);
+        pickExercise(query, null);
+      };
+    } else {
+      emptyDiv.textContent = 'Aucun exercice disponible.';
+      container.appendChild(emptyDiv);
+    }
     return;
   }
-  container.innerHTML = '';
+
+  /* Render matching items */
   items.forEach(function(item) {
     var last = getExLastPerf(item.name);
     var div = document.createElement('div');
@@ -6558,16 +6739,28 @@ function renderExPickerList() {
       var perfStr = last.weight > 0 ? last.weight + 'kg × ' + last.reps + ' × ' + last.sets : last.reps + ' reps × ' + last.sets;
       histHtml = '<span class="ex-picker-hist">' + perfStr + '</span>';
     }
+    var badge = item.custom ? '<span style="font-size:10px;color:var(--blue-light);margin-left:4px;">✎</span>' : '';
     div.innerHTML =
       '<div class="ex-picker-icon">' + item.icon + '</div>' +
       '<div class="ex-picker-info">' +
-        '<div class="ex-picker-name">' + item.name + '</div>' +
+        '<div class="ex-picker-name">' + escapeHtml(item.name) + badge + '</div>' +
         '<div class="ex-picker-group">' + item.group + '</div>' +
       '</div>' +
       histHtml;
-    div.onclick = function() { pickExercise(item.name, last); };
+    div.onclick = (function(it, lp) { return function() { pickExercise(it.name, lp); }; })(item, last);
     container.appendChild(div);
   });
+
+  /* If query typed but results found — still offer "add custom" at bottom */
+  if (query && items.length > 0) {
+    var addMore = document.createElement('div');
+    addMore.style.cssText = 'padding:10px 0 4px;text-align:center;';
+    addMore.innerHTML = '<button class="ex-add-custom-btn ex-add-custom-btn--small" onclick="(function(){' +
+      'var q=document.getElementById(\'ex-picker-search\').value.trim();' +
+      'if(q){saveCustomExercise(q);pickExercise(q,null);}' +
+      '})()">＋ Ajouter « ' + escapeHtml(query) + ' » quand même</button>';
+    container.appendChild(addMore);
+  }
 }
 
 /* expose picker functions globally for inline onclick */
@@ -6575,6 +6768,8 @@ window.openExPicker = openExPicker;
 window.closeExPicker = closeExPicker;
 window.closeExPickerIfBg = closeExPickerIfBg;
 window.filterExPicker = filterExPicker;
+window.saveCustomExercise = saveCustomExercise;
+window.pickExercise = pickExercise;
 
 function filterExPicker() {
   var searchEl = document.getElementById('ex-picker-search');
@@ -6584,6 +6779,14 @@ function filterExPicker() {
 
 function pickExercise(name, lastPerf) {
   if (!trState.data) return;
+  /* Auto-save to custom exercises if not in built-in DB */
+  if (name && name.trim()) {
+    var inDB = false;
+    Object.values(EXERCISE_DB).forEach(function(arr) {
+      arr.forEach(function(ex) { if (ex.name.toLowerCase() === name.trim().toLowerCase()) inDB = true; });
+    });
+    if (!inDB) saveCustomExercise(name.trim());
+  }
   var newEx = { id: uid('ex'), name: name, weight: 0, reps: 0, sets: 0, unit: 'kg', note: '' };
   /* Pre-fill with last performance */
   if (lastPerf) {
@@ -6975,7 +7178,7 @@ function buildSearchIndex() {
     s4:'Nutrition & Macros', s5:'Suppléments', s6:'Entraînement MFT28',
     s7:'Repas Détaillés', s8:'Suivi Renpho & Whoop', s9:'Journal & Projection',
     s10:'Score de Progression', s11:'Projection 16 Semaines',
-    s12:'Recommandations S3', s13:'Évolution Corporelle',
+    s12:'Recommandations S4', s13:'Évolution Corporelle',
     s14:'Journal Alimentaire', s15:'Journal Entraînement', s16:'Sauvegarde & Données'
   };
   var sections = document.querySelectorAll('.section');
@@ -8555,7 +8758,7 @@ function renderS8AutoSummary(days, renpho) {
 ═══════════════════════════════════════════════════ */
 
 var S10_PROG_START = '2026-03-09';
-var s10WeekOffset  = 1; /* S2 = offset 1 = last scored week */
+var s10WeekOffset  = 2; /* S3 = offset 2 = dernier score disponible */
 
 var S10_SCORES = {
   'S1': { available: true,
@@ -9045,7 +9248,8 @@ function initApp() {
       '2026-03-02': { weight:76.40, bf:16.5, muscle:60.60, lbm:63.80, visceral:9,  bmr:1747, updatedAt:'2026-03-02T00:00:00.000Z' },
       '2026-03-09': { weight:77.35, bf:16.8, muscle:61.10, lbm:64.40, visceral:10, bmr:1759, updatedAt:'2026-03-09T00:00:00.000Z' },
       '2026-03-16': { weight:77.85, bf:16.9, muscle:61.40, lbm:64.70, visceral:10, bmr:1765, updatedAt:'2026-03-16T00:00:00.000Z' },
-      '2026-03-23': { weight:76.50, bf:16.6, muscle:60.59, lbm:63.80, visceral:9,  bmr:1756, updatedAt:'2026-03-23T06:00:00.000Z' }
+      '2026-03-23': { weight:76.50, bf:16.6, muscle:60.59, lbm:63.80, visceral:9,  bmr:1756, updatedAt:'2026-03-23T06:00:00.000Z' },
+      '2026-03-30': { weight:76.50, bf:16.6, muscle:60.59, lbm:63.80, visceral:9,  bmr:1756, updatedAt:'2026-03-30T06:00:00.000Z' }
     };
     var existingRenpho = JSON.parse(localStorage.getItem('shai_recomp_renpho_v1') || '{}');
     for (var wk in SEED_RENPHO) {
